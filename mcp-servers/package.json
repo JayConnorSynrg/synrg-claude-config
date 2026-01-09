@@ -1,0 +1,9 @@
+{
+  "name": "claude-mcp-servers",
+  "version": "1.0.0",
+  "description": "Custom minimal MCP servers for Claude Code",
+  "type": "commonjs",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}

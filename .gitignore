@@ -1,0 +1,50 @@
+# SYNRG Claude Configuration - .gitignore
+
+# Node modules (everywhere)
+node_modules/
+**/node_modules/
+
+# Package locks
+package-lock.json
+yarn.lock
+
+# Session and history data (sensitive)
+history.jsonl
+stats-cache.json
+settings.local.json
+
+# Cache directories
+cache/
+debug/
+shell-snapshots/
+file-history/
+todos/
+telemetry/
+statsig/
+plans/
+
+# IDE-specific
+ide/
+
+# Session environment (may contain secrets)
+session-env/
+
+# Local MCP configuration (may contain API keys)
+mcp.json
+
+# Archive (old/deprecated)
+archive/
+commands-archive/
+
+# Project session data
+projects/
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp

@@ -1,0 +1,29 @@
+{
+  "description": "SYNRG Protocol Enforcement Hooks - Enterprise security, git strategy, and commit workflow",
+  "version": "1.0.0",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/synrg-security-gate.py",
+            "timeout": 5
+          }
+        ],
+        "matcher": "Edit|Write|MultiEdit"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/synrg-commit-reminder.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
