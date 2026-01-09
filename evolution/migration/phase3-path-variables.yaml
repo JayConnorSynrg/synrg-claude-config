@@ -1,0 +1,391 @@
+# Phase 3: Path Variables Migration Manifest
+# Generated: 2026-01-09
+# Total paths to migrate: 87
+
+version: "1.0.0"
+phase: 3
+name: "Path Variables"
+status: "infrastructure-ready"
+description: "Replace hardcoded paths with ${VARIABLE} syntax for portability"
+
+# Variable definitions
+variables:
+  HOME:
+    description: "User home directory"
+    default: "/Users/jelalconnor"
+    env_source: "$HOME"
+
+  CLAUDE_HOME:
+    description: "Claude configuration root"
+    default: "${HOME}/.claude"
+    resolves_to: "~/.claude"
+
+  SYNRG_HOME:
+    description: "SYNRG platform installation"
+    default: "${HOME}/.local/synrg"
+    resolves_to: "~/.local/synrg"
+
+  CODING_ROOT:
+    description: "Primary coding directory"
+    default: "${HOME}/CODING"
+    resolves_to: "~/CODING"
+
+  CLAUDE_AGENTS:
+    description: "Agent definitions directory"
+    default: "${CLAUDE_HOME}/agents"
+
+  CLAUDE_COMMANDS:
+    description: "Slash commands directory"
+    default: "${CLAUDE_HOME}/commands"
+
+  CLAUDE_SKILLS:
+    description: "Skills library directory"
+    default: "${CLAUDE_HOME}/skills"
+
+  CLAUDE_PROTOCOLS:
+    description: "Extracted protocols directory"
+    default: "${CLAUDE_HOME}/protocols"
+
+  N8N_WORKFLOWS:
+    description: "N8N workflows project"
+    default: "${CODING_ROOT}/N8N/Workflows"
+
+  N8N_AGENTS:
+    description: "N8N agent definitions"
+    default: "${CODING_ROOT}/N8N/AGENTS"
+
+  N8N_PATTERNS:
+    description: "N8N pattern library"
+    default: "${N8N_WORKFLOWS}/.claude/patterns"
+
+# Migration manifest by file
+files:
+  synrg.md:
+    total_paths: 25
+    priority: high
+    paths:
+      - line: 75
+        original: "~/.claude/agents/n8n-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+      - line: 76
+        original: "~/.claude/agents/github-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
+      - line: 237
+        original: "~/.claude/skills/mandatory-context-delegation.md"
+        replacement: "${CLAUDE_SKILLS}/mandatory-context-delegation.md"
+      - line: 364
+        original: "~/.claude/skills/"
+        replacement: "${CLAUDE_SKILLS}/"
+      - line: 412
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 424
+        original: "~/.claude/commands/"
+        replacement: "${CLAUDE_COMMANDS}/"
+      - line: 738
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 763
+        original: "/Users/jelalconnor/CODING/N8N/Workflows/.claude/patterns/"
+        replacement: "${N8N_PATTERNS}/"
+      - line: 774
+        original: "~/.claude/agents/{domain}-{focus}.md"
+        replacement: "${CLAUDE_AGENTS}/{domain}-{focus}.md"
+      - line: 1010
+        original: "~/.claude/agents/n8n-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+      - line: 1011
+        original: "~/.claude/agents/github-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
+      - line: 4892
+        original: "~/.claude/commands/synrg.md"
+        replacement: "${CLAUDE_COMMANDS}/synrg.md"
+      - line: 4898
+        original: "~/.claude/commands/synrg.evolution.log"
+        replacement: "${CLAUDE_COMMANDS}/synrg.evolution.log"
+      - line: 4910
+        original: "~/.claude/commands/synrg.evolution.log"
+        replacement: "${CLAUDE_COMMANDS}/synrg.evolution.log"
+      - line: 5160
+        original: "/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/config/n8n-config.json"
+        replacement: "${CODING_ROOT}/Development/N8N-Integration/Cursor N8N MCP/config/n8n-config.json"
+      - line: 5161
+        original: "/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/n8n-fast-config.js"
+        replacement: "${CODING_ROOT}/Development/N8N-Integration/Cursor N8N MCP/n8n-fast-config.js"
+      - line: 5221
+        original: "/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/workflows/catalog.json"
+        replacement: "${CODING_ROOT}/Development/N8N-Integration/Cursor N8N MCP/workflows/catalog.json"
+      - line: 5476
+        original: "/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/config/"
+        replacement: "${CODING_ROOT}/Development/N8N-Integration/Cursor N8N MCP/config/"
+      - line: 5477
+        original: "/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/workflows/"
+        replacement: "${CODING_ROOT}/Development/N8N-Integration/Cursor N8N MCP/workflows/"
+      - line: 5478
+        original: "/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/n8n-fast-config.js"
+        replacement: "${CODING_ROOT}/Development/N8N-Integration/Cursor N8N MCP/n8n-fast-config.js"
+      - line: 5479
+        original: "/Users/jelalconnor/CODING/Development/N8N-Integration/VS STUDIO N8N MCP/n8n-rules-document.txt"
+        replacement: "${CODING_ROOT}/Development/N8N-Integration/VS STUDIO N8N MCP/n8n-rules-document.txt"
+      - line: 5684
+        original: "~/.claude/skills/"
+        replacement: "${CLAUDE_SKILLS}/"
+
+  synrg-refactor.md:
+    total_paths: 7
+    priority: medium
+    paths:
+      - line: 117
+        original: "~/.claude/skills/mandatory-context-delegation.md"
+        replacement: "${CLAUDE_SKILLS}/mandatory-context-delegation.md"
+      - line: 123
+        original: "~/.claude/skills/universal-synrg-protocols.md"
+        replacement: "${CLAUDE_SKILLS}/universal-synrg-protocols.md"
+      - line: 148
+        original: "~/.claude/agents/n8n-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+      - line: 149
+        original: "~/.claude/agents/github-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
+      - line: 221
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 230
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 3084
+        original: "~/.claude/commands/synrg-refactor.evolution.log"
+        replacement: "${CLAUDE_COMMANDS}/synrg-refactor.evolution.log"
+
+  synrg-commit.md:
+    total_paths: 5
+    priority: medium
+    paths:
+      - line: 70
+        original: "~/.claude/agents/n8n-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+      - line: 71
+        original: "~/.claude/agents/github-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
+      - line: 111
+        original: "~/.claude/skills/mandatory-context-delegation.md"
+        replacement: "${CLAUDE_SKILLS}/mandatory-context-delegation.md"
+      - line: 117
+        original: "~/.claude/skills/universal-synrg-protocols.md"
+        replacement: "${CLAUDE_SKILLS}/universal-synrg-protocols.md"
+      - line: 1470
+        original: "~/.claude/commands/examples/synrg-commit/"
+        replacement: "${CLAUDE_COMMANDS}/examples/synrg-commit/"
+
+  synrg-spec.md:
+    total_paths: 6
+    priority: medium
+    paths:
+      - line: 64
+        original: "~/.claude/agents/n8n-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+      - line: 65
+        original: "~/.claude/agents/github-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
+      - line: 105
+        original: "~/.claude/skills/mandatory-context-delegation.md"
+        replacement: "${CLAUDE_SKILLS}/mandatory-context-delegation.md"
+      - line: 111
+        original: "~/.claude/skills/universal-synrg-protocols.md"
+        replacement: "${CLAUDE_SKILLS}/universal-synrg-protocols.md"
+      - line: 324
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 1067
+        original: "specs/.spec-index.json"
+        replacement: "${PROJECT_ROOT}/specs/.spec-index.json"
+        note: "Relative path - may need context-aware resolution"
+
+  synrg-scaffold.md:
+    total_paths: 4
+    priority: low
+    paths:
+      - line: 56
+        original: "~/.claude/agents/n8n-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+      - line: 57
+        original: "~/.claude/agents/github-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
+      - line: 97
+        original: "~/.claude/skills/mandatory-context-delegation.md"
+        replacement: "${CLAUDE_SKILLS}/mandatory-context-delegation.md"
+      - line: 103
+        original: "~/.claude/skills/universal-synrg-protocols.md"
+        replacement: "${CLAUDE_SKILLS}/universal-synrg-protocols.md"
+
+  synrg-guided.md:
+    total_paths: 7
+    priority: medium
+    paths:
+      - line: 62
+        original: "~/.claude/agents/n8n-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+      - line: 63
+        original: "~/.claude/agents/github-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
+      - line: 110
+        original: "~/.claude/skills/mandatory-context-delegation.md"
+        replacement: "${CLAUDE_SKILLS}/mandatory-context-delegation.md"
+      - line: 174
+        original: "~/.claude/skills/universal-synrg-protocols.md"
+        replacement: "${CLAUDE_SKILLS}/universal-synrg-protocols.md"
+      - line: 207
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 226
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 2312
+        original: "~/.claude/skills/universal-synrg-protocols.md"
+        replacement: "${CLAUDE_SKILLS}/universal-synrg-protocols.md"
+
+  synrg-buildworkflow.md:
+    total_paths: 7
+    priority: high
+    paths:
+      - line: 54
+        original: "~/.claude/agents/n8n-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+      - line: 55
+        original: "~/.claude/agents/github-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
+      - line: 110
+        original: "~/.claude/skills/mandatory-context-delegation.md"
+        replacement: "${CLAUDE_SKILLS}/mandatory-context-delegation.md"
+      - line: 116
+        original: "~/.claude/skills/universal-synrg-protocols.md"
+        replacement: "${CLAUDE_SKILLS}/universal-synrg-protocols.md"
+      - line: 265
+        original: "/Users/jelalconnor/CODING/N8N/Workflows/workflows/development"
+        replacement: "${N8N_WORKFLOWS}/workflows/development"
+      - line: 654
+        original: "/Users/jelalconnor/CODING/N8N/AGENTS/n8n-patterns-schema.ts"
+        replacement: "${N8N_AGENTS}/n8n-patterns-schema.ts"
+      - line: 655
+        original: "/Users/jelalconnor/CODING/N8N/AGENTS/n8n-patterns-data.ts"
+        replacement: "${N8N_AGENTS}/n8n-patterns-data.ts"
+
+  synrg-swarm.md:
+    total_paths: 12
+    priority: high
+    paths:
+      - line: 49
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 59
+        original: "~/.claude/agents/n8n-*.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-*.md"
+      - line: 96
+        original: "~/.claude/agents/n8n-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+      - line: 97
+        original: "~/.claude/agents/github-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
+      - line: 137
+        original: "~/.claude/skills/mandatory-context-delegation.md"
+        replacement: "${CLAUDE_SKILLS}/mandatory-context-delegation.md"
+      - line: 143
+        original: "~/.claude/skills/universal-synrg-protocols.md"
+        replacement: "${CLAUDE_SKILLS}/universal-synrg-protocols.md"
+      - line: 165
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 166
+        original: "/Users/jelalconnor/CODING/N8N/Workflows/.claude/patterns/"
+        replacement: "${N8N_PATTERNS}/"
+      - line: 179
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 180
+        original: "~/.claude/commands/"
+        replacement: "${CLAUDE_COMMANDS}/"
+      - line: 212
+        original: "~/.claude/agents/n8n-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+      - line: 213
+        original: "~/.claude/agents/github-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
+
+  synrg-evolve.md:
+    total_paths: 12
+    priority: medium
+    paths:
+      - line: 60
+        original: "~/.claude/agents/n8n-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+      - line: 61
+        original: "~/.claude/agents/github-mcp-delegate.md"
+        replacement: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
+      - line: 107
+        original: "~/.claude/skills/mandatory-context-delegation.md"
+        replacement: "${CLAUDE_SKILLS}/mandatory-context-delegation.md"
+      - line: 113
+        original: "~/.claude/skills/universal-synrg-protocols.md"
+        replacement: "${CLAUDE_SKILLS}/universal-synrg-protocols.md"
+      - line: 165
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 166
+        original: "/Users/jelalconnor/CODING/N8N/Workflows/.claude/patterns/"
+        replacement: "${N8N_PATTERNS}/"
+      - line: 179
+        original: "~/.claude/agents/"
+        replacement: "${CLAUDE_AGENTS}/"
+      - line: 180
+        original: "~/.claude/commands/"
+        replacement: "${CLAUDE_COMMANDS}/"
+      - line: 234
+        original: "~/.claude/commands/synrg.md"
+        replacement: "${CLAUDE_COMMANDS}/synrg.md"
+      - line: 556
+        original: "~/.claude/commands/synrg.md"
+        replacement: "${CLAUDE_COMMANDS}/synrg.md"
+      - line: 557
+        original: "~/.claude/commands/synrg.v*.md"
+        replacement: "${CLAUDE_COMMANDS}/synrg.v*.md"
+      - line: 560
+        original: "~/.claude/commands/synrg.v*.md"
+        replacement: "${CLAUDE_COMMANDS}/synrg.v*.md"
+
+  CLAUDE.md:
+    total_paths: 2
+    priority: low
+    paths:
+      - line: 52
+        original: "~/CODING"
+        replacement: "${CODING_ROOT}"
+      - line: 53
+        original: "~/.local/synrg/"
+        replacement: "${SYNRG_HOME}/"
+
+# Summary statistics
+summary:
+  total_files: 10
+  total_paths: 87
+  by_priority:
+    high: 3  # synrg.md, synrg-buildworkflow.md, synrg-swarm.md
+    medium: 5  # synrg-refactor.md, synrg-commit.md, synrg-spec.md, synrg-guided.md, synrg-evolve.md
+    low: 2  # synrg-scaffold.md, CLAUDE.md
+  by_pattern:
+    tilde_claude: 62  # ~/.claude/*
+    absolute_user: 23  # /Users/jelalconnor/*
+    tilde_other: 2  # ~/CODING, ~/.local/synrg
+
+# Migration instructions
+migration:
+  approach: "sed-based batch replacement"
+  backup_required: true
+  validation_required: true
+  rollback_available: true
+
+  steps:
+    - "1. Create backup of all command files"
+    - "2. Run migration script (evolution/migration/migrate-paths.sh)"
+    - "3. Validate all paths resolve correctly"
+    - "4. Test command execution"
+    - "5. Commit changes"

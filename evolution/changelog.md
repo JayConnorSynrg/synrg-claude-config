@@ -7,11 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned - Phase 3: Path Variables
-- Replace hardcoded paths with `${CLAUDE_HOME}` variables
-- Implement path resolver in commands
-- Add environment detection
-
 ### Planned - Phase 4: Extension Points
 - Add `<!-- EXTENSION: custom-agents -->` markers
 - Create hook registration system
@@ -26,6 +21,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create command registry API
 - Implement inter-command communication
 - Add dependency resolution
+
+---
+
+## [1.2.0] - 2026-01-09
+
+### Added - Phase 3: Path Variables Infrastructure
+
+Created path variable system for portability (87 paths identified across 10 files):
+
+**Core Variables Defined:**
+| Variable | Resolves To |
+|----------|-------------|
+| `${HOME}` | User home directory |
+| `${CLAUDE_HOME}` | `${HOME}/.claude` |
+| `${SYNRG_HOME}` | `${HOME}/.local/synrg` |
+| `${CODING_ROOT}` | `${HOME}/CODING` |
+
+**Derived Variables:**
+| Variable | Resolves To |
+|----------|-------------|
+| `${CLAUDE_AGENTS}` | `${CLAUDE_HOME}/agents` |
+| `${CLAUDE_COMMANDS}` | `${CLAUDE_HOME}/commands` |
+| `${CLAUDE_SKILLS}` | `${CLAUDE_HOME}/skills` |
+| `${CLAUDE_PROTOCOLS}` | `${CLAUDE_HOME}/protocols` |
+
+**Infrastructure Files Created:**
+- `config/paths.yaml` v1.1.0 - Updated with resolver configuration
+- `config/path-resolver.md` - Variable syntax documentation
+- `evolution/migration/phase3-path-variables.yaml` - Complete migration manifest
+- `evolution/migration/migrate-paths.sh` - Executable migration script
+
+**Paths Identified by File:**
+| File | Paths Found |
+|------|-------------|
+| synrg.md | 25 |
+| synrg-swarm.md | 12 |
+| synrg-evolve.md | 12 |
+| synrg-buildworkflow.md | 7 |
+| synrg-guided.md | 7 |
+| synrg-refactor.md | 7 |
+| synrg-spec.md | 6 |
+| synrg-commit.md | 5 |
+| synrg-scaffold.md | 4 |
+| CLAUDE.md | 2 |
+
+### Notes
+- Infrastructure is ready but NOT applied to commands yet
+- Original commands remain unchanged (backward compatible)
+- Run `DRY_RUN=false ~/.claude/evolution/migration/migrate-paths.sh` to apply
+- Phase 4 will add extension point markers
 
 ---
 

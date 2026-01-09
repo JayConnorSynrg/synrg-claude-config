@@ -1,80 +1,188 @@
 # SYNRG Path Configuration
 # Centralizes all path references for portability
-# Version: 1.0.0
+# Version: 1.1.0
 
-version: "1.0.0"
+version: "1.1.0"
 last_updated: "2026-01-09"
+phase: "3-infrastructure-ready"
 
-# Base paths - modify these for different environments
-base:
-  claude_home: "${HOME}/.claude"
-  synrg_home: "${HOME}/.local/synrg"
-  coding_root: "${HOME}/CODING"
+# =============================================================================
+# CORE VARIABLES - Modify these for different environments
+# =============================================================================
 
-# Command locations
+core:
+  # User home directory - resolved from environment
+  HOME: "${HOME}"
+
+  # Claude configuration root
+  CLAUDE_HOME: "${HOME}/.claude"
+
+  # SYNRG platform installation
+  SYNRG_HOME: "${HOME}/.local/synrg"
+
+  # Primary coding directory
+  CODING_ROOT: "${HOME}/CODING"
+
+# =============================================================================
+# DERIVED VARIABLES - Automatically resolved from core
+# =============================================================================
+
+derived:
+  # Claude subdirectories
+  CLAUDE_AGENTS: "${CLAUDE_HOME}/agents"
+  CLAUDE_COMMANDS: "${CLAUDE_HOME}/commands"
+  CLAUDE_SKILLS: "${CLAUDE_HOME}/skills"
+  CLAUDE_PROTOCOLS: "${CLAUDE_HOME}/protocols"
+  CLAUDE_CONFIG: "${CLAUDE_HOME}/config"
+  CLAUDE_TEMPLATES: "${CLAUDE_HOME}/templates"
+  CLAUDE_EVOLUTION: "${CLAUDE_HOME}/evolution"
+  CLAUDE_HOOKS: "${CLAUDE_HOME}/hooks"
+  CLAUDE_MCP: "${CLAUDE_HOME}/mcp-servers"
+
+  # Project-specific paths
+  N8N_WORKFLOWS: "${CODING_ROOT}/N8N/Workflows"
+  N8N_AGENTS: "${CODING_ROOT}/N8N/AGENTS"
+  N8N_PATTERNS: "${N8N_WORKFLOWS}/.claude/patterns"
+  N8N_INTEGRATION: "${CODING_ROOT}/Development/N8N-Integration"
+
+# =============================================================================
+# RESOLVER CONFIGURATION
+# =============================================================================
+
+resolver:
+  # Resolution order (first match wins)
+  order:
+    - environment  # Check OS environment variables first
+    - config       # Then check this config file
+    - default      # Fall back to hardcoded defaults
+
+  # Pattern matching for variable detection
+  patterns:
+    variable: '\$\{([A-Z_]+)\}'  # Matches ${VARIABLE_NAME}
+    tilde: '^~/'                  # Matches ~/path
+    absolute: '^/Users/'          # Matches /Users/username/
+
+  # Substitution rules (applied in order)
+  substitutions:
+    # Rule 1: Absolute user paths → ${HOME}
+    - pattern: '/Users/jelalconnor'
+      replacement: '${HOME}'
+      priority: 1
+
+    # Rule 2: Tilde home → ${HOME}
+    - pattern: '~'
+      replacement: '${HOME}'
+      priority: 2
+
+    # Rule 3: .claude directory → ${CLAUDE_HOME}
+    - pattern: '${HOME}/.claude'
+      replacement: '${CLAUDE_HOME}'
+      priority: 3
+
+    # Rule 4: Subdirectory shortcuts
+    - pattern: '${CLAUDE_HOME}/agents'
+      replacement: '${CLAUDE_AGENTS}'
+      priority: 4
+    - pattern: '${CLAUDE_HOME}/commands'
+      replacement: '${CLAUDE_COMMANDS}'
+      priority: 4
+    - pattern: '${CLAUDE_HOME}/skills'
+      replacement: '${CLAUDE_SKILLS}'
+      priority: 4
+    - pattern: '${CLAUDE_HOME}/protocols'
+      replacement: '${CLAUDE_PROTOCOLS}'
+      priority: 4
+
+# =============================================================================
+# COMMAND LOCATIONS
+# =============================================================================
+
 commands:
-  synrg: "${base.claude_home}/commands/synrg.md"
-  synrg_guided: "${base.claude_home}/commands/synrg-guided.md"
-  synrg_commit: "${base.claude_home}/commands/synrg-commit.md"
-  synrg_refactor: "${base.claude_home}/commands/synrg-refactor.md"
-  synrg_spec: "${base.claude_home}/commands/synrg-spec.md"
-  synrg_scaffold: "${base.claude_home}/commands/synrg-scaffold.md"
-  synrg_buildworkflow: "${base.claude_home}/commands/synrg-buildworkflow.md"
-  synrg_swarm: "${base.claude_home}/commands/synrg-swarm.md"
-  synrg_evolve: "${base.claude_home}/commands/synrg-evolve.md"
+  synrg: "${CLAUDE_COMMANDS}/synrg.md"
+  synrg_guided: "${CLAUDE_COMMANDS}/synrg-guided.md"
+  synrg_commit: "${CLAUDE_COMMANDS}/synrg-commit.md"
+  synrg_refactor: "${CLAUDE_COMMANDS}/synrg-refactor.md"
+  synrg_spec: "${CLAUDE_COMMANDS}/synrg-spec.md"
+  synrg_scaffold: "${CLAUDE_COMMANDS}/synrg-scaffold.md"
+  synrg_buildworkflow: "${CLAUDE_COMMANDS}/synrg-buildworkflow.md"
+  synrg_swarm: "${CLAUDE_COMMANDS}/synrg-swarm.md"
+  synrg_evolve: "${CLAUDE_COMMANDS}/synrg-evolve.md"
 
-# Agent definitions
+# =============================================================================
+# RESOURCE LOCATIONS
+# =============================================================================
+
 agents:
-  directory: "${base.claude_home}/agents"
+  directory: "${CLAUDE_AGENTS}"
   patterns:
-    - "${base.claude_home}/agents/*.md"
+    - "${CLAUDE_AGENTS}/*.md"
+  mcp_delegates:
+    n8n: "${CLAUDE_AGENTS}/n8n-mcp-delegate.md"
+    github: "${CLAUDE_AGENTS}/github-mcp-delegate.md"
 
-# Skills
 skills:
-  directory: "${base.claude_home}/skills"
+  directory: "${CLAUDE_SKILLS}"
   patterns:
-    - "${base.claude_home}/skills/*.md"
+    - "${CLAUDE_SKILLS}/*.md"
+  core:
+    mcdp: "${CLAUDE_SKILLS}/mandatory-context-delegation.md"
+    universal: "${CLAUDE_SKILLS}/universal-synrg-protocols.md"
 
-# Protocols (Phase 2)
 protocols:
-  directory: "${base.claude_home}/protocols"
-  index: "${base.claude_home}/protocols/index.yaml"
+  directory: "${CLAUDE_PROTOCOLS}"
+  index: "${CLAUDE_PROTOCOLS}/index.yaml"
+  loader: "${CLAUDE_PROTOCOLS}/loader.md"
 
-# Templates
 templates:
-  base: "${base.claude_home}/templates"
-  synrg_spec: "${base.claude_home}/templates/synrg-spec"
-  synrg_commit: "${base.claude_home}/templates/synrg-commit"
-  synrg_scaffold: "${base.claude_home}/templates/synrg-scaffold"
-  synrg_refactor: "${base.claude_home}/templates/synrg-refactor"
+  base: "${CLAUDE_TEMPLATES}"
+  synrg_spec: "${CLAUDE_TEMPLATES}/synrg-spec"
+  synrg_commit: "${CLAUDE_TEMPLATES}/synrg-commit"
+  synrg_scaffold: "${CLAUDE_TEMPLATES}/synrg-scaffold"
+  synrg_refactor: "${CLAUDE_TEMPLATES}/synrg-refactor"
 
-# Configuration
 config:
-  paths: "${base.claude_home}/config/paths.yaml"
-  dependencies: "${base.claude_home}/config/dependencies.yaml"
+  paths: "${CLAUDE_CONFIG}/paths.yaml"
+  dependencies: "${CLAUDE_CONFIG}/dependencies.yaml"
+  path_resolver: "${CLAUDE_CONFIG}/path-resolver.md"
 
-# Evolution tracking
 evolution:
-  changelog: "${base.claude_home}/evolution/changelog.md"
-  migration: "${base.claude_home}/evolution/migration"
+  changelog: "${CLAUDE_EVOLUTION}/changelog.md"
+  migration: "${CLAUDE_EVOLUTION}/migration"
 
-# MCP servers
 mcp:
-  servers: "${base.claude_home}/mcp-servers"
-  config: "${base.claude_home}/mcp.json"
+  servers: "${CLAUDE_MCP}"
+  config: "${CLAUDE_HOME}/mcp.json"
 
-# Hooks
 hooks:
-  directory: "${base.claude_home}/hooks"
-  config: "${base.claude_home}/hooks/synrg-hooks.json"
+  directory: "${CLAUDE_HOOKS}"
+  config: "${CLAUDE_HOOKS}/synrg-hooks.json"
 
-# External tools
+# =============================================================================
+# EXTERNAL TOOLS
+# =============================================================================
+
 external:
-  n8n_pattern_library: "${base.synrg_home}/n8n-pattern-library"
-  python_orchestrator: "${base.coding_root}/SYNRG AGENTS/agent-swarm-native/BMAD-METHOD/synrg_orchestrator.py"
+  n8n:
+    pattern_library: "${SYNRG_HOME}/n8n-pattern-library"
+    workflows_base: "${N8N_WORKFLOWS}/workflows/development"
+    patterns_schema: "${N8N_AGENTS}/n8n-patterns-schema.ts"
+    patterns_data: "${N8N_AGENTS}/n8n-patterns-data.ts"
 
-# Portability aliases (for command references)
-aliases:
-  CLAUDE_HOME: "${base.claude_home}"
-  SYNRG_HOME: "${base.synrg_home}"
-  CODING_ROOT: "${base.coding_root}"
+  python:
+    orchestrator: "${CODING_ROOT}/SYNRG AGENTS/agent-swarm-native/BMAD-METHOD/synrg_orchestrator.py"
+
+# =============================================================================
+# MIGRATION STATUS
+# =============================================================================
+
+migration:
+  status: "infrastructure-ready"
+  manifest: "${CLAUDE_EVOLUTION}/migration/phase3-path-variables.yaml"
+  total_paths: 87
+  files_affected: 10
+
+  # When true, commands should use variable syntax
+  variables_enabled: false
+
+  # Enable after migration is applied
+  # variables_enabled: true
