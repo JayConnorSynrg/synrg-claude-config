@@ -1,0 +1,157 @@
+# Phase 5: Version Infrastructure Migration Manifest
+# Generated: 2026-01-09
+
+version: "1.0.0"
+phase: 5
+name: "Version Infrastructure"
+status: "infrastructure-ready"
+description: "Add version headers to all commands and implement compatibility checking"
+
+# Version header standard
+header_standard:
+  format: "YAML frontmatter"
+  location: "Lines 1-15 of command file"
+  fields:
+    required:
+      - synrg_version
+      - command
+      - created
+      - updated
+    optional:
+      - min_claude_version
+      - requires
+      - breaking_changes
+
+# Current version status by command
+commands:
+  synrg:
+    has_header: false
+    current_version: "4.0.0"
+    created: "2025-01-01"
+    action: "inject_header"
+    dependencies:
+      protocols: [mcdp, sub-agent-spawn, value-first, mcp-config]
+      agents: [n8n-mcp-delegate, github-mcp-delegate]
+      skills: [mandatory-context-delegation, universal-synrg-protocols]
+
+  synrg-refactor:
+    has_header: true
+    header_format: "title_version"
+    current_version: "3.0.0"
+    created: "2025-06-01"
+    action: "standardize_header"
+    dependencies:
+      protocols: [mcdp, sub-agent-spawn]
+      agents: [n8n-mcp-delegate, github-mcp-delegate]
+      skills: [certainty-gated-atomic-change]
+
+  synrg-commit:
+    has_header: true
+    header_format: "metadata_block"
+    current_version: "1.0.0"
+    created: "2025-11-02"
+    action: "standardize_header"
+    dependencies:
+      protocols: [git-commit]
+      agents: []
+      skills: [commit-message-craft, git-strategy-decision]
+
+  synrg-spec:
+    has_header: false
+    current_version: "1.0.0"
+    created: "2025-06-01"
+    action: "inject_header"
+    dependencies:
+      protocols: [value-first, phase-gate]
+      agents: []
+      skills: [universal-synrg-protocols]
+
+  synrg-scaffold:
+    has_header: true
+    header_format: "metadata_block"
+    current_version: "2.0.0"
+    created: "2025-07-01"
+    action: "standardize_header"
+    dependencies:
+      protocols: [phase-gate]
+      agents: []
+      skills: [universal-synrg-protocols]
+
+  synrg-guided:
+    has_header: false
+    current_version: "4.3.0"
+    created: "2025-06-01"
+    action: "inject_header"
+    dependencies:
+      protocols: [sub-agent-spawn, phase-gate]
+      agents: []
+      skills: [universal-synrg-protocols]
+
+  synrg-buildworkflow:
+    has_header: false
+    current_version: "1.0.0"
+    created: "2025-09-01"
+    action: "inject_header"
+    dependencies:
+      protocols: [mcdp, mcp-config]
+      agents: [n8n-mcp-delegate, github-mcp-delegate]
+      skills: []
+
+  synrg-swarm:
+    has_header: false
+    current_version: "1.0.0"
+    created: "2025-09-01"
+    action: "inject_header"
+    dependencies:
+      protocols: [mcdp, sub-agent-spawn, mcp-config]
+      agents: [n8n-mcp-delegate, github-mcp-delegate]
+      skills: [mandatory-context-delegation]
+
+  synrg-evolve:
+    has_header: false
+    current_version: "1.0.0"
+    created: "2025-10-01"
+    action: "inject_header"
+    dependencies:
+      protocols: []
+      agents: []
+      skills: [universal-synrg-protocols]
+
+# Summary statistics
+summary:
+  total_commands: 9
+  with_headers: 3
+  without_headers: 6
+  actions:
+    inject_header: 6
+    standardize_header: 3
+
+# Infrastructure files created
+infrastructure:
+  - config/versions.yaml
+  - config/version-checker.md
+  - evolution/migration/inject-version-headers.sh
+  - evolution/migration/phase5-version-infrastructure.yaml
+
+# Migration instructions
+migration:
+  approach: "header-injection"
+  backup_required: true
+  validation_required: true
+
+  steps:
+    - "1. Create backup of all command files"
+    - "2. Run: DRY_RUN=false ~/.claude/evolution/migration/inject-version-headers.sh"
+    - "3. Validate headers are correctly formatted"
+    - "4. Update config/versions.yaml to reflect headers_injected: true"
+    - "5. Test command execution"
+    - "6. Commit changes"
+
+# Validation checklist
+validation:
+  - "All commands have synrg_version field"
+  - "All commands have command field matching filename"
+  - "All commands have created date"
+  - "All commands have updated date"
+  - "Dependencies accurately reflect imports"
+  - "versions.yaml matches actual file versions"

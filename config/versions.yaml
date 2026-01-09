@@ -1,0 +1,329 @@
+# SYNRG Version Registry
+# Central version tracking for all commands and components
+# Version: 1.0.0
+
+registry_version: "1.0.0"
+last_updated: "2026-01-09"
+schema_version: "1.0.0"
+
+# =============================================================================
+# VERSION HEADER STANDARD
+# =============================================================================
+
+header_standard:
+  format: |
+    ---
+    synrg_version: "{major}.{minor}.{patch}"
+    command: "{command_name}"
+    created: "{YYYY-MM-DD}"
+    updated: "{YYYY-MM-DD}"
+    min_claude_version: "opus-4"
+    requires:
+      protocols: []
+      agents: []
+      skills: []
+    breaking_changes: []
+    ---
+
+  example: |
+    ---
+    synrg_version: "4.0.0"
+    command: "synrg"
+    created: "2025-01-01"
+    updated: "2026-01-09"
+    min_claude_version: "opus-4"
+    requires:
+      protocols:
+        - mcdp@1.0.0
+        - sub-agent-spawn@1.0.0
+      agents:
+        - n8n-mcp-delegate
+        - github-mcp-delegate
+      skills:
+        - mandatory-context-delegation
+    breaking_changes:
+      - version: "4.0.0"
+        description: "Added MCDP mandatory delegation"
+    ---
+
+# =============================================================================
+# COMMAND VERSIONS
+# =============================================================================
+
+commands:
+  synrg:
+    current_version: "4.0.0"
+    version_history:
+      - version: "4.0.0"
+        date: "2026-01-09"
+        status: "current"
+        description: "Added MCDP, value-first analysis, 5-layer validation"
+      - version: "3.0.0"
+        date: "2025-06-01"
+        status: "deprecated"
+        description: "Initial SYNRG orchestration"
+    min_compatible: "3.0.0"
+    has_version_header: false
+    header_location: "Line 1-15"
+    dependencies:
+      protocols: [mcdp, sub-agent-spawn, value-first, mcp-config]
+      agents: [n8n-mcp-delegate, github-mcp-delegate]
+      skills: [mandatory-context-delegation, universal-synrg-protocols]
+
+  synrg-refactor:
+    current_version: "3.0.0"
+    version_history:
+      - version: "3.0.0"
+        date: "2026-01-09"
+        status: "current"
+        description: "Intelligent file restructuring with parallel agents"
+    min_compatible: "3.0.0"
+    has_version_header: true
+    header_location: "Line 6 (title)"
+    dependencies:
+      protocols: [mcdp, sub-agent-spawn]
+      agents: [n8n-mcp-delegate, github-mcp-delegate]
+      skills: [certainty-gated-atomic-change]
+
+  synrg-commit:
+    current_version: "1.0.0"
+    version_history:
+      - version: "1.0.0"
+        date: "2025-11-02"
+        status: "current"
+        description: "Git commit orchestration with atomic commits"
+    min_compatible: "1.0.0"
+    has_version_header: true
+    header_location: "Line 4-5"
+    dependencies:
+      protocols: [git-commit]
+      agents: []
+      skills: [commit-message-craft, git-strategy-decision]
+
+  synrg-spec:
+    current_version: "1.0.0"
+    version_history:
+      - version: "1.0.0"
+        date: "2026-01-09"
+        status: "current"
+        description: "Spec-driven development with 7-phase pipeline"
+    min_compatible: "1.0.0"
+    has_version_header: false
+    header_location: "Line 1-15"
+    dependencies:
+      protocols: [value-first, phase-gate]
+      agents: []
+      skills: [universal-synrg-protocols]
+
+  synrg-scaffold:
+    current_version: "2.0.0"
+    version_history:
+      - version: "2.0.0"
+        date: "2026-01-09"
+        status: "current"
+        description: "Guided project directory builder"
+    min_compatible: "2.0.0"
+    has_version_header: true
+    header_location: "Line 3"
+    dependencies:
+      protocols: [phase-gate]
+      agents: []
+      skills: [universal-synrg-protocols]
+
+  synrg-guided:
+    current_version: "4.3.0"
+    version_history:
+      - version: "4.3.0"
+        date: "2026-01-09"
+        status: "current"
+        description: "Interactive planning with adaptive parallelization"
+    min_compatible: "4.0.0"
+    has_version_header: false
+    header_location: "Line 1-15"
+    dependencies:
+      protocols: [sub-agent-spawn, phase-gate]
+      agents: []
+      skills: [universal-synrg-protocols]
+
+  synrg-buildworkflow:
+    current_version: "1.0.0"
+    version_history:
+      - version: "1.0.0"
+        date: "2026-01-09"
+        status: "current"
+        description: "N8N workflow builder with 10 specialist agents"
+    min_compatible: "1.0.0"
+    has_version_header: false
+    header_location: "Line 1-15"
+    dependencies:
+      protocols: [mcdp, mcp-config]
+      agents: [n8n-mcp-delegate, github-mcp-delegate]
+      skills: []
+
+  synrg-swarm:
+    current_version: "1.0.0"
+    version_history:
+      - version: "1.0.0"
+        date: "2026-01-09"
+        status: "current"
+        description: "Sub-agent development and optimization"
+    min_compatible: "1.0.0"
+    has_version_header: false
+    header_location: "Line 1-15"
+    dependencies:
+      protocols: [mcdp, sub-agent-spawn, mcp-config]
+      agents: [n8n-mcp-delegate, github-mcp-delegate]
+      skills: [mandatory-context-delegation]
+
+  synrg-evolve:
+    current_version: "1.0.0"
+    version_history:
+      - version: "1.0.0"
+        date: "2026-01-09"
+        status: "current"
+        description: "Self-evolution pattern integration"
+    min_compatible: "1.0.0"
+    has_version_header: false
+    header_location: "Line 1-15"
+    dependencies:
+      protocols: []
+      agents: []
+      skills: [universal-synrg-protocols]
+
+# =============================================================================
+# PROTOCOL VERSIONS
+# =============================================================================
+
+protocols:
+  mcdp:
+    current_version: "1.0.0"
+    file: "protocols/mcdp.yaml"
+    min_compatible: "1.0.0"
+
+  sub-agent-spawn:
+    current_version: "1.0.0"
+    file: "protocols/sub-agent-spawn.yaml"
+    min_compatible: "1.0.0"
+
+  value-first:
+    current_version: "1.0.0"
+    file: "protocols/value-first.yaml"
+    min_compatible: "1.0.0"
+
+  git-commit:
+    current_version: "1.0.0"
+    file: "protocols/git-commit.yaml"
+    min_compatible: "1.0.0"
+
+  phase-gate:
+    current_version: "1.0.0"
+    file: "protocols/phase-gate.yaml"
+    min_compatible: "1.0.0"
+
+  mcp-config:
+    current_version: "1.0.0"
+    file: "protocols/mcp-config.yaml"
+    min_compatible: "1.0.0"
+
+# =============================================================================
+# SKILL VERSIONS
+# =============================================================================
+
+skills:
+  mandatory-context-delegation:
+    current_version: "1.0.0"
+    file: "skills/mandatory-context-delegation.md"
+    min_compatible: "1.0.0"
+
+  universal-synrg-protocols:
+    current_version: "1.0.0"
+    file: "skills/universal-synrg-protocols.md"
+    min_compatible: "1.0.0"
+
+  certainty-gated-atomic-change:
+    current_version: "1.0.0"
+    file: "skills/certainty-gated-atomic-change.md"
+    min_compatible: "1.0.0"
+
+  commit-message-craft:
+    current_version: "1.0.0"
+    file: "skills/commit-message-craft.md"
+    min_compatible: "1.0.0"
+
+  git-strategy-decision:
+    current_version: "1.0.0"
+    file: "skills/git-strategy-decision.md"
+    min_compatible: "1.0.0"
+
+# =============================================================================
+# AGENT VERSIONS
+# =============================================================================
+
+agents:
+  n8n-mcp-delegate:
+    current_version: "1.0.0"
+    file: "agents/n8n-mcp-delegate.md"
+    min_compatible: "1.0.0"
+
+  github-mcp-delegate:
+    current_version: "1.0.0"
+    file: "agents/github-mcp-delegate.md"
+    min_compatible: "1.0.0"
+
+# =============================================================================
+# COMPATIBILITY MATRIX
+# =============================================================================
+
+compatibility:
+  # Command → Minimum protocol versions required
+  command_protocol_requirements:
+    synrg:
+      mcdp: ">=1.0.0"
+      sub-agent-spawn: ">=1.0.0"
+      value-first: ">=1.0.0"
+      mcp-config: ">=1.0.0"
+
+    synrg-refactor:
+      mcdp: ">=1.0.0"
+      sub-agent-spawn: ">=1.0.0"
+
+    synrg-commit:
+      git-commit: ">=1.0.0"
+
+    synrg-spec:
+      value-first: ">=1.0.0"
+      phase-gate: ">=1.0.0"
+
+    synrg-scaffold:
+      phase-gate: ">=1.0.0"
+
+    synrg-guided:
+      sub-agent-spawn: ">=1.0.0"
+      phase-gate: ">=1.0.0"
+
+    synrg-buildworkflow:
+      mcdp: ">=1.0.0"
+      mcp-config: ">=1.0.0"
+
+    synrg-swarm:
+      mcdp: ">=1.0.0"
+      sub-agent-spawn: ">=1.0.0"
+      mcp-config: ">=1.0.0"
+
+    synrg-evolve: {}
+
+# =============================================================================
+# DEPRECATION NOTICES
+# =============================================================================
+
+deprecations: []
+
+# =============================================================================
+# MIGRATION STATUS
+# =============================================================================
+
+migration:
+  status: "infrastructure-ready"
+  headers_injected: false
+  commands_with_headers: 3
+  commands_without_headers: 6

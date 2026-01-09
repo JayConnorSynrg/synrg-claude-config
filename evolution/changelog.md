@@ -7,15 +7,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned - Phase 5: Version Infrastructure
-- Add version headers to all commands
-- Implement compatibility checking
-- Create migration scripts
-
 ### Planned - Phase 6: Sub-Agent Chaining
 - Create command registry API
 - Implement inter-command communication
 - Add dependency resolution
+
+---
+
+## [1.4.0] - 2026-01-09
+
+### Added - Phase 5: Version Infrastructure
+
+Created versioning system for all SYNRG commands with compatibility checking:
+
+**Version Header Standard:**
+```yaml
+---
+synrg_version: "4.0.0"
+command: "synrg"
+created: "2025-01-01"
+updated: "2026-01-09"
+min_claude_version: "opus-4"
+requires:
+  protocols: [mcdp, sub-agent-spawn]
+  agents: [n8n-mcp-delegate]
+  skills: [mandatory-context-delegation]
+breaking_changes: []
+---
+```
+
+**Current Version Status:**
+| Command | Version | Has Header |
+|---------|---------|------------|
+| synrg | 4.0.0 | No (pending) |
+| synrg-refactor | 3.0.0 | Yes |
+| synrg-commit | 1.0.0 | Yes |
+| synrg-spec | 1.0.0 | No (pending) |
+| synrg-scaffold | 2.0.0 | Yes |
+| synrg-guided | 4.3.0 | No (pending) |
+| synrg-buildworkflow | 1.0.0 | No (pending) |
+| synrg-swarm | 1.0.0 | No (pending) |
+| synrg-evolve | 1.0.0 | No (pending) |
+
+**Infrastructure Files Created:**
+- `config/versions.yaml` - Central version registry
+- `config/version-checker.md` - Compatibility checking documentation
+- `evolution/migration/inject-version-headers.sh` - Header injection script
+- `evolution/migration/phase5-version-infrastructure.yaml` - Migration manifest
+
+**Compatibility Features:**
+- Semantic versioning (MAJOR.MINOR.PATCH)
+- Protocol version requirements
+- Agent/skill dependency tracking
+- Breaking change documentation
+- Deprecation notice support
+
+### Notes
+- Version headers NOT yet injected into commands
+- Run `DRY_RUN=false ~/.claude/evolution/migration/inject-version-headers.sh` to apply
+- Original commands remain unchanged (backward compatible)
+- Phase 6 will add sub-agent chaining
 
 ---
 
