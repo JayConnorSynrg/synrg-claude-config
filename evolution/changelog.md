@@ -7,10 +7,71 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned - Phase 6: Sub-Agent Chaining
-- Create command registry API
-- Implement inter-command communication
-- Add dependency resolution
+(No planned phases remaining - modularity refactoring complete)
+
+---
+
+## [1.5.0] - 2026-01-09
+
+### Added - Phase 6: Sub-Agent Chaining Infrastructure
+
+Created command chaining system enabling multi-step workflows:
+
+**Command Registry:**
+- 9 commands registered with capabilities, inputs, outputs
+- 8 categories: orchestrator, git, refactoring, specification, scaffolding, n8n, development, evolution
+- Chaining rules: `can_chain_to`, `can_chain_from` for each command
+
+**Chaining Capabilities:**
+| Source Command | Can Chain To |
+|----------------|--------------|
+| synrg | synrg-commit, synrg-spec, synrg-refactor, synrg-scaffold |
+| synrg-guided | synrg-commit, synrg-refactor |
+| synrg-refactor | synrg-commit |
+| synrg-spec | synrg-scaffold, synrg-commit |
+| synrg-scaffold | synrg-commit |
+| synrg-swarm | synrg-commit |
+| synrg-commit | (terminal - receives chains) |
+
+**Built-in Chain Patterns:**
+- `refactor-commit` - Refactor code, then commit changes
+- `spec-to-implementation` - Full workflow: spec → scaffold → implement → commit
+- `agent-development` - Develop, test, and commit new agent
+
+**Infrastructure Files Created:**
+- `config/command-registry.yaml` - Central command registry
+- `config/chaining-protocol.md` - Inter-command communication docs
+- `config/dependency-resolver.yaml` - Dependency resolution config
+- `templates/chain-patterns/*.yaml` - Chain pattern definitions
+- `chain-state/` directories - Chain execution state tracking
+
+**Features:**
+- Context passing between chained commands
+- Conditional chaining (chain only if condition met)
+- Dependency resolution with topological sort
+- Chain validation before execution
+- Error handling strategies (halt, continue, rollback)
+
+### Modularity Refactoring Complete
+
+All 6 phases of the modularity refactoring are now complete:
+
+| Phase | Version | Description | Status |
+|-------|---------|-------------|--------|
+| 1 | 1.0.0 | Directory Structure | ✅ Complete |
+| 2 | 1.1.0 | Protocol Extraction | ✅ Complete |
+| 3 | 1.2.0 | Path Variables | ✅ Complete |
+| 4 | 1.3.0 | Extension Points | ✅ Complete |
+| 5 | 1.4.0 | Version Infrastructure | ✅ Complete |
+| 6 | 1.5.0 | Sub-Agent Chaining | ✅ Complete |
+
+**Total Infrastructure Created:**
+- 6 extracted protocols (2,331 lines)
+- 87 extension points identified
+- 87 path variables mapped
+- 9 commands versioned
+- 9 commands in registry
+- 3 chain patterns defined
 
 ---
 

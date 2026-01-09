@@ -1,0 +1,95 @@
+# Chain Pattern: Refactor and Commit
+# Description: Refactor code and automatically commit changes
+# Version: 1.0.0
+
+pattern_id: "refactor-commit"
+name: "Refactor and Commit"
+description: "Refactor code with quality elevation, then commit changes atomically"
+version: "1.0.0"
+
+# Chain definition
+chain:
+  - command: synrg-refactor
+    alias: "refactor"
+    required: true
+
+  - command: synrg-commit
+    alias: "commit"
+    required: false
+    condition: "refactor.changes.length > 0"
+
+# Input schema
+input:
+  target:
+    type: string
+    required: true
+    description: "File or directory to refactor"
+
+  objective:
+    type: string
+    required: false
+    description: "Refactoring objective"
+
+  risk_tolerance:
+    type: enum
+    values: [conservative, balanced, aggressive]
+    default: balanced
+    description: "Risk tolerance for changes"
+
+  auto_commit:
+    type: boolean
+    default: true
+    description: "Automatically commit after refactoring"
+
+# Output schema
+output:
+  refactor_result:
+    type: object
+    from: refactor
+
+  commit_result:
+    type: object
+    from: commit
+    optional: true
+
+# Context passing
+context_mapping:
+  # Pass refactor changes to commit
+  refactor_to_commit:
+    source: "refactor.output.changes"
+    target: "commit.input.changes"
+
+  # Pass quality report for commit message
+  quality_to_message:
+    source: "refactor.output.quality_report.summary"
+    target: "commit.input.message_hint"
+
+# Error handling
+error_handling:
+  refactor_failure:
+    action: halt
+    message: "Refactoring failed, no changes committed"
+
+  commit_failure:
+    action: warn
+    message: "Changes made but commit failed - manual commit required"
+
+# Usage example
+example:
+  invocation: |
+    /chain refactor-commit --target=src/auth/ --objective="Improve error handling"
+
+  expected_flow: |
+    1. synrg-refactor analyzes src/auth/
+    2. Applies certainty-gated changes
+    3. If changes made, synrg-commit creates atomic commits
+    4. Returns combined result
+
+# Validation
+validation:
+  pre_chain:
+    - "target exists"
+    - "git repository initialized"
+
+  post_chain:
+    - "all changes committed or documented"

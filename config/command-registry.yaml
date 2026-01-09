@@ -1,0 +1,378 @@
+# SYNRG Command Registry
+# Central registry for command discovery and chaining
+# Version: 1.0.0
+
+registry_version: "1.0.0"
+last_updated: "2026-01-09"
+
+# =============================================================================
+# COMMAND REGISTRY
+# =============================================================================
+
+commands:
+  # Primary orchestrator
+  synrg:
+    id: "synrg"
+    name: "SYNRG Director-Orchestrator"
+    version: "4.0.0"
+    path: "${CLAUDE_COMMANDS}/synrg.md"
+    description: "Multi-agent planning and execution orchestrator"
+    category: "orchestrator"
+    invocation: "/synrg [objective]"
+
+    capabilities:
+      - value-first-analysis
+      - parallel-agent-spawning
+      - mcp-delegation
+      - 5-layer-validation
+      - self-evolution
+
+    accepts_input:
+      - objective: "string"
+      - context: "object (optional)"
+
+    returns:
+      - execution_result: "object"
+      - validation_report: "object"
+      - evolution_log: "array"
+
+    can_chain_to:
+      - synrg-commit
+      - synrg-spec
+      - synrg-refactor
+      - synrg-scaffold
+
+  # Guided orchestrator
+  synrg-guided:
+    id: "synrg-guided"
+    name: "SYNRG Guided Orchestrator"
+    version: "4.3.0"
+    path: "${CLAUDE_COMMANDS}/synrg-guided.md"
+    description: "Interactive planning with autonomous execution"
+    category: "orchestrator"
+    invocation: "/synrg-guided [objective]"
+
+    capabilities:
+      - interactive-planning
+      - adaptive-parallelization
+      - user-confirmation-gates
+
+    accepts_input:
+      - objective: "string"
+      - planning_mode: "enum (interactive, autonomous)"
+
+    returns:
+      - plan: "object"
+      - execution_result: "object"
+
+    can_chain_to:
+      - synrg-commit
+      - synrg-refactor
+
+  # Git commit orchestrator
+  synrg-commit:
+    id: "synrg-commit"
+    name: "SYNRG Commit Orchestrator"
+    version: "1.0.0"
+    path: "${CLAUDE_COMMANDS}/synrg-commit.md"
+    description: "Git workflow automation with atomic commits"
+    category: "git"
+    invocation: "/synrg-commit"
+
+    capabilities:
+      - atomic-commit-decomposition
+      - commit-message-generation
+      - pre-commit-validation
+      - multi-commit-orchestration
+
+    accepts_input:
+      - changes: "array (optional)"
+      - message_hint: "string (optional)"
+
+    returns:
+      - commits: "array"
+      - push_status: "boolean"
+
+    can_chain_to: []
+    can_chain_from:
+      - synrg
+      - synrg-guided
+      - synrg-refactor
+      - synrg-spec
+      - synrg-scaffold
+
+  # File restructuring
+  synrg-refactor:
+    id: "synrg-refactor"
+    name: "SYNRG File Restructuring Agent"
+    version: "3.0.0"
+    path: "${CLAUDE_COMMANDS}/synrg-refactor.md"
+    description: "Intelligent code quality elevation"
+    category: "refactoring"
+    invocation: "/synrg-refactor [objective]"
+
+    capabilities:
+      - parallel-analysis
+      - certainty-gated-changes
+      - quality-elevation
+      - risk-stratification
+
+    accepts_input:
+      - target: "string (file or directory)"
+      - objective: "string"
+      - risk_tolerance: "enum (conservative, balanced, aggressive)"
+
+    returns:
+      - changes: "array"
+      - quality_report: "object"
+      - risk_assessment: "object"
+
+    can_chain_to:
+      - synrg-commit
+
+    can_chain_from:
+      - synrg
+      - synrg-guided
+
+  # Spec-driven development
+  synrg-spec:
+    id: "synrg-spec"
+    name: "SYNRG Spec-Driven Development"
+    version: "1.0.0"
+    path: "${CLAUDE_COMMANDS}/synrg-spec.md"
+    description: "Progressive refinement from constitution to implementation"
+    category: "specification"
+    invocation: "/synrg-spec [objective]"
+
+    capabilities:
+      - 7-phase-pipeline
+      - constitution-generation
+      - spec-clarification
+      - test-driven-planning
+
+    accepts_input:
+      - objective: "string"
+      - phase: "enum (optional)"
+
+    returns:
+      - specification: "object"
+      - implementation_plan: "object"
+      - test_plan: "object"
+
+    can_chain_to:
+      - synrg-scaffold
+      - synrg-commit
+
+    can_chain_from:
+      - synrg
+
+  # Project scaffolding
+  synrg-scaffold:
+    id: "synrg-scaffold"
+    name: "SYNRG Project Scaffold Builder"
+    version: "2.0.0"
+    path: "${CLAUDE_COMMANDS}/synrg-scaffold.md"
+    description: "Guided evolving project directory builder"
+    category: "scaffolding"
+    invocation: "/synrg-scaffold [project_type]"
+
+    capabilities:
+      - project-type-detection
+      - directory-structure-generation
+      - strategic-analysis
+      - iterative-refinement
+
+    accepts_input:
+      - project_type: "string"
+      - requirements: "object (optional)"
+
+    returns:
+      - directory_structure: "object"
+      - configuration_files: "array"
+
+    can_chain_to:
+      - synrg-commit
+
+    can_chain_from:
+      - synrg-spec
+
+  # N8N workflow builder
+  synrg-buildworkflow:
+    id: "synrg-buildworkflow"
+    name: "SYNRG N8N Workflow Builder"
+    version: "1.0.0"
+    path: "${CLAUDE_COMMANDS}/synrg-buildworkflow.md"
+    description: "N8N workflow builder with 10 specialist agents"
+    category: "n8n"
+    invocation: "/synrg-buildworkflow [workflow_description]"
+
+    capabilities:
+      - workflow-architecture
+      - credential-management
+      - node-validation
+      - error-handling
+
+    accepts_input:
+      - description: "string"
+      - template_id: "number (optional)"
+
+    returns:
+      - workflow: "object"
+      - validation_report: "object"
+
+    can_chain_to: []
+    can_chain_from:
+      - synrg
+
+  # Sub-agent development
+  synrg-swarm:
+    id: "synrg-swarm"
+    name: "SYNRG Sub-Agent Developer"
+    version: "1.0.0"
+    path: "${CLAUDE_COMMANDS}/synrg-swarm.md"
+    description: "Sub-agent development and optimization"
+    category: "development"
+    invocation: "/synrg-swarm [agent_spec]"
+
+    capabilities:
+      - agent-specification
+      - agent-implementation
+      - agent-testing
+      - agent-optimization
+
+    accepts_input:
+      - agent_type: "string"
+      - specification: "object"
+
+    returns:
+      - agent_definition: "object"
+      - test_results: "object"
+
+    can_chain_to:
+      - synrg-commit
+
+    can_chain_from:
+      - synrg
+
+  # Self-evolution
+  synrg-evolve:
+    id: "synrg-evolve"
+    name: "SYNRG Self-Evolution"
+    version: "1.0.0"
+    path: "${CLAUDE_COMMANDS}/synrg-evolve.md"
+    description: "Self-evolution pattern integration"
+    category: "evolution"
+    invocation: "/synrg-evolve [mode]"
+
+    capabilities:
+      - pattern-integration
+      - error-analysis
+      - command-optimization
+
+    accepts_input:
+      - mode: "enum (integrate_staged, analyze_and_evolve, review_and_optimize)"
+      - target_command: "string (optional)"
+
+    returns:
+      - evolution_report: "object"
+      - changes_applied: "array"
+
+    can_chain_to: []
+    can_chain_from:
+      - synrg
+
+# =============================================================================
+# COMMAND CATEGORIES
+# =============================================================================
+
+categories:
+  orchestrator:
+    description: "High-level task coordination"
+    commands: [synrg, synrg-guided]
+
+  git:
+    description: "Git workflow automation"
+    commands: [synrg-commit]
+
+  refactoring:
+    description: "Code quality and restructuring"
+    commands: [synrg-refactor]
+
+  specification:
+    description: "Spec-driven development"
+    commands: [synrg-spec]
+
+  scaffolding:
+    description: "Project structure generation"
+    commands: [synrg-scaffold]
+
+  n8n:
+    description: "N8N workflow automation"
+    commands: [synrg-buildworkflow]
+
+  development:
+    description: "Agent and tool development"
+    commands: [synrg-swarm]
+
+  evolution:
+    description: "Self-improvement and learning"
+    commands: [synrg-evolve]
+
+# =============================================================================
+# CHAINING RULES
+# =============================================================================
+
+chaining:
+  # Maximum chain depth to prevent infinite loops
+  max_depth: 5
+
+  # Default timeout per command in chain (ms)
+  default_timeout: 300000
+
+  # How to handle chain failures
+  failure_strategy: "halt"  # halt | continue | rollback
+
+  # Common chain patterns
+  patterns:
+    # Full development workflow
+    full-development:
+      description: "Complete development from spec to commit"
+      chain: [synrg-spec, synrg-scaffold, synrg, synrg-commit]
+
+    # Refactor and commit
+    refactor-commit:
+      description: "Refactor code and commit changes"
+      chain: [synrg-refactor, synrg-commit]
+
+    # Spec to scaffold
+    spec-scaffold:
+      description: "Generate spec then scaffold project"
+      chain: [synrg-spec, synrg-scaffold]
+
+    # Agent development
+    agent-development:
+      description: "Develop and commit new agent"
+      chain: [synrg-swarm, synrg-commit]
+
+# =============================================================================
+# DISCOVERY API
+# =============================================================================
+
+api:
+  # List all commands
+  list: "registry.list(category?: string)"
+
+  # Get command details
+  get: "registry.get(command_id: string)"
+
+  # Check if command exists
+  exists: "registry.exists(command_id: string)"
+
+  # Get chain for pattern
+  get_chain: "registry.getChain(pattern_name: string)"
+
+  # Validate chain
+  validate_chain: "registry.validateChain(chain: string[])"
+
+  # Resolve dependencies
+  resolve: "registry.resolve(command_id: string)"

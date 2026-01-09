@@ -1,0 +1,142 @@
+# Chain Pattern: Agent Development
+# Description: Develop, test, and commit a new sub-agent
+# Version: 1.0.0
+
+pattern_id: "agent-development"
+name: "Agent Development"
+description: "Create a new specialized sub-agent with full lifecycle"
+version: "1.0.0"
+
+# Chain definition
+chain:
+  - command: synrg-swarm
+    alias: "develop"
+    required: true
+    description: "Develop the new agent"
+
+  - command: synrg-commit
+    alias: "commit"
+    required: false
+    condition: "develop.output.agent_created"
+    description: "Commit the new agent"
+
+  - command: synrg-evolve
+    alias: "register"
+    required: false
+    condition: "commit.output.success"
+    description: "Register agent in evolution log"
+
+# Input schema
+input:
+  agent_type:
+    type: string
+    required: true
+    description: "Type/domain of agent (e.g., n8n, github, security)"
+
+  agent_name:
+    type: string
+    required: true
+    description: "Name for the new agent"
+
+  specification:
+    type: object
+    required: false
+    description: "Detailed agent specification"
+    properties:
+      purpose:
+        type: string
+      capabilities:
+        type: array
+      tools:
+        type: array
+      model:
+        type: enum
+        values: [haiku, sonnet, opus]
+
+  auto_commit:
+    type: boolean
+    default: true
+
+  auto_register:
+    type: boolean
+    default: true
+
+# Output schema
+output:
+  agent_definition:
+    type: object
+    from: develop
+    properties:
+      file_path: string
+      agent_id: string
+      capabilities: array
+
+  test_results:
+    type: object
+    from: develop
+
+  commit_info:
+    type: object
+    from: commit
+    optional: true
+
+  registration:
+    type: object
+    from: register
+    optional: true
+
+# Context passing
+context_mapping:
+  develop_to_commit:
+    source: "develop.output.agent_file"
+    target: "commit.input.files"
+
+  develop_to_message:
+    source: "develop.output.agent_id"
+    target: "commit.input.message_hint"
+    transform: "Add new agent: ${value}"
+
+  commit_to_register:
+    source: "develop.output.agent_definition"
+    target: "register.input.new_agent"
+
+# Error handling
+error_handling:
+  develop_failure:
+    action: halt
+    message: "Agent development failed"
+
+  commit_failure:
+    action: warn
+    message: "Agent created but commit failed - manual commit required"
+
+  register_failure:
+    action: warn
+    message: "Agent committed but registration failed - manual update needed"
+
+# Usage example
+example:
+  invocation: |
+    /chain agent-development \
+      --agent_type=security \
+      --agent_name=security-scanner \
+      --specification.purpose="Scan code for OWASP vulnerabilities"
+
+  expected_flow: |
+    1. synrg-swarm creates agent specification
+    2. synrg-swarm implements agent
+    3. synrg-swarm tests agent
+    4. synrg-commit commits agent file
+    5. synrg-evolve registers in agent library
+    6. Returns complete development report
+
+# Validation
+validation:
+  pre_chain:
+    - "agent name is unique"
+    - "agent type is valid"
+
+  post_chain:
+    - "agent file exists"
+    - "agent passes tests"
+    - "agent registered in library"

@@ -1,0 +1,138 @@
+# Chain Pattern: Spec to Implementation
+# Description: Full development workflow from specification to committed code
+# Version: 1.0.0
+
+pattern_id: "spec-to-implementation"
+name: "Spec to Implementation"
+description: "Complete development workflow: spec → scaffold → implement → commit"
+version: "1.0.0"
+
+# Chain definition
+chain:
+  - command: synrg-spec
+    alias: "spec"
+    required: true
+    description: "Generate specification from objective"
+
+  - command: synrg-scaffold
+    alias: "scaffold"
+    required: false
+    condition: "spec.output.requires_new_structure"
+    description: "Create project structure if needed"
+
+  - command: synrg
+    alias: "implement"
+    required: true
+    description: "Implement according to specification"
+
+  - command: synrg-commit
+    alias: "commit"
+    required: false
+    condition: "implement.output.changes.length > 0"
+    description: "Commit all changes"
+
+# Input schema
+input:
+  objective:
+    type: string
+    required: true
+    description: "What to build"
+
+  project_type:
+    type: string
+    required: false
+    description: "Type of project (for scaffolding)"
+
+  skip_scaffold:
+    type: boolean
+    default: false
+    description: "Skip scaffolding step"
+
+  auto_commit:
+    type: boolean
+    default: true
+    description: "Automatically commit when done"
+
+# Output schema
+output:
+  specification:
+    type: object
+    from: spec
+
+  structure:
+    type: object
+    from: scaffold
+    optional: true
+
+  implementation:
+    type: object
+    from: implement
+
+  commits:
+    type: array
+    from: commit
+    optional: true
+
+# Context passing
+context_mapping:
+  spec_to_scaffold:
+    source: "spec.output.directory_requirements"
+    target: "scaffold.input.requirements"
+
+  spec_to_implement:
+    source: "spec.output.specification"
+    target: "implement.input.context.specification"
+
+  scaffold_to_implement:
+    source: "scaffold.output.directory_structure"
+    target: "implement.input.context.structure"
+
+  implement_to_commit:
+    source: "implement.output.changes"
+    target: "commit.input.changes"
+
+# Error handling
+error_handling:
+  spec_failure:
+    action: halt
+    message: "Specification generation failed"
+
+  scaffold_failure:
+    action: continue
+    message: "Scaffolding failed, proceeding with existing structure"
+
+  implement_failure:
+    action: halt
+    message: "Implementation failed"
+
+  commit_failure:
+    action: warn
+    message: "Implementation complete but commit failed"
+
+# Usage example
+example:
+  invocation: |
+    /chain spec-to-implementation --objective="Build user authentication with JWT"
+
+  expected_flow: |
+    1. synrg-spec creates detailed specification
+    2. synrg-scaffold creates directory structure (if needed)
+    3. synrg implements the specification
+    4. synrg-commit creates atomic commits
+    5. Returns complete development summary
+
+# Validation
+validation:
+  pre_chain:
+    - "objective is clear and actionable"
+
+  post_chain:
+    - "all spec requirements implemented"
+    - "tests pass"
+    - "changes committed"
+
+# Estimated duration
+estimated_duration:
+  min_minutes: 10
+  max_minutes: 60
+  depends_on: "objective complexity"

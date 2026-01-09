@@ -1,0 +1,302 @@
+# SYNRG Dependency Resolver Configuration
+# Resolves dependencies between commands, protocols, agents, and skills
+# Version: 1.0.0
+
+resolver_version: "1.0.0"
+last_updated: "2026-01-09"
+
+# =============================================================================
+# RESOLUTION STRATEGY
+# =============================================================================
+
+strategy:
+  # Order of resolution
+  resolution_order:
+    - protocols      # Load protocol rules first
+    - skills         # Then skills
+    - agents         # Then agent definitions
+    - commands       # Finally commands
+
+  # Version conflict resolution
+  version_conflicts:
+    strategy: "highest-compatible"  # highest-compatible | exact | error
+    fallback: "error"
+
+  # Missing dependency handling
+  missing_deps:
+    protocols: "error"      # Required
+    skills: "warn"          # Soft requirement
+    agents: "warn"          # Soft requirement
+    commands: "error"       # Required
+
+  # Circular dependency handling
+  circular_deps: "error"    # error | break-at-root
+
+# =============================================================================
+# DEPENDENCY GRAPH
+# =============================================================================
+
+# Command dependencies (what each command needs to run)
+command_dependencies:
+  synrg:
+    protocols:
+      - id: mcdp
+        version: ">=1.0.0"
+        required: true
+      - id: sub-agent-spawn
+        version: ">=1.0.0"
+        required: true
+      - id: value-first
+        version: ">=1.0.0"
+        required: true
+      - id: mcp-config
+        version: ">=1.0.0"
+        required: true
+    agents:
+      - id: n8n-mcp-delegate
+        required: true
+      - id: github-mcp-delegate
+        required: true
+    skills:
+      - id: mandatory-context-delegation
+        required: true
+      - id: universal-synrg-protocols
+        required: true
+
+  synrg-guided:
+    protocols:
+      - id: sub-agent-spawn
+        version: ">=1.0.0"
+        required: true
+      - id: phase-gate
+        version: ">=1.0.0"
+        required: true
+    skills:
+      - id: universal-synrg-protocols
+        required: true
+
+  synrg-commit:
+    protocols:
+      - id: git-commit
+        version: ">=1.0.0"
+        required: true
+    skills:
+      - id: commit-message-craft
+        required: true
+      - id: git-strategy-decision
+        required: true
+
+  synrg-refactor:
+    protocols:
+      - id: mcdp
+        version: ">=1.0.0"
+        required: true
+      - id: sub-agent-spawn
+        version: ">=1.0.0"
+        required: true
+    agents:
+      - id: n8n-mcp-delegate
+        required: false
+      - id: github-mcp-delegate
+        required: false
+    skills:
+      - id: certainty-gated-atomic-change
+        required: true
+
+  synrg-spec:
+    protocols:
+      - id: value-first
+        version: ">=1.0.0"
+        required: true
+      - id: phase-gate
+        version: ">=1.0.0"
+        required: true
+    skills:
+      - id: universal-synrg-protocols
+        required: true
+
+  synrg-scaffold:
+    protocols:
+      - id: phase-gate
+        version: ">=1.0.0"
+        required: true
+    skills:
+      - id: universal-synrg-protocols
+        required: true
+
+  synrg-buildworkflow:
+    protocols:
+      - id: mcdp
+        version: ">=1.0.0"
+        required: true
+      - id: mcp-config
+        version: ">=1.0.0"
+        required: true
+    agents:
+      - id: n8n-mcp-delegate
+        required: true
+      - id: github-mcp-delegate
+        required: false
+
+  synrg-swarm:
+    protocols:
+      - id: mcdp
+        version: ">=1.0.0"
+        required: true
+      - id: sub-agent-spawn
+        version: ">=1.0.0"
+        required: true
+      - id: mcp-config
+        version: ">=1.0.0"
+        required: true
+    agents:
+      - id: n8n-mcp-delegate
+        required: true
+      - id: github-mcp-delegate
+        required: true
+    skills:
+      - id: mandatory-context-delegation
+        required: true
+
+  synrg-evolve:
+    protocols: []
+    agents: []
+    skills:
+      - id: universal-synrg-protocols
+        required: true
+
+# =============================================================================
+# PROTOCOL DEPENDENCIES
+# =============================================================================
+
+protocol_dependencies:
+  mcdp:
+    depends_on: []
+    provides:
+      - context-delegation
+      - mcp-routing
+
+  sub-agent-spawn:
+    depends_on: []
+    provides:
+      - agent-spawning
+      - parallel-execution
+
+  value-first:
+    depends_on: []
+    provides:
+      - prioritization
+      - impact-assessment
+
+  phase-gate:
+    depends_on: []
+    provides:
+      - phase-transitions
+      - approval-gates
+
+  git-commit:
+    depends_on: []
+    provides:
+      - atomic-commits
+      - message-formatting
+
+  mcp-config:
+    depends_on:
+      - mcdp
+    provides:
+      - mcp-tool-configuration
+      - delegation-patterns
+
+# =============================================================================
+# RESOLUTION ALGORITHM
+# =============================================================================
+
+algorithm:
+  description: |
+    Topological sort with version constraint satisfaction
+
+  steps:
+    - name: "collect"
+      action: "Gather all dependencies from command"
+
+    - name: "expand"
+      action: "Recursively expand transitive dependencies"
+
+    - name: "deduplicate"
+      action: "Merge duplicate dependencies, resolve versions"
+
+    - name: "sort"
+      action: "Topologically sort by dependency order"
+
+    - name: "validate"
+      action: "Check all constraints satisfied"
+
+    - name: "load"
+      action: "Load dependencies in sorted order"
+
+  pseudocode: |
+    def resolve(command_id):
+        deps = collect_dependencies(command_id)
+        expanded = expand_transitive(deps)
+        deduped = deduplicate_with_versions(expanded)
+
+        if has_cycle(deduped):
+            raise CircularDependencyError
+
+        sorted_deps = topological_sort(deduped)
+        validate_constraints(sorted_deps)
+
+        return sorted_deps
+
+# =============================================================================
+# CHAIN RESOLUTION
+# =============================================================================
+
+chain_resolution:
+  description: "Resolve dependencies for an entire command chain"
+
+  strategy: "union-dedupe"
+
+  example:
+    chain: [synrg-spec, synrg-scaffold, synrg-commit]
+    resolution:
+      protocols:
+        - value-first      # from synrg-spec
+        - phase-gate       # from synrg-spec, synrg-scaffold (deduped)
+        - git-commit       # from synrg-commit
+      skills:
+        - universal-synrg-protocols  # from synrg-spec, synrg-scaffold (deduped)
+        - commit-message-craft       # from synrg-commit
+        - git-strategy-decision      # from synrg-commit
+
+# =============================================================================
+# CACHING
+# =============================================================================
+
+caching:
+  enabled: true
+  ttl_seconds: 3600
+  cache_location: "${CLAUDE_HOME}/cache/dependency-resolution/"
+
+  invalidation:
+    on_protocol_change: true
+    on_skill_change: true
+    on_agent_change: true
+    on_command_change: true
+
+# =============================================================================
+# VALIDATION
+# =============================================================================
+
+validation:
+  pre_execution:
+    - check_required_protocols
+    - check_required_skills
+    - check_required_agents
+    - check_version_constraints
+    - check_file_existence
+
+  post_resolution:
+    - verify_no_cycles
+    - verify_all_loaded
+    - verify_version_compatibility

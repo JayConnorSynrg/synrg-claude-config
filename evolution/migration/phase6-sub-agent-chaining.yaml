@@ -1,0 +1,145 @@
+# Phase 6: Sub-Agent Chaining Migration Manifest
+# Generated: 2026-01-09
+
+version: "1.0.0"
+phase: 6
+name: "Sub-Agent Chaining"
+status: "infrastructure-ready"
+description: "Enable commands to chain together for complex multi-step workflows"
+
+# Infrastructure created
+infrastructure:
+  config_files:
+    - path: "config/command-registry.yaml"
+      description: "Central registry for command discovery and chaining"
+      size_lines: 280
+
+    - path: "config/chaining-protocol.md"
+      description: "Inter-command communication protocol documentation"
+      size_lines: 350
+
+    - path: "config/dependency-resolver.yaml"
+      description: "Dependency resolution configuration"
+      size_lines: 240
+
+  chain_patterns:
+    - path: "templates/chain-patterns/refactor-commit.yaml"
+      description: "Refactor code and commit pattern"
+
+    - path: "templates/chain-patterns/spec-to-implementation.yaml"
+      description: "Full development workflow pattern"
+
+    - path: "templates/chain-patterns/agent-development.yaml"
+      description: "Agent development and commit pattern"
+
+  directories:
+    - path: "chain-state/active/"
+      description: "Currently executing chains"
+
+    - path: "chain-state/completed/"
+      description: "Completed chain logs"
+
+    - path: "chain-state/failed/"
+      description: "Failed chain logs with error info"
+
+# Command registry summary
+registry_summary:
+  total_commands: 9
+  categories: 8
+
+  commands:
+    - id: synrg
+      category: orchestrator
+      can_chain_to: [synrg-commit, synrg-spec, synrg-refactor, synrg-scaffold]
+
+    - id: synrg-guided
+      category: orchestrator
+      can_chain_to: [synrg-commit, synrg-refactor]
+
+    - id: synrg-commit
+      category: git
+      can_chain_to: []
+      can_chain_from: [synrg, synrg-guided, synrg-refactor, synrg-spec, synrg-scaffold]
+
+    - id: synrg-refactor
+      category: refactoring
+      can_chain_to: [synrg-commit]
+
+    - id: synrg-spec
+      category: specification
+      can_chain_to: [synrg-scaffold, synrg-commit]
+
+    - id: synrg-scaffold
+      category: scaffolding
+      can_chain_to: [synrg-commit]
+
+    - id: synrg-buildworkflow
+      category: n8n
+      can_chain_to: []
+
+    - id: synrg-swarm
+      category: development
+      can_chain_to: [synrg-commit]
+
+    - id: synrg-evolve
+      category: evolution
+      can_chain_to: []
+
+# Chaining capabilities
+chaining:
+  max_chain_depth: 5
+  failure_strategies: [halt, continue, rollback]
+
+  built_in_patterns:
+    - refactor-commit
+    - spec-to-implementation
+    - agent-development
+
+  context_passing:
+    - output_to_input_mapping
+    - accumulated_state
+    - chain_position_tracking
+
+# Dependency resolution
+dependency_resolution:
+  strategy: "topological-sort"
+  version_handling: "highest-compatible"
+  caching: true
+
+  resolution_order:
+    - protocols
+    - skills
+    - agents
+    - commands
+
+# API endpoints
+api:
+  registry:
+    - "registry.list(category?)"
+    - "registry.get(command_id)"
+    - "registry.exists(command_id)"
+
+  chaining:
+    - "chain.execute(pattern_id, input)"
+    - "chain.validate(command_list)"
+    - "chain.getStatus(chain_id)"
+
+  resolution:
+    - "resolver.resolve(command_id)"
+    - "resolver.resolveChain(command_list)"
+
+# Migration notes
+migration:
+  status: "infrastructure-ready"
+  commands_modified: false
+
+  notes:
+    - "Chaining infrastructure is ready but NOT yet integrated into commands"
+    - "Commands can be chained manually using the defined patterns"
+    - "Full integration requires adding CHAIN directives to commands"
+    - "Chain state directories created for execution tracking"
+
+  next_steps:
+    - "Test chain patterns manually"
+    - "Add CHAIN directives to commands (optional)"
+    - "Implement chain execution engine (future)"
