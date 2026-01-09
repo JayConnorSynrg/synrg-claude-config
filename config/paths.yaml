@@ -1,0 +1,80 @@
+# SYNRG Path Configuration
+# Centralizes all path references for portability
+# Version: 1.0.0
+
+version: "1.0.0"
+last_updated: "2026-01-09"
+
+# Base paths - modify these for different environments
+base:
+  claude_home: "${HOME}/.claude"
+  synrg_home: "${HOME}/.local/synrg"
+  coding_root: "${HOME}/CODING"
+
+# Command locations
+commands:
+  synrg: "${base.claude_home}/commands/synrg.md"
+  synrg_guided: "${base.claude_home}/commands/synrg-guided.md"
+  synrg_commit: "${base.claude_home}/commands/synrg-commit.md"
+  synrg_refactor: "${base.claude_home}/commands/synrg-refactor.md"
+  synrg_spec: "${base.claude_home}/commands/synrg-spec.md"
+  synrg_scaffold: "${base.claude_home}/commands/synrg-scaffold.md"
+  synrg_buildworkflow: "${base.claude_home}/commands/synrg-buildworkflow.md"
+  synrg_swarm: "${base.claude_home}/commands/synrg-swarm.md"
+  synrg_evolve: "${base.claude_home}/commands/synrg-evolve.md"
+
+# Agent definitions
+agents:
+  directory: "${base.claude_home}/agents"
+  patterns:
+    - "${base.claude_home}/agents/*.md"
+
+# Skills
+skills:
+  directory: "${base.claude_home}/skills"
+  patterns:
+    - "${base.claude_home}/skills/*.md"
+
+# Protocols (Phase 2)
+protocols:
+  directory: "${base.claude_home}/protocols"
+  index: "${base.claude_home}/protocols/index.yaml"
+
+# Templates
+templates:
+  base: "${base.claude_home}/templates"
+  synrg_spec: "${base.claude_home}/templates/synrg-spec"
+  synrg_commit: "${base.claude_home}/templates/synrg-commit"
+  synrg_scaffold: "${base.claude_home}/templates/synrg-scaffold"
+  synrg_refactor: "${base.claude_home}/templates/synrg-refactor"
+
+# Configuration
+config:
+  paths: "${base.claude_home}/config/paths.yaml"
+  dependencies: "${base.claude_home}/config/dependencies.yaml"
+
+# Evolution tracking
+evolution:
+  changelog: "${base.claude_home}/evolution/changelog.md"
+  migration: "${base.claude_home}/evolution/migration"
+
+# MCP servers
+mcp:
+  servers: "${base.claude_home}/mcp-servers"
+  config: "${base.claude_home}/mcp.json"
+
+# Hooks
+hooks:
+  directory: "${base.claude_home}/hooks"
+  config: "${base.claude_home}/hooks/synrg-hooks.json"
+
+# External tools
+external:
+  n8n_pattern_library: "${base.synrg_home}/n8n-pattern-library"
+  python_orchestrator: "${base.coding_root}/SYNRG AGENTS/agent-swarm-native/BMAD-METHOD/synrg_orchestrator.py"
+
+# Portability aliases (for command references)
+aliases:
+  CLAUDE_HOME: "${base.claude_home}"
+  SYNRG_HOME: "${base.synrg_home}"
+  CODING_ROOT: "${base.coding_root}"

@@ -1,0 +1,191 @@
+# SYNRG Dependency Manifest
+# Tracks inter-command dependencies and requirements
+# Version: 1.0.0
+
+version: "1.0.0"
+last_updated: "2026-01-09"
+
+# Command dependency graph
+commands:
+  synrg:
+    version: "1.0.0"
+    requires:
+      protocols:
+        - mcdp
+        - sub-agent-spawn
+        - value-first
+        - mcp-config
+      agents:
+        - n8n-workflow-expert
+        - full-stack-dev-expert
+        - github-repo-director
+      skills:
+        - mandatory-context-delegation
+        - universal-synrg-protocols
+    optional:
+      - synrg-commit  # For git operations
+      - synrg-spec    # For spec-driven tasks
+
+  synrg-guided:
+    version: "1.0.0"
+    requires:
+      protocols:
+        - sub-agent-spawn
+        - phase-gate
+      skills:
+        - universal-synrg-protocols
+    optional:
+      - synrg-commit
+
+  synrg-commit:
+    version: "1.0.0"
+    requires:
+      protocols:
+        - git-commit
+      skills:
+        - commit-message-craft
+        - git-strategy-decision
+    external:
+      - git
+
+  synrg-refactor:
+    version: "1.0.0"
+    requires:
+      protocols:
+        - mcdp
+        - sub-agent-spawn
+      skills:
+        - certainty-gated-atomic-change
+    optional:
+      - synrg-commit
+
+  synrg-spec:
+    version: "1.0.0"
+    requires:
+      protocols:
+        - value-first
+        - phase-gate
+      skills:
+        - universal-synrg-protocols
+    optional:
+      - synrg-scaffold  # For directory creation
+      - synrg-commit
+
+  synrg-scaffold:
+    version: "1.0.0"
+    requires:
+      protocols:
+        - phase-gate
+      skills:
+        - universal-synrg-protocols
+    optional:
+      - synrg-spec
+
+  synrg-buildworkflow:
+    version: "1.0.0"
+    requires:
+      protocols:
+        - mcdp
+        - mcp-config
+      agents:
+        - n8n-workflow-expert
+        - n8n-node-validator
+        - n8n-connection-fixer
+        - n8n-expression-debugger
+        - n8n-pattern-retriever
+        - n8n-version-researcher
+        - n8n-mcp-delegate
+    external:
+      - n8n-mcp-server
+
+  synrg-swarm:
+    version: "1.0.0"
+    requires:
+      protocols:
+        - mcdp
+        - sub-agent-spawn
+        - mcp-config
+      skills:
+        - mandatory-context-delegation
+    optional:
+      - synrg  # Parent orchestrator
+
+  synrg-evolve:
+    version: "1.0.0"
+    requires:
+      skills:
+        - universal-synrg-protocols
+    targets:
+      - all  # Can evolve any command
+
+# Agent dependencies
+agents:
+  n8n-workflow-expert:
+    requires:
+      - n8n-mcp-delegate
+      - n8n-pattern-retriever
+    optional:
+      - n8n-node-validator
+      - n8n-connection-fixer
+      - n8n-expression-debugger
+      - n8n-version-researcher
+
+  github-repo-director:
+    requires:
+      - github-mcp-delegate
+      - github-structure-analyzer
+      - github-docs-extractor
+      - github-code-pattern-analyzer
+      - github-insights-synthesizer
+
+# External system requirements
+external:
+  git:
+    required: true
+    min_version: "2.0.0"
+    used_by:
+      - synrg-commit
+
+  n8n-mcp-server:
+    required: false
+    used_by:
+      - synrg-buildworkflow
+    config_path: "${CLAUDE_HOME}/mcp.json"
+
+  gh-cli:
+    required: false
+    used_by:
+      - github-mcp-delegate
+    commands:
+      - gh repo
+      - gh pr
+      - gh issue
+
+# Skill dependencies
+skills:
+  mandatory-context-delegation:
+    used_by:
+      - synrg
+      - synrg-refactor
+      - synrg-swarm
+      - synrg-buildworkflow
+
+  universal-synrg-protocols:
+    used_by:
+      - synrg
+      - synrg-guided
+      - synrg-spec
+      - synrg-scaffold
+      - synrg-evolve
+
+  certainty-gated-atomic-change:
+    used_by:
+      - synrg-refactor
+
+  commit-message-craft:
+    used_by:
+      - synrg-commit
+
+  git-strategy-decision:
+    used_by:
+      - synrg-commit
