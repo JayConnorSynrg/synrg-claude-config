@@ -1,0 +1,389 @@
+# Phase 4: Extension Points Migration Manifest
+# Generated: 2026-01-09
+# Total extension points identified: 87
+
+version: "1.0.0"
+phase: 4
+name: "Extension Points"
+status: "infrastructure-ready"
+description: "Add extension point markers for modular customization"
+
+# Extension point marker syntax
+marker_syntax:
+  format: "<!-- EXTENSION: {category}-{name} -->"
+  categories:
+    - agents        # Custom agent definitions
+    - protocols     # Custom protocol rules
+    - validators    # Custom validation layers
+    - tools         # Custom tool configurations
+    - phases        # Custom workflow phases
+    - patterns      # Custom pattern libraries
+    - hooks         # Custom hook registrations
+    - templates     # Custom template definitions
+
+# Extension points by file
+files:
+  synrg.md:
+    total_points: 14
+    priority: critical
+    points:
+      - id: mcp-delegates
+        marker: "<!-- EXTENSION: agents-mcp-delegates -->"
+        location: "MCP Delegate Agent Registry"
+        line_approx: 71-96
+        type: agents
+        description: "Register custom MCP domain handlers"
+        extensible_content: "New MCP delegate mappings"
+
+      - id: n8n-agents
+        marker: "<!-- EXTENSION: agents-n8n-custom -->"
+        location: "Available N8N Agents Table"
+        line_approx: 744-753
+        type: agents
+        description: "Register specialized n8n agents"
+        extensible_content: "Task type to agent mappings"
+
+      - id: mcp-patterns
+        marker: "<!-- EXTENSION: protocols-mcp-patterns -->"
+        location: "detectMCPToolRequirements()"
+        line_approx: 1019-1070
+        type: protocols
+        description: "Add MCP pattern matching rules"
+        extensible_content: "Keywords and tool arrays for new MCPs"
+
+      - id: reconnaissance-agents
+        marker: "<!-- EXTENSION: agents-reconnaissance -->"
+        location: "Phase 1 Sub-Agent Registry"
+        line_approx: 863-932
+        type: agents
+        description: "Add parallel reconnaissance agents"
+        extensible_content: "New analysis sub-agents"
+
+      - id: tool-types
+        marker: "<!-- EXTENSION: protocols-tool-types -->"
+        location: "Tool Type Decision Matrix"
+        line_approx: 399-408
+        type: protocols
+        description: "Add custom tool type categories"
+        extensible_content: "New tool invocation patterns"
+
+      - id: validation-layers
+        marker: "<!-- EXTENSION: validators-layers -->"
+        location: "4-Layer Validation Framework"
+        line_approx: 4522-4592
+        type: validators
+        description: "Add custom validation layers"
+        extensible_content: "Layer N with checklist items"
+
+      - id: execution-rules
+        marker: "<!-- EXTENSION: protocols-execution-rules -->"
+        location: "Sub-Agent Execution Rules"
+        line_approx: 4405-4475
+        type: protocols
+        description: "Add execution standards"
+        extensible_content: "New rule categories"
+
+      - id: failure-types
+        marker: "<!-- EXTENSION: protocols-failure-types -->"
+        location: "Failure Classification"
+        line_approx: 4677-4746
+        type: protocols
+        description: "Add failure type definitions"
+        extensible_content: "Type N with recovery procedure"
+
+      - id: evolution-phases
+        marker: "<!-- EXTENSION: phases-evolution -->"
+        location: "Self-Evolution Protocol"
+        line_approx: 4777-4976
+        type: phases
+        description: "Add evolution process phases"
+        extensible_content: "New phase definitions"
+
+      - id: known-patterns
+        marker: "<!-- EXTENSION: patterns-known-failures -->"
+        location: "Known Failure Patterns Registry"
+        line_approx: 2112-2122
+        type: patterns
+        description: "Register known failure patterns"
+        extensible_content: "Pattern category with reference"
+
+      - id: mcdp-rules
+        marker: "<!-- EXTENSION: protocols-mcdp-rules -->"
+        location: "MCDP Rules Section"
+        line_approx: 123-237
+        type: protocols
+        description: "Add context delegation rules"
+        extensible_content: "Rule N with trigger and savings"
+
+  synrg-refactor.md:
+    total_points: 10
+    priority: high
+    points:
+      - id: parallel-batch-1
+        marker: "<!-- EXTENSION: agents-refactor-batch1 -->"
+        location: "Parallel Agent Batch 1"
+        type: agents
+        description: "Add reconnaissance agents"
+
+      - id: parallel-batch-2
+        marker: "<!-- EXTENSION: agents-refactor-batch2 -->"
+        location: "Parallel Agent Batch 2"
+        type: agents
+        description: "Add analysis agents"
+
+      - id: parallel-batch-3
+        marker: "<!-- EXTENSION: agents-refactor-batch3 -->"
+        location: "Parallel Agent Batch 3"
+        type: agents
+        description: "Add preparation agents"
+
+      - id: phase-pipeline
+        marker: "<!-- EXTENSION: phases-refactor-pipeline -->"
+        location: "6-Phase Pipeline"
+        type: phases
+        description: "Add refactoring phases"
+
+      - id: risk-strategies
+        marker: "<!-- EXTENSION: patterns-risk-strategies -->"
+        location: "Risk Stratification"
+        type: patterns
+        description: "Add risk response strategies"
+
+  synrg-commit.md:
+    total_points: 6
+    priority: medium
+    points:
+      - id: commit-agents
+        marker: "<!-- EXTENSION: agents-commit -->"
+        location: "Sub-Agent Definitions"
+        type: agents
+        description: "Add commit analysis agents"
+
+      - id: commit-validators
+        marker: "<!-- EXTENSION: validators-commit -->"
+        location: "Pre-Commit Validators"
+        type: validators
+        description: "Add commit validation rules"
+
+      - id: message-templates
+        marker: "<!-- EXTENSION: templates-commit-messages -->"
+        location: "Message Templates"
+        type: templates
+        description: "Add commit message formats"
+
+  synrg-spec.md:
+    total_points: 12
+    priority: high
+    points:
+      - id: constitutional-articles
+        marker: "<!-- EXTENSION: protocols-constitutional -->"
+        location: "Constitutional Articles"
+        type: protocols
+        description: "Add spec constitutional rules"
+
+      - id: spec-templates
+        marker: "<!-- EXTENSION: templates-spec -->"
+        location: "Template Definitions"
+        type: templates
+        description: "Add spec template types"
+
+      - id: spec-validators
+        marker: "<!-- EXTENSION: validators-spec -->"
+        location: "12 Validation Rules"
+        type: validators
+        description: "Add spec validation rules"
+
+      - id: phase-gates
+        marker: "<!-- EXTENSION: phases-spec-gates -->"
+        location: "7-Phase Pipeline"
+        type: phases
+        description: "Add spec phase gates"
+
+  synrg-scaffold.md:
+    total_points: 10
+    priority: medium
+    points:
+      - id: project-types
+        marker: "<!-- EXTENSION: templates-project-types -->"
+        location: "Project Type Registry"
+        type: templates
+        description: "Add project archetypes"
+
+      - id: scaffold-phases
+        marker: "<!-- EXTENSION: phases-scaffold -->"
+        location: "6-Phase Pipeline"
+        type: phases
+        description: "Add scaffold phases"
+
+      - id: question-sets
+        marker: "<!-- EXTENSION: templates-questions -->"
+        location: "Discovery Questions"
+        type: templates
+        description: "Add question categories"
+
+      - id: analysis-frameworks
+        marker: "<!-- EXTENSION: patterns-analysis -->"
+        location: "Analysis Frameworks"
+        type: patterns
+        description: "Add analysis patterns"
+
+  synrg-guided.md:
+    total_points: 7
+    priority: medium
+    points:
+      - id: guided-agents
+        marker: "<!-- EXTENSION: agents-guided -->"
+        location: "Phase 0 Agent Registry"
+        type: agents
+        description: "Add guided orchestration agents"
+
+      - id: quality-gates
+        marker: "<!-- EXTENSION: validators-quality-gates -->"
+        location: "Quality Gates Layer 0-4"
+        type: validators
+        description: "Add quality gate layers"
+
+      - id: protected-structures
+        marker: "<!-- EXTENSION: patterns-protected -->"
+        location: "Protected Structure Detection"
+        type: patterns
+        description: "Add protected code patterns"
+
+      - id: recovery-patterns
+        marker: "<!-- EXTENSION: patterns-recovery -->"
+        location: "Error Recovery Patterns"
+        type: patterns
+        description: "Add recovery strategies"
+
+  synrg-buildworkflow.md:
+    total_points: 5
+    priority: high
+    points:
+      - id: workflow-agents
+        marker: "<!-- EXTENSION: agents-workflow -->"
+        location: "10 Specialist Agents"
+        type: agents
+        description: "Add workflow specialist agents"
+
+      - id: ubiquitous-rules
+        marker: "<!-- EXTENSION: protocols-ubiquitous -->"
+        location: "7 Core Rules"
+        type: protocols
+        description: "Add workflow building rules"
+
+      - id: validation-gates
+        marker: "<!-- EXTENSION: validators-workflow-gates -->"
+        location: "4 Mandatory Gates"
+        type: validators
+        description: "Add workflow validation gates"
+
+      - id: n8n-patterns
+        marker: "<!-- EXTENSION: patterns-n8n -->"
+        location: "Pattern Library"
+        type: patterns
+        description: "Add n8n workflow patterns"
+
+  synrg-swarm.md:
+    total_points: 7
+    priority: high
+    points:
+      - id: decomposition-patterns
+        marker: "<!-- EXTENSION: patterns-decomposition -->"
+        location: "Task Decomposition Examples"
+        type: patterns
+        description: "Add task breakdown patterns"
+
+      - id: agent-principles
+        marker: "<!-- EXTENSION: protocols-agent-design -->"
+        location: "7 Design Principles"
+        type: protocols
+        description: "Add agent design requirements"
+
+      - id: development-phases
+        marker: "<!-- EXTENSION: phases-agent-dev -->"
+        location: "5 Development Phases"
+        type: phases
+        description: "Add agent development phases"
+
+      - id: parallel-strategy
+        marker: "<!-- EXTENSION: protocols-parallel -->"
+        location: "Parallel Execution Framework"
+        type: protocols
+        description: "Add parallelization strategies"
+
+      - id: agent-patterns
+        marker: "<!-- EXTENSION: patterns-agent -->"
+        location: "Known Development Patterns"
+        type: patterns
+        description: "Add agent-specific patterns"
+
+  synrg-evolve.md:
+    total_points: 7
+    priority: medium
+    points:
+      - id: evolution-modes
+        marker: "<!-- EXTENSION: protocols-evolution-modes -->"
+        location: "Execution Mode Detection"
+        type: protocols
+        description: "Add evolution trigger modes"
+
+      - id: anti-memory-indicators
+        marker: "<!-- EXTENSION: patterns-anti-memory -->"
+        location: "Anti-Memory Detection"
+        type: patterns
+        description: "Add failure pattern indicators"
+
+      - id: proposal-templates
+        marker: "<!-- EXTENSION: templates-evolution -->"
+        location: "Pattern Proposal Format"
+        type: templates
+        description: "Add evolution proposal formats"
+
+      - id: integration-strategies
+        marker: "<!-- EXTENSION: protocols-integration -->"
+        location: "Integration Best Practices"
+        type: protocols
+        description: "Add integration rules"
+
+      - id: conflict-resolution
+        marker: "<!-- EXTENSION: protocols-conflicts -->"
+        location: "Conflict Resolution"
+        type: protocols
+        description: "Add conflict handling strategies"
+
+      - id: evolution-metrics
+        marker: "<!-- EXTENSION: patterns-metrics -->"
+        location: "Metrics Dashboard"
+        type: patterns
+        description: "Add evolution tracking metrics"
+
+# Summary statistics
+summary:
+  total_files: 9
+  total_extension_points: 87
+  by_category:
+    agents: 18
+    protocols: 24
+    validators: 12
+    patterns: 18
+    phases: 10
+    templates: 8
+    tools: 3
+    hooks: 4
+  by_priority:
+    critical: 1  # synrg.md (14 points)
+    high: 4      # synrg-refactor, synrg-spec, synrg-buildworkflow, synrg-swarm
+    medium: 4    # synrg-commit, synrg-scaffold, synrg-guided, synrg-evolve
+
+# Migration approach
+migration:
+  approach: "marker-injection"
+  backup_required: true
+  validation_required: true
+
+  steps:
+    - "1. Create backup of all command files"
+    - "2. Run migration script to inject markers"
+    - "3. Validate markers are correctly placed"
+    - "4. Test command execution"
+    - "5. Commit changes"

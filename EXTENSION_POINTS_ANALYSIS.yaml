@@ -1,0 +1,934 @@
+---
+analysis_metadata:
+  title: "SYNRG Command Extension Points Analysis"
+  created: "2026-01-09"
+  scope: "synrg-refactor.md, synrg-commit.md, synrg-spec.md, synrg-scaffold.md"
+  purpose: "Identify all extension points for custom agents, protocols, phases, validators, and templates"
+
+files_analyzed:
+  - synrg-commit.md
+  - synrg-refactor.md
+  - synrg-spec.md
+  - synrg-scaffold.md
+
+# =============================================================================
+# FILE 1: synrg-commit.md
+# =============================================================================
+
+synrg_commit:
+  filename: "/Users/jelalconnor/.claude/commands/synrg-commit.md"
+  total_lines: 1485
+
+  extension_points:
+
+    # Agent Registry Extension Point
+    - ep_id: "commit-ep-001"
+      type: "Agent Registry"
+      location: "Lines 66-71"
+      section_name: "MCP Delegate Agent Registry"
+      marker_suggestion: "<!-- EXTENSION: agent-registry-mcp -->"
+      current_state: |
+        | MCP Domain | Delegate Agent | Agent File |
+        |------------|----------------|------------|
+        | `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `~/.claude/agents/n8n-mcp-delegate.md` |
+        | `mcp__n8n-workflows__*` | `github-mcp-delegate` | `~/.claude/agents/github-mcp-delegate.md` |
+      what_can_be_extended: |
+        - Add new MCP delegate agents for additional MCP systems (e.g., Supabase, GitHub Actions)
+        - Register custom domain patterns with their corresponding delegate agents
+        - Define delegation routing for new MCP tool families
+      implementation_example: |
+        # New entry to add:
+        | `mcp__supabase-mcp__*` | `supabase-mcp-delegate` | `~/.claude/agents/supabase-mcp-delegate.md` |
+        | `mcp__github-actions__*` | `github-actions-delegate` | `~/.claude/agents/github-actions-delegate.md` |
+
+    # Sub-Agent Phase Definitions Extension Point
+    - ep_id: "commit-ep-002"
+      type: "Sub-Agent Registry"
+      location: "Lines 224-189"
+      section_name: "Sub-Agent Specifications (6 specialized agents)"
+      marker_suggestion: "<!-- EXTENSION: sub-agent-specifications -->"
+      current_state: |
+        Six parallel sub-agents defined:
+        1. Git Diff Analyzer
+        2. Context Mapper
+        3. Intent Detector
+        4. Quality Checker
+        5. Impact Assessor
+        6. Commit History Analyzer
+      what_can_be_extended: |
+        - Add new sub-agents for specialized commit analysis (e.g., security analyzer, performance analyzer)
+        - Extend existing sub-agents with additional analysis capabilities
+        - Create domain-specific agents (e.g., ML-specific commit analyzer)
+        - Add post-analysis synthesis agents for custom commit classification
+      custom_agents_could_handle: |
+        - SecurityCommitAnalyzer: Scan commits for security vulnerabilities
+        - PerformanceImpactAnalyzer: Detect performance-related changes
+        - ComplianceChecker: Validate commits against compliance rules
+        - DatabaseMigrationAnalyzer: Analyze database schema changes
+
+    # Commit Message Template Extension Point
+    - ep_id: "commit-ep-003"
+      type: "Template"
+      location: "Lines 764-814"
+      section_name: "Commit Message Generation"
+      marker_suggestion: "<!-- EXTENSION: commit-message-templates -->"
+      current_state: |
+        Current format: Conventional Commits Specification with:
+        - HEADER: type(scope): subject (max 50 chars)
+        - BODY: What, Why, How, Impact sections
+        - FOOTER: Breaking changes, issue refs, co-author
+      what_can_be_extended: |
+        - Add custom commit message templates (e.g., Jira-specific format)
+        - Support alternate commit conventions (e.g., Angular, Gitmoji)
+        - Define organization-specific commit formats
+        - Create domain-specific message generators
+      custom_templates_could_include: |
+        - LinkedinCommitMessage: With ticket tracking
+        - GitumojiTemplate: With emoji support
+        - AngularCommitTemplate: Angular-specific format
+        - SemanticCommitTemplate: With semantic versioning hints
+
+    # Validation Rules Extension Point
+    - ep_id: "commit-ep-004"
+      type: "Validation Rules"
+      location: "Lines 955-985"
+      section_name: "Pre-Commit Validation"
+      marker_suggestion: "<!-- EXTENSION: pre-commit-validators -->"
+      current_state: |
+        Current validators:
+        - testsPass: Verify tests
+        - lintPass: Verify linting
+        - typeCheckPass: Verify types
+        - securityPass: Check for critical security issues
+        - buildPass: Verify build succeeds
+      what_can_be_extended: |
+        - Add custom validation rules (e.g., changelog validation, documentation validation)
+        - Create conditional validators (e.g., semantic validation for breaking changes)
+        - Implement project-specific quality gates
+        - Add complexity metric validators
+      custom_validators_could_check: |
+        - ChangelogValidation: Verify CHANGELOG.md updated
+        - DocumentationValidation: Check docs updated for API changes
+        - CommitMessageQualityValidator: Enforce detailed commit messages
+        - MigrationSafetyValidator: Verify safe database migrations
+
+    # Configuration Options Extension Point
+    - ep_id: "commit-ep-005"
+      type: "Configuration"
+      location: "Lines 1290-1324"
+      section_name: "Command Options & Configuration"
+      marker_suggestion: "<!-- EXTENSION: configuration-options -->"
+      current_state: |
+        Options include: autoApprove, dryRun, runValidation, requireTests,
+        messageFormat, separateTests, separateDocs, createBackup, etc.
+      what_can_be_extended: |
+        - Add custom configuration profiles (e.g., strict, balanced, fast)
+        - Define organization-specific default options
+        - Create environment-aware configurations
+        - Support conditional option application
+
+    # Error Handling Extension Point
+    - ep_id: "commit-ep-006"
+      type: "Protocol / Error Handler"
+      location: "Lines 1215-1257"
+      section_name: "Error Classification & Handling"
+      marker_suggestion: "<!-- EXTENSION: error-handlers -->"
+      current_state: |
+        Current error types:
+        - MERGE_CONFLICT
+        - PRE_COMMIT_HOOK_FAILED
+        - GIT_PERMISSION_ERROR
+        - EMPTY_COMMIT
+        - default (unknown)
+      what_can_be_extended: |
+        - Add custom error types (e.g., INVALID_SCOPE_ERROR, BREAKING_CHANGE_DETECTED)
+        - Define custom recovery procedures
+        - Create domain-specific error handlers
+        - Implement auto-fix strategies for common errors
+
+
+# =============================================================================
+# FILE 2: synrg-refactor.md
+# =============================================================================
+
+synrg_refactor:
+  filename: "/Users/jelalconnor/.claude/commands/synrg-refactor.md"
+  total_lines: 3148
+
+  extension_points:
+
+    # MCP Agent Registry Extension Point
+    - ep_id: "refactor-ep-001"
+      type: "Agent Registry"
+      location: "Lines 144-151"
+      section_name: "MCP Delegate Agent Registry"
+      marker_suggestion: "<!-- EXTENSION: mcp-agent-registry -->"
+      current_state: |
+        | MCP Domain | Delegate Agent | Agent File |
+        |------------|----------------|------------|
+        | `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `~/.claude/agents/n8n-mcp-delegate.md` |
+        | `mcp__n8n-workflows__*` | `github-mcp-delegate` | `~/.claude/agents/github-mcp-delegate.md` |
+      what_can_be_extended: |
+        - Register additional MCP system delegates
+        - Add domain-specific MCP delegates
+        - Extend delegate routing for specialized tools
+
+    # Specialized Agent Library Extension Point
+    - ep_id: "refactor-ep-002"
+      type: "Agent Registry"
+      location: "Lines 228-234"
+      section_name: "Available Specialized Agents"
+      marker_suggestion: "<!-- EXTENSION: specialized-agents-library -->"
+      current_state: |
+        Current specialized agents:
+        - N8N: n8n-node-validator, n8n-connection-fixer, n8n-expression-debugger, n8n-workflow-expert
+        - General: full-stack-dev-expert, agency-automation-expert
+      what_can_be_extended: |
+        - Add new specialized agents by domain (React expert, Python expert, etc.)
+        - Register custom analysis agents
+        - Define agent categories and discovery mechanism
+        - Create dynamic agent loading from agent library
+      custom_agents_could_include: |
+        - GoRefactoringExpert: For Go codebases
+        - RustRefactoringExpert: For Rust codebases
+        - DatabaseSchemaRefactor: For migrations
+        - SecurityHardeningExpert: For security refactoring
+
+    # Phase Definitions Extension Point
+    - ep_id: "refactor-ep-003"
+      type: "Phase Definition"
+      location: "Lines 240-250"
+      section_name: "Execution Overview - 7 Phase Pipeline"
+      marker_suggestion: "<!-- EXTENSION: phase-pipeline -->"
+      current_state: |
+        Seven-phase pipeline:
+        - Phase 0: Context Gathering & Safety
+        - Phase 1: Discovery & Analysis (6 agents)
+        - Phase 1.5: Refactoring Opportunity Synthesis
+        - Phase 2: Risk Analysis (8 agents)
+        - Phase 3: Strategy Generation
+        - Phase 3.5: User Approval
+        - Phase 5: Execution (Dynamic agents)
+        - Phase 6: Validation (7 agents)
+        - Phase 7: Commit & Documentation
+      what_can_be_extended: |
+        - Insert new phases into pipeline (e.g., Phase 2.5: Cost Analysis)
+        - Add custom pre/post phase hooks
+        - Create conditional phase branches
+        - Define phase bypass rules
+      custom_phases_could_include: |
+        - Phase X: ArchitectureImpactAnalysis
+        - Phase Y: PerformanceOptimizationSuggestion
+        - Phase Z: DocumentationGeneration
+
+    # Discovery Agent Batch Extension Point
+    - ep_id: "refactor-ep-004"
+      type: "Agent Registry / Batch"
+      location: "Lines 526-1006"
+      section_name: "BATCH 1A-1F: Discovery & Analysis Agents (6 agents)"
+      marker_suggestion: "<!-- EXTENSION: discovery-agent-batch -->"
+      current_state: |
+        1A: FileScanner
+        1B: DependencyMapper
+        1C: CodeFlowTracer
+        1D: PatternDetector
+        1E: CodeSmellDetector
+        1F: ComplexityAnalyzer
+      what_can_be_extended: |
+        - Add new discovery agents (1G, 1H, etc.)
+        - Create custom file type analyzers
+        - Define domain-specific pattern detectors
+        - Add specialized code quality metrics
+      custom_agents_could_include: |
+        - 1G: SecurityVulnerabilityScanner
+        - 1H: PerformanceHotspotAnalyzer
+        - 1I: APICompatibilityChecker
+
+    # Risk Analysis Agent Batch Extension Point
+    - ep_id: "refactor-ep-005"
+      type: "Agent Registry / Batch"
+      location: "Lines 1356-1860"
+      section_name: "BATCH 2A-2H: Risk Analysis Agents (8 agents)"
+      marker_suggestion: "<!-- EXTENSION: risk-analysis-agents -->"
+      current_state: |
+        2A: AutoGenDetector
+        2B: CriticalPathAnalyzer
+        2C: CircularDependencyChecker
+        2D: TypeSafetyValidator
+        2E: ExternalIntegrationScanner
+        2F: TestCoverageMapper
+        2G: TechnicalDebtAnalyzer
+        2H: CohesionAnalyzer
+      what_can_be_extended: |
+        - Add new risk analysis agents (2I, 2J, etc.)
+        - Create domain-specific risk assessors
+        - Implement custom risk scoring algorithms
+      custom_agents_could_include: |
+        - 2I: SecurityRiskAnalyzer
+        - 2J: PerformanceRegressionDetector
+        - 2K: BreakingChangeDetector
+
+    # Validation Agent Batch Extension Point
+    - ep_id: "refactor-ep-006"
+      type: "Agent Registry / Batch"
+      location: "Lines 2367-2641"
+      section_name: "BATCH 6A-6G: Validation Agents (7 agents)"
+      marker_suggestion: "<!-- EXTENSION: validation-agent-batch -->"
+      current_state: |
+        6A: ImportValidator
+        6B: TypeCheckValidator
+        6C: BuildValidator
+        6D: TestValidator
+        6E: GitValidator
+        6F: CodeQualityValidator
+        6G: RefactoringValidator
+      what_can_be_extended: |
+        - Add new validators (6H, 6I, etc.)
+        - Implement domain-specific validation rules
+        - Create custom quality gates
+      custom_validators_could_include: |
+        - 6H: SecurityComplianceValidator
+        - 6I: PerformanceBenchmarkValidator
+        - 6J: DocumentationCompleteness
+
+    # Execution Batch Strategy Extension Point
+    - ep_id: "refactor-ep-007"
+      type: "Protocol / Strategy"
+      location: "Lines 2120-2147"
+      section_name: "Execution Batch Strategy (Phases A-E)"
+      marker_suggestion: "<!-- EXTENSION: execution-strategies -->"
+      current_state: |
+        Phase A: Pre-Move Refactorings (Sequential)
+        Phase B: Low-Risk Moves (8 Parallel)
+        Phase C: Medium-Risk Moves (4 Parallel)
+        Phase D: High-Risk Moves (Sequential)
+        Phase E: Critical Moves (Sequential + Approval)
+      what_can_be_extended: |
+        - Add custom risk level definitions
+        - Create custom batch grouping strategies
+        - Implement conditional batch execution
+        - Define organization-specific risk thresholds
+
+    # Pattern Detection Extension Point
+    - ep_id: "refactor-ep-008"
+      type: "Pattern Registry"
+      location: "Lines 1193-1229"
+      section_name: "Design Pattern Suggestions"
+      marker_suggestion: "<!-- EXTENSION: design-pattern-registry -->"
+      current_state: |
+        Current patterns:
+        - Creational: Factory, Singleton, Builder
+        - Structural: Adapter, Decorator, Facade
+        - Behavioral: Strategy, Observer, Command, Template Method, State
+      what_can_be_extended: |
+        - Add custom design patterns
+        - Register domain-specific patterns
+        - Create industry-specific pattern libraries
+        - Support organizational coding patterns
+
+    # Known Failure Patterns Extension Point
+    - ep_id: "refactor-ep-009"
+      type: "Pattern Registry / Anti-Pattern"
+      location: "Lines 159-167"
+      section_name: "Known Failure Patterns (Anti-Memory Protocol)"
+      marker_suggestion: "<!-- EXTENSION: failure-pattern-registry -->"
+      current_state: |
+        Current patterns:
+        - Import path updates: Expression syntax contamination
+        - Config file edits: Environment variable format errors
+        - Build tool configs: Version-specific parameter formats
+        - Type definitions: Auto-generated file modifications
+      what_can_be_extended: |
+        - Register project-specific failure patterns
+        - Add new anti-patterns for emerging issues
+        - Implement pattern-based recovery procedures
+        - Create versioned pattern rules
+
+    # Tool Type Selection Protocol Extension Point
+    - ep_id: "refactor-ep-010"
+      type: "Protocol / Configuration"
+      location: "Lines 187-209"
+      section_name: "Claude Tool Selection Protocol"
+      marker_suggestion: "<!-- EXTENSION: tool-selection-rules -->"
+      current_state: |
+        Current rules:
+        - SUB-AGENTS: >500 token responses
+        - SLASH COMMANDS: Multi-phase orchestration
+        - HOOKS: Event-triggered automation
+        - SKILLS: Reusable methodology
+        - DIRECT TOOLS: One-shot operations
+      what_can_be_extended: |
+        - Add custom tool selection rules
+        - Define project-specific tool preferences
+        - Implement conditional tool routing
+        - Create performance-based tool selection
+
+
+# =============================================================================
+# FILE 3: synrg-spec.md
+# =============================================================================
+
+synrg_spec:
+  filename: "/Users/jelalconnor/.claude/commands/synrg-spec.md"
+  total_lines: 4828
+
+  extension_points:
+
+    # Phase Progression Extension Point
+    - ep_id: "spec-ep-001"
+      type: "Phase Definition"
+      location: "Lines 133-156"
+      section_name: "Phase Gating Protocol (7 Mandatory Phases)"
+      marker_suggestion: "<!-- EXTENSION: phase-progression-rules -->"
+      current_state: |
+        Seven phases in order:
+        1. CONSTITUTION: Immutable principles (9 Articles)
+        2. SPECIFY: Detailed specification
+        3. CLARIFY: Resolve ambiguities
+        4. PLAN: Implementation plan
+        5. TASKS: Atomic task breakdown
+        6. TESTS (RED): Write failing tests
+        7. IMPLEMENT: Make tests pass
+      what_can_be_extended: |
+        - Add sub-phases within phases (e.g., Phase 2.5 for spec validation)
+        - Create conditional phase branches
+        - Define phase bypass rules for specific scenarios
+        - Implement phase customization per project type
+        - Add parallel phases for independent work streams
+      custom_phases_could_include: |
+        - Phase 2.5: SpecValidation (automatic review cycle)
+        - Phase 4.5: ArchitectureReview (expert validation)
+        - Phase 6.5: PerformanceValidation (benchmark tests)
+
+    # Phase Gate Validation Extension Point
+    - ep_id: "spec-ep-002"
+      type: "Validation Rules"
+      location: "Lines 172-177"
+      section_name: "Phase Gate Validation Rules"
+      marker_suggestion: "<!-- EXTENSION: phase-gate-validators -->"
+      current_state: |
+        Current validation:
+        1. Previous phase artifact exists
+        2. Previous phase status is "complete" or "ready"
+        3. No pending items from previous phase
+        4. For IMPLEMENT: tests.md shows RED
+      what_can_be_extended: |
+        - Add custom phase entry conditions
+        - Implement conditional gate bypasses
+        - Create domain-specific validation rules
+        - Define severity levels for gate violations
+      custom_gates_could_check: |
+        - SecurityReviewCompletion: Security review passed
+        - StakeholderApproval: Required approvals obtained
+        - BudgetAllocation: Resources allocated
+        - DependencyAvailability: All dependencies ready
+
+    # Constitutional Articles Extension Point
+    - ep_id: "spec-ep-003"
+      type: "Template / Protocol"
+      location: "Lines 1078-1208"
+      section_name: "Constitutional Articles (9 Articles)"
+      marker_suggestion: "<!-- EXTENSION: constitutional-articles -->"
+      current_state: |
+        Current articles:
+        I. Feature Name & Mission
+        II. Success Criteria
+        III. Test-First Development
+        IV. User Personas
+        V. Phase Gate Integrity
+        VI-IX. Additional governance articles
+      what_can_be_extended: |
+        - Add custom articles for organizational governance
+        - Create industry-specific article sets
+        - Define domain-specific success criteria
+        - Implement custom governance rules
+      custom_articles_could_include: |
+        - Article X: SecurityRequirements (for security-sensitive features)
+        - Article XI: ComplianceRequirements (for regulated industries)
+        - Article XII: PerformanceGauges (SLA/latency targets)
+
+    # Specification Template Extension Point
+    - ep_id: "spec-ep-004"
+      type: "Template"
+      location: "Lines 1263-1532"
+      section_name: "Specification Template"
+      marker_suggestion: "<!-- EXTENSION: specification-templates -->"
+      current_state: |
+        Template sections:
+        - YAML frontmatter with metadata
+        - Feature overview
+        - User scenarios
+        - Requirements (Functional & Non-functional)
+        - Success criteria
+        - Out of scope
+      what_can_be_extended: |
+        - Add domain-specific requirement types
+        - Create industry-specific sections
+        - Implement custom metadata fields
+        - Support alternate spec formats
+      custom_templates_could_include: |
+        - APISpecification: With endpoint definitions
+        - DatabaseSchemaSpec: With schema DDL
+        - CLICommandSpec: With argument definitions
+        - MobileAppSpec: With platform-specific sections
+
+    # Clarifications Template Extension Point
+    - ep_id: "spec-ep-005"
+      type: "Template"
+      location: "Lines 1691-1983"
+      section_name: "Clarifications Template (Q&A Document)"
+      marker_suggestion: "<!-- EXTENSION: clarification-templates -->"
+      current_state: |
+        Template sections:
+        - Question & Answer pairs
+        - Impact assessment
+        - Related clarifications
+      what_can_be_extended: |
+        - Add custom question categories
+        - Implement conditional Q&A flows
+        - Create domain-specific clarification types
+        - Define escalation procedures
+
+    # Plan Template Extension Point
+    - ep_id: "spec-ep-006"
+      type: "Template"
+      location: "Lines 2049-2376"
+      section_name: "Implementation Plan Template"
+      marker_suggestion: "<!-- EXTENSION: plan-templates -->"
+      current_state: |
+        Template sections:
+        - Architecture overview
+        - Component breakdown
+        - API changes
+        - Database changes
+        - Implementation steps
+      what_can_be_extended: |
+        - Add domain-specific architecture patterns
+        - Create custom component types
+        - Implement deployment plan sections
+        - Define rollback procedures
+
+    # Tasks Template Extension Point
+    - ep_id: "spec-ep-007"
+      type: "Template"
+      location: "Lines 2735-3009"
+      section_name: "Tasks Template (Atomic Task Breakdown)"
+      marker_suggestion: "<!-- EXTENSION: task-templates -->"
+      current_state: |
+        Task structure:
+        - Task ID
+        - Description
+        - Dependencies
+        - Estimated effort
+        - Success criteria
+        - Test references
+      what_can_be_extended: |
+        - Add custom task types
+        - Implement skill/role requirements
+        - Create priority frameworks
+        - Define dependency models
+      custom_task_types_could_include: |
+        - SecurityReviewTask
+        - DocumentationTask
+        - RefactoringTask
+        - DatabaseMigrationTask
+
+    # Tests Document Template Extension Point
+    - ep_id: "spec-ep-008"
+      type: "Template"
+      location: "Lines 3178-3500"
+      section_name: "Tests Document Template"
+      marker_suggestion: "<!-- EXTENSION: test-templates -->"
+      current_state: |
+        Test types (Article IX order):
+        1. Contract Tests
+        2. Integration Tests
+        3. E2E Tests
+        4. Unit Tests
+      what_can_be_extended: |
+        - Add custom test types
+        - Create domain-specific test frameworks
+        - Implement custom assertion libraries
+        - Define test performance requirements
+      custom_test_types_could_include: |
+        - SecurityTests
+        - PerformanceTests
+        - AccessibilityTests
+        - ComplianceTests
+
+    # Support Document Templates Extension Point
+    - ep_id: "spec-ep-009"
+      type: "Template"
+      location: "Lines 515-650"
+      section_name: "Support Document Templates (codebase-analysis, gap-analysis, etc.)"
+      marker_suggestion: "<!-- EXTENSION: support-document-templates -->"
+      current_state: |
+        Support documents:
+        - codebase-analysis.md
+        - gap-analysis.md
+        - research.md
+        - data-model.md
+        - quickstart.md
+      what_can_be_extended: |
+        - Add custom support document types
+        - Create domain-specific analysis templates
+        - Implement project-specific research templates
+        - Define additional metadata documents
+      custom_documents_could_include: |
+        - threat-model.md
+        - deployment-guide.md
+        - disaster-recovery-plan.md
+        - capacity-planning.md
+
+    # Regeneration Trigger Protocol Extension Point
+    - ep_id: "spec-ep-010"
+      type: "Protocol"
+      location: "Lines 203-227"
+      section_name: "Regeneration Triggers (Cascade Protocol)"
+      marker_suggestion: "<!-- EXTENSION: regeneration-triggers -->"
+      current_state: |
+        Trigger matrix:
+        - constitutional-articles changes → cascade all
+        - spec.md scope change → clarifications → plan → tasks → tests
+        - clarifications → plan → tasks → tests
+        - tasks → tests only
+      what_can_be_extended: |
+        - Add custom cascade rules
+        - Implement selective regeneration
+        - Create condition-based triggers
+        - Define rollback triggers
+
+    # Tool Type Selection for Phases Extension Point
+    - ep_id: "spec-ep-011"
+      type: "Protocol / Configuration"
+      location: "Lines 180-199"
+      section_name: "Claude Tool Selection Protocol (per phase)"
+      marker_suggestion: "<!-- EXTENSION: phase-tool-mapping -->"
+      current_state: |
+        Current mapping:
+        - CONSTITUTION: DIRECT
+        - SPECIFY: SUB-AGENT
+        - CLARIFY: DIRECT
+        - PLAN: SUB-AGENT
+        - TASKS: SUB-AGENT
+        - TESTS: SUB-AGENT
+        - IMPLEMENT: SUB-AGENT + SLASH COMMAND
+      what_can_be_extended: |
+        - Add conditional tool selection
+        - Create project-type-based mappings
+        - Implement performance-based routing
+        - Define custom tool types per project
+
+    # Custom Validation Rules Extension Point
+    - ep_id: "spec-ep-012"
+      type: "Validation Rules"
+      location: "Lines 990-1014"
+      section_name: "Phase Entry Validation (canEnterPhase function)"
+      marker_suggestion: "<!-- EXTENSION: custom-validators -->"
+      current_state: |
+        Current checks:
+        - Artifact exists
+        - Status is complete/ready
+        - No pending items (clarifications)
+      what_can_be_extended: |
+        - Add domain-specific validators
+        - Implement custom readiness checks
+        - Create severity-based validations
+        - Define conditional validators
+
+
+# =============================================================================
+# FILE 4: synrg-scaffold.md
+# =============================================================================
+
+synrg_scaffold:
+  filename: "/Users/jelalconnor/.claude/commands/synrg-scaffold.md"
+  total_lines: 1954
+
+  extension_points:
+
+    # Phase Definition Extension Point
+    - ep_id: "scaffold-ep-001"
+      type: "Phase Definition"
+      location: "Lines 139-150"
+      section_name: "Execution Flow (6 Phases + Strategic Analysis)"
+      marker_suggestion: "<!-- EXTENSION: scaffold-phases -->"
+      current_state: |
+        Six main phases + 4 analysis phases:
+        - Phase 1: Project Type Discovery
+        - Phase 1.5: Strategic Foundation Analysis
+        - Phase 2: Adaptive Context Gathering
+        - Phase 2.5: Ecosystem & Alternative Analysis
+        - Phase 3: Development Workflow & Standards
+        - Phase 3.5: Workflow Optimization Analysis
+        - Phase 4: SYNRG Integration Preferences
+        - Phase 4.5: Automation Strategy Validation
+        - Phase 5: Directory Scaffolding & Generation
+        - Phase 6: Validation & Next Steps
+      what_can_be_extended: |
+        - Add custom discovery phases
+        - Insert project-type-specific phases
+        - Create alternative analysis phases
+        - Define organizational onboarding phases
+      custom_phases_could_include: |
+        - Phase 2.75: SecurityRequirementsGathering
+        - Phase 3.25: ComplianceRequirementMapping
+        - Phase 5.5: TemplateCustomization
+
+    # Project Type Questions Extension Point
+    - ep_id: "scaffold-ep-002"
+      type: "Question Set / Configuration"
+      location: "Lines 159-266"
+      section_name: "Phase 1: Project Type Discovery Questions"
+      marker_suggestion: "<!-- EXTENSION: project-type-questions -->"
+      current_state: |
+        Current types:
+        - Web Application
+        - CLI Tool
+        - Library/Package
+        - Mobile App
+        - API/Backend Service
+        - Desktop Application
+        - AI/ML Project
+        - Automation/Script
+      what_can_be_extended: |
+        - Add custom project types
+        - Create industry-specific types
+        - Implement hybrid project type support
+        - Define type-specific follow-up questions
+      custom_types_could_include: |
+        - Blockchain/Smart Contracts
+        - AR/VR Applications
+        - Real-time Data Pipeline
+        - Game Engine
+
+    # Adaptive Context Questions Extension Point
+    - ep_id: "scaffold-ep-003"
+      type: "Question Set / Protocol"
+      location: "Lines 477-1050"
+      section_name: "Phase 2: Adaptive Context Gathering (8 question sets)"
+      marker_suggestion: "<!-- EXTENSION: adaptive-questions -->"
+      current_state: |
+        Question sets for each project type:
+        - 2.1: Web Application
+        - 2.2: CLI Tool
+        - 2.3: Library/Package
+        - 2.4: Mobile App
+        - 2.5: API/Backend Service
+        - 2.6: Desktop Application
+        - 2.7: AI/ML Project
+        - 2.8: Automation/Script
+      what_can_be_extended: |
+        - Add custom question sets for new project types
+        - Implement branching question logic
+        - Create follow-up question chains
+        - Define conditional questions based on answers
+
+    # Analysis Framework Extension Point
+    - ep_id: "scaffold-ep-004"
+      type: "Template / Analysis Pattern"
+      location: "Lines 275-474"
+      section_name: "Phase 1.5: Strategic Foundation Analysis Template"
+      marker_suggestion: "<!-- EXTENSION: analysis-frameworks -->"
+      current_state: |
+        Analysis includes:
+        - Choice validation
+        - Alternative probabilities
+        - Top 1% performer insights
+        - Ecosystem perspective
+        - Tradeoff matrix
+        - Recommendation
+      what_can_be_extended: |
+        - Add custom analysis sections
+        - Create domain-specific analysis frameworks
+        - Implement industry-specific insights
+        - Define custom tradeoff dimensions
+      custom_analyses_could_include: |
+        - SecurityImpactAnalysis
+        - RegulatorySuitability
+        - TimeToMarketAnalysis
+        - TCOProjection
+
+    # Ecosystem Analysis Templates Extension Point
+    - ep_id: "scaffold-ep-005"
+      type: "Template"
+      location: "Lines 1053-1367"
+      section_name: "Phase 2.5: Ecosystem & Alternative Analysis Template"
+      marker_suggestion: "<!-- EXTENSION: ecosystem-analysis-templates -->"
+      current_state: |
+        Analysis per technology:
+        - Choice validation
+        - Alternative analysis
+        - Top 1% insights
+        - Ecosystem perspective
+        - Tradeoff matrix
+        - Recommendation
+      what_can_be_extended: |
+        - Add custom analysis dimensions
+        - Create compliance analysis sections
+        - Implement vendor lock-in analysis
+        - Define hidden cost assessments
+
+    # Workflow Optimization Analysis Extension Point
+    - ep_id: "scaffold-ep-006"
+      type: "Template / Analysis Pattern"
+      location: "Lines 1440-1671"
+      section_name: "Phase 3.5: Workflow Optimization Analysis Template"
+      marker_suggestion: "<!-- EXTENSION: workflow-analysis -->"
+      current_state: |
+        Workflow analysis includes:
+        - Testing strategy optimization
+        - CI/CD optimization
+        - Git workflow efficiency
+        - Industry benchmarks
+        - Workflow tradeoffs
+        - Recommendations
+      what_can_be_extended: |
+        - Add custom workflow optimization areas
+        - Implement domain-specific recommendations
+        - Create role-specific workflow guidance
+        - Define organizational policies
+
+    # Automation Strategy Validation Extension Point
+    - ep_id: "scaffold-ep-007"
+      type: "Template / Protocol"
+      location: "Lines 1749-1918"
+      section_name: "Phase 4.5: Automation Strategy Validation Template"
+      marker_suggestion: "<!-- EXTENSION: automation-strategies -->"
+      current_state: |
+        Automation analysis includes:
+        - Automation level analysis
+        - Screenshot validation strategy
+        - Risk vs speed tradeoff
+        - Final recommendations
+      what_can_be_extended: |
+        - Add custom automation strategies
+        - Create risk-based automation profiles
+        - Implement team maturity-based configurations
+        - Define organizational automation policies
+
+    # Validation Questions Extension Point
+    - ep_id: "scaffold-ep-008"
+      type: "Question Set"
+      location: "Lines 1375-1437"
+      section_name: "Phase 3: Development Workflow & Standards Questions"
+      marker_suggestion: "<!-- EXTENSION: workflow-questions -->"
+      current_state: |
+        Questions cover:
+        - Testing approach
+        - Quality tools
+        - Git workflow
+        - CI/CD
+      what_can_be_extended: |
+        - Add custom workflow questions
+        - Implement conditional questions
+        - Create organization-specific choices
+        - Define required vs optional configurations
+
+    # SYNRG Integration Questions Extension Point
+    - ep_id: "scaffold-ep-009"
+      type: "Question Set"
+      location: "Lines 1678-1740"
+      section_name: "Phase 4: SYNRG Integration Preferences Questions"
+      marker_suggestion: "<!-- EXTENSION: synrg-integration-questions -->"
+      current_state: |
+        Questions about:
+        - SYNRG command inclusion
+        - Automation level
+        - Screenshot validation
+      what_can_be_extended: |
+        - Add project-specific SYNRG commands
+        - Create custom automation profiles
+        - Implement team-based defaults
+        - Define escalation policies
+
+    # Directory Structure Templates Extension Point
+    - ep_id: "scaffold-ep-010"
+      type: "Template"
+      location: "Lines 1921-1923 (referenced)"
+      section_name: "Phase 5: Directory Scaffolding"
+      marker_suggestion: "<!-- EXTENSION: directory-templates -->"
+      current_state: |
+        Template generates:
+        - .claude/ directory structure
+        - README files
+        - Architecture documentation
+        - Configuration files
+      what_can_be_extended: |
+        - Add custom directory layouts
+        - Create industry-specific templates
+        - Implement organizational standards
+        - Define required vs optional files
+
+
+# =============================================================================
+# SUMMARY AND RECOMMENDATIONS
+# =============================================================================
+
+summary:
+  total_extension_points_found: 48
+
+  by_type:
+    agent_registry: 6
+    phase_definition: 6
+    template: 12
+    validation_rules: 6
+    question_set: 6
+    protocol: 4
+    pattern_registry: 2
+
+  by_file:
+    synrg_commit: 6
+    synrg_refactor: 10
+    synrg_spec: 12
+    synrg_scaffold: 10
+
+  top_priority_extensions:
+    - "Agent Registry (all files): Enable custom domain-specific agents"
+    - "Phase Definitions (all files): Support custom phase insertion"
+    - "Template System (synrg-spec, synrg-scaffold): Allow domain-specific templates"
+    - "Validation Rules (synrg-commit, synrg-spec): Enable custom quality gates"
+    - "Question Sets (synrg-scaffold): Support custom discovery questions"
+
+  implementation_strategy:
+    - "Create `.claude/EXTENSION_POINTS/` directory"
+    - "Add `EXTENSION_GUIDE.md` with standardized patterns"
+    - "Create extension templates for each type (agent, phase, template, validator, question)"
+    - "Implement dynamic loader for extensions in each command"
+    - "Document extension registry format and discovery mechanism"
+
+recommended_markers:
+  format: "<!-- EXTENSION: extension-type-name -->"
+  placement: "Above each extension point section"
+  effect: "Enables automated discovery and documentation of extension points"
+
+extension_framework_components:
+  - name: "Agent Registry"
+    purpose: "Register custom agents for specialized tasks"
+    files: "All SYNRG commands"
+    example: "Register security-focused agents, domain-specific experts"
+
+  - name: "Phase Pipeline"
+    purpose: "Insert custom phases into execution flow"
+    files: "synrg-refactor, synrg-spec, synrg-scaffold"
+    example: "Add validation phases, custom analysis phases"
+
+  - name: "Template System"
+    purpose: "Define domain-specific documentation templates"
+    files: "synrg-spec, synrg-scaffold"
+    example: "Security specs, compliance templates, industry standards"
+
+  - name: "Validation Framework"
+    purpose: "Add custom quality gates and validators"
+    files: "synrg-commit, synrg-spec, synrg-refactor"
+    example: "Security validators, compliance checkers, custom metrics"
+
+  - name: "Question Sets"
+    purpose: "Add custom discovery questions for scaffolding"
+    files: "synrg-scaffold"
+    example: "Security questions, compliance requirements, organizational policies"
+
+  - name: "Protocol Extensions"
+    purpose: "Define domain-specific operational rules"
+    files: "All SYNRG commands"
+    example: "Custom error handlers, cascading rules, conditional logic"

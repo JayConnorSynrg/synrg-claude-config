@@ -1,0 +1,70 @@
+# Hook Extension Template
+# Copy this file and customize for your hook extension
+
+# Unique identifier for this extension
+id: "my-hook-extension"
+
+# Human-readable name
+name: "My Hook Extension"
+
+# Semantic version
+version: "1.0.0"
+
+# Extension category (must be "hooks" for hook extensions)
+category: hooks
+
+# Hook type determines when this hook executes
+# Available types:
+#   - pre-execution    (Before command runs)
+#   - post-execution   (After command completes)
+#   - validation       (During validation phase)
+#   - evolution        (During evolution phase)
+hook_type: "pre-execution"
+
+# When to trigger this hook
+# Options:
+#   - always           (Every execution)
+#   - on-condition     (Only when condition met)
+trigger: "always"
+
+# Condition for on-condition triggers (optional)
+# condition:
+#   type: "command-match"
+#   pattern: "synrg-commit"
+
+# Executor - path to script that runs
+# Can be shell script, Python, or any executable
+executor: "${CLAUDE_HOME}/hooks/pre-execution/my-hook.py"
+
+# Arguments passed to executor
+arguments:
+  - "${OBJECTIVE}"      # The user's objective
+  - "${COMMAND_NAME}"   # Which SYNRG command is running
+  # Available variables:
+  # - ${OBJECTIVE}
+  # - ${COMMAND_NAME}
+  # - ${WORKING_DIR}
+  # - ${TIMESTAMP}
+
+# Expected return codes
+success_codes: [0]
+
+# What to do on failure
+# Options:
+#   - abort   (Stop execution)
+#   - warn    (Log warning, continue)
+#   - ignore  (Silently continue)
+failure_action: "warn"
+
+# Timeout in seconds (optional)
+timeout: 30
+
+# Extension metadata
+metadata:
+  author: "your-name"
+  created: "2026-01-09"
+  description: "Detailed description of what this hook does"
+  dependencies: []
+  tags:
+    - hooks
+    - pre-execution

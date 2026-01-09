@@ -1,0 +1,50 @@
+# Validator Extension Template
+# Copy this file and customize for your validator extension
+
+# Unique identifier for this extension
+id: "my-validator-extension"
+
+# Human-readable name
+name: "My Validator Extension"
+
+# Semantic version
+version: "1.0.0"
+
+# Extension category (must be "validators" for validator extensions)
+category: validators
+
+# Which SYNRG commands this extension applies to
+target_commands:
+  - synrg.md
+  # Add more commands as needed:
+  # - synrg-spec.md
+  # - synrg-commit.md
+
+# Which extension point marker to inject at
+# Available validator injection points:
+#   - <!-- EXTENSION: validators-layers -->         (Validation framework layers)
+#   - <!-- EXTENSION: validators-commit -->         (Commit validation rules)
+#   - <!-- EXTENSION: validators-spec -->           (Spec validation rules)
+#   - <!-- EXTENSION: validators-quality-gates -->  (Quality gate layers)
+#   - <!-- EXTENSION: validators-workflow-gates --> (Workflow validation gates)
+injection_point: "<!-- EXTENSION: validators-layers -->"
+
+# The content to inject (format: validation layer with checklist)
+content: |
+  ### Layer N: My Custom Validation
+  - [ ] Check item 1 description
+  - [ ] Check item 2 description
+  - [ ] Check item 3 description
+  - [ ] Check item 4 description
+
+  **Failure Action:** HALT and report issues
+
+# Extension metadata
+metadata:
+  author: "your-name"
+  created: "2026-01-09"
+  description: "Detailed description of what this validator checks"
+  dependencies: []
+  tags:
+    - validation
+    - custom

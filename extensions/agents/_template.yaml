@@ -1,0 +1,50 @@
+# Agent Extension Template
+# Copy this file and customize for your agent extension
+
+# Unique identifier for this extension
+id: "my-agent-extension"
+
+# Human-readable name
+name: "My Agent Extension"
+
+# Semantic version
+version: "1.0.0"
+
+# Extension category (must be "agents" for agent extensions)
+category: agents
+
+# Which SYNRG commands this extension applies to
+target_commands:
+  - synrg.md
+  # Add more commands as needed:
+  # - synrg-refactor.md
+  # - synrg-guided.md
+
+# Which extension point marker to inject at
+# Available agent injection points:
+#   - <!-- EXTENSION: agents-mcp-delegates -->      (MCP domain handlers)
+#   - <!-- EXTENSION: agents-n8n-custom -->         (N8N specialized agents)
+#   - <!-- EXTENSION: agents-reconnaissance -->     (Reconnaissance phase)
+#   - <!-- EXTENSION: agents-refactor-batch1 -->    (Refactor batch 1)
+#   - <!-- EXTENSION: agents-guided -->             (Guided orchestration)
+#   - <!-- EXTENSION: agents-workflow -->           (Workflow specialists)
+injection_point: "<!-- EXTENSION: agents-reconnaissance -->"
+
+# The content to inject (format depends on target location)
+content: |
+  - id: my-custom-agent
+    role: "Description of what this agent does"
+    task: "Specific task this agent performs"
+    tools: ["Read", "Grep", "Glob"]
+    contextScope: "target-only"
+    deliverable: "What this agent returns"
+
+# Extension metadata
+metadata:
+  author: "your-name"
+  created: "2026-01-09"
+  description: "Detailed description of what this agent extension provides"
+  dependencies: []  # List other extension IDs if this depends on them
+  tags:
+    - custom
+    - reconnaissance

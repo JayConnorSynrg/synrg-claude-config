@@ -7,11 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned - Phase 4: Extension Points
-- Add `<!-- EXTENSION: custom-agents -->` markers
-- Create hook registration system
-- Document extension API
-
 ### Planned - Phase 5: Version Infrastructure
 - Add version headers to all commands
 - Implement compatibility checking
@@ -21,6 +16,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create command registry API
 - Implement inter-command communication
 - Add dependency resolution
+
+---
+
+## [1.3.0] - 2026-01-09
+
+### Added - Phase 4: Extension Points Infrastructure
+
+Created extensibility system with 87 extension points across 9 commands:
+
+**Extension Categories:**
+| Category | Points | Purpose |
+|----------|--------|---------|
+| `agents` | 18 | Custom agent definitions |
+| `protocols` | 24 | Custom protocol rules |
+| `validators` | 12 | Custom validation layers |
+| `patterns` | 18 | Custom pattern libraries |
+| `phases` | 10 | Custom workflow phases |
+| `templates` | 8 | Custom templates |
+
+**Marker Syntax:**
+```markdown
+<!-- EXTENSION: {category}-{name} -->
+```
+
+**Infrastructure Files Created:**
+- `config/extensions.yaml` - Extension registry and configuration
+- `config/extension-api.md` - Complete extension API documentation
+- `evolution/migration/phase4-extension-points.yaml` - Extension point manifest
+
+**Extension Templates:**
+- `extensions/agents/_template.yaml`
+- `extensions/validators/_template.yaml`
+- `extensions/patterns/_template.yaml`
+- `extensions/hooks/_template.yaml`
+
+**Hook System:**
+- `hooks/pre-execution/` - Pre-execution hook directory
+- `hooks/post-execution/` - Post-execution hook directory
+- `hooks/validation/` - Validation hook directory
+- `hooks/evolution/` - Evolution hook directory
+- Example hook scripts with metrics collection
+
+**Extension Points by Command:**
+| Command | Points | Priority |
+|---------|--------|----------|
+| synrg.md | 14 | critical |
+| synrg-spec.md | 12 | high |
+| synrg-refactor.md | 10 | high |
+| synrg-scaffold.md | 10 | medium |
+| synrg-guided.md | 7 | medium |
+| synrg-swarm.md | 7 | high |
+| synrg-evolve.md | 7 | medium |
+| synrg-commit.md | 6 | medium |
+| synrg-buildworkflow.md | 5 | high |
+
+### Notes
+- Extension markers NOT yet injected into commands
+- Original commands remain unchanged (backward compatible)
+- Use extension templates to create custom extensions
+- Phase 5 will add version infrastructure
 
 ---
 

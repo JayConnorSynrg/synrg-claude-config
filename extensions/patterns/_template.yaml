@@ -1,0 +1,56 @@
+# Pattern Extension Template
+# Copy this file and customize for your pattern extension
+
+# Unique identifier for this extension
+id: "my-pattern-extension"
+
+# Human-readable name
+name: "My Pattern Extension"
+
+# Semantic version
+version: "1.0.0"
+
+# Extension category (must be "patterns" for pattern extensions)
+category: patterns
+
+# Which SYNRG commands this extension applies to
+target_commands:
+  - synrg.md
+  # Add more commands as needed:
+  # - synrg-refactor.md
+  # - synrg-evolve.md
+
+# Which extension point marker to inject at
+# Available pattern injection points:
+#   - <!-- EXTENSION: patterns-known-failures -->   (Known failure patterns)
+#   - <!-- EXTENSION: patterns-risk-strategies -->  (Risk response strategies)
+#   - <!-- EXTENSION: patterns-protected -->        (Protected code patterns)
+#   - <!-- EXTENSION: patterns-recovery -->         (Error recovery patterns)
+#   - <!-- EXTENSION: patterns-decomposition -->    (Task decomposition)
+#   - <!-- EXTENSION: patterns-n8n -->              (N8N workflow patterns)
+#   - <!-- EXTENSION: patterns-agent -->            (Agent development patterns)
+#   - <!-- EXTENSION: patterns-anti-memory -->      (Anti-memory indicators)
+injection_point: "<!-- EXTENSION: patterns-known-failures -->"
+
+# The content to inject (format: table row or pattern definition)
+content: |
+  | Pattern Category | Pattern Description | Reference Required |
+  | Custom Domain | Known failure pattern in this domain | reference-doc.md |
+
+# Alternative format for detailed patterns:
+# content: |
+#   ### Pattern-CUSTOM-001: Pattern Name
+#   **Context:** When this pattern applies
+#   **Problem:** What goes wrong
+#   **Solution:** How to fix it
+#   **Reference:** documentation-link.md
+
+# Extension metadata
+metadata:
+  author: "your-name"
+  created: "2026-01-09"
+  description: "Detailed description of patterns this extension provides"
+  dependencies: []
+  tags:
+    - patterns
+    - anti-memory

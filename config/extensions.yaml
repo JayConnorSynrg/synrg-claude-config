@@ -1,0 +1,134 @@
+# SYNRG Extension Registry
+# Central registry for all extensions
+# Version: 1.0.0
+
+version: "1.0.0"
+last_updated: "2026-01-09"
+
+# Extension categories
+categories:
+  agents:
+    description: "Custom agent definitions"
+    directory: "${CLAUDE_HOME}/extensions/agents"
+    schema: "agent-extension.schema.yaml"
+
+  protocols:
+    description: "Custom protocol rules"
+    directory: "${CLAUDE_HOME}/extensions/protocols"
+    schema: "protocol-extension.schema.yaml"
+
+  validators:
+    description: "Custom validation layers"
+    directory: "${CLAUDE_HOME}/extensions/validators"
+    schema: "validator-extension.schema.yaml"
+
+  patterns:
+    description: "Custom pattern libraries"
+    directory: "${CLAUDE_HOME}/extensions/patterns"
+    schema: "pattern-extension.schema.yaml"
+
+  templates:
+    description: "Custom templates"
+    directory: "${CLAUDE_HOME}/extensions/templates"
+    schema: "template-extension.schema.yaml"
+
+  hooks:
+    description: "Custom hook registrations"
+    directory: "${CLAUDE_HOME}/extensions/hooks"
+    schema: "hook-extension.schema.yaml"
+
+# Registered extensions (empty by default)
+extensions:
+  agents: []
+  protocols: []
+  validators: []
+  patterns: []
+  templates: []
+  hooks: []
+
+# Extension loading order
+load_order:
+  - protocols    # Load rules first
+  - validators   # Then validation layers
+  - patterns     # Then pattern libraries
+  - agents       # Then agent definitions
+  - templates    # Then templates
+  - hooks        # Finally hooks
+
+# Extension resolution
+resolution:
+  # How to handle conflicts
+  conflict_strategy: "last-wins"  # first-wins | last-wins | error | merge
+
+  # Validation before loading
+  validate_on_load: true
+
+  # Cache loaded extensions
+  cache_enabled: true
+
+# Extension API endpoints
+api:
+  register: "extension.register(category, definition)"
+  unregister: "extension.unregister(category, id)"
+  list: "extension.list(category)"
+  get: "extension.get(category, id)"
+  validate: "extension.validate(category, definition)"
+
+# Example extension format
+example:
+  agent_extension: |
+    # Custom Agent Extension
+    id: "my-custom-agent"
+    name: "My Custom Agent"
+    version: "1.0.0"
+    category: agents
+    target_commands:
+      - synrg.md
+      - synrg-refactor.md
+    injection_point: "<!-- EXTENSION: agents-custom -->"
+    content: |
+      | Custom Task | `my-custom-agent` | haiku |
+    metadata:
+      author: "user"
+      created: "2026-01-09"
+
+  validator_extension: |
+    # Custom Validator Extension
+    id: "security-validator"
+    name: "Security Validation Layer"
+    version: "1.0.0"
+    category: validators
+    target_commands:
+      - synrg.md
+    injection_point: "<!-- EXTENSION: validators-layers -->"
+    content: |
+      ### Layer 5: Security Validation
+      - [ ] No hardcoded credentials
+      - [ ] Input validation present
+      - [ ] Output sanitization
+      - [ ] OWASP Top 10 addressed
+    metadata:
+      author: "user"
+      created: "2026-01-09"
+
+# Hook registration
+hooks:
+  # Pre-execution hooks
+  pre_execution:
+    enabled: true
+    registry: "${CLAUDE_HOME}/hooks/pre-execution/"
+
+  # Post-execution hooks
+  post_execution:
+    enabled: true
+    registry: "${CLAUDE_HOME}/hooks/post-execution/"
+
+  # Validation hooks
+  validation:
+    enabled: true
+    registry: "${CLAUDE_HOME}/hooks/validation/"
+
+  # Evolution hooks
+  evolution:
+    enabled: true
+    registry: "${CLAUDE_HOME}/hooks/evolution/"
