@@ -1,0 +1,355 @@
+# MCP Tool Configuration Protocol
+# Extracted from: synrg.md, synrg-buildworkflow.md, synrg-swarm.md
+# Version: 1.0.0
+
+id: mcp-config
+name: "MCP Tool Configuration Protocol"
+version: "1.0.0"
+extracted_from:
+  - synrg.md
+  - synrg-buildworkflow.md
+  - synrg-swarm.md
+  - agents/n8n-mcp-delegate.md
+  - agents/github-mcp-delegate.md
+
+description: |
+  Protocol for MCP (Model Context Protocol) tool delegation and configuration within the SYNRG
+  multi-agent orchestration system. Establishes mandatory delegation patterns to optimize context
+  usage, enforce anti-pattern detection, and ensure consistent handling of MCP tool calls across
+  all agents and orchestrators.
+
+  CORE PRINCIPLE: "Let sub-agents consume the context for heavy MCP tool calls, then distill
+  findings back to the director."
+
+available_servers:
+  - name: n8n-mcp
+    purpose: n8n workflow automation and management
+    tool_prefix: "mcp__n8n-mcp__*"
+    delegate_agent: n8n-mcp-delegate
+    agent_file: "~/.claude/agents/n8n-mcp-delegate.md"
+    api_url: "https://jayconnorexe.app.n8n.cloud/api/v1"
+    config_location: "/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/config/n8n-config.json"
+
+  - name: n8n-workflows
+    purpose: GitHub repository access for n8n workflow examples
+    tool_prefix: "mcp__n8n-workflows__*"
+    delegate_agent: github-mcp-delegate
+    agent_file: "~/.claude/agents/github-mcp-delegate.md"
+    description: "Access to Zie619/n8n-workflows and other n8n workflow repositories"
+
+tool_patterns:
+  n8n:
+    workflow_operations:
+      - tool: "mcp__n8n-mcp__n8n_get_workflow"
+        purpose: "Fetch workflow by ID"
+        payload_size: "Large (5-50KB)"
+        delegation_example: |
+          Task({
+            subagent_type: "n8n-mcp-delegate",
+            prompt: "Get workflow {id} and return distilled structure",
+            model: "haiku"
+          })
+
+      - tool: "mcp__n8n-mcp__n8n_list_workflows"
+        purpose: "List all workflows"
+        payload_size: "Medium (1-10KB)"
+
+      - tool: "mcp__n8n-mcp__n8n_create_workflow"
+        purpose: "Create new workflow"
+        payload_size: "Response: Small"
+
+      - tool: "mcp__n8n-mcp__n8n_update_full_workflow"
+        purpose: "Full workflow update"
+        payload_size: "Response: Medium"
+
+      - tool: "mcp__n8n-mcp__n8n_update_partial_workflow"
+        purpose: "Incremental update (diff operations)"
+        payload_size: "Response: Small"
+
+      - tool: "mcp__n8n-mcp__n8n_delete_workflow"
+        purpose: "Delete workflow"
+        payload_size: "Response: Minimal"
+
+      - tool: "mcp__n8n-mcp__n8n_validate_workflow"
+        purpose: "Validate workflow by ID"
+        payload_size: "Medium (validation results)"
+        delegation_example: |
+          Task({
+            subagent_type: "n8n-mcp-delegate",
+            prompt: "Validate workflow {id} and return issues/recommendations",
+            model: "haiku"
+          })
+
+      - tool: "mcp__n8n-mcp__n8n_autofix_workflow"
+        purpose: "Auto-fix common workflow issues"
+        payload_size: "Medium (fix report)"
+
+      - tool: "mcp__n8n-mcp__n8n_test_workflow"
+        purpose: "Test/trigger workflow execution"
+        payload_size: "Variable"
+
+      - tool: "mcp__n8n-mcp__n8n_workflow_versions"
+        purpose: "Version management and rollback"
+        payload_size: "Medium"
+
+    node_operations:
+      - tool: "mcp__n8n-mcp__get_node"
+        purpose: "Get node schema/documentation"
+        payload_size: "Medium (1-8KB)"
+        delegation_example: |
+          Task({
+            subagent_type: "n8n-mcp-delegate",
+            prompt: "Get node schema for {nodeType} with key parameters",
+            model: "haiku"
+          })
+
+      - tool: "mcp__n8n-mcp__search_nodes"
+        purpose: "Search nodes by keyword"
+        payload_size: "Medium (1-5KB)"
+        delegation_example: |
+          Task({
+            subagent_type: "n8n-mcp-delegate",
+            prompt: "Search nodes for {query} and return top matches",
+            model: "haiku"
+          })
+
+      - tool: "mcp__n8n-mcp__validate_node"
+        purpose: "Validate node configuration"
+        payload_size: "Small (validation result)"
+
+    template_operations:
+      - tool: "mcp__n8n-mcp__search_templates"
+        purpose: "Search workflow templates"
+        payload_size: "Medium (2-10KB)"
+        delegation_example: |
+          Task({
+            subagent_type: "n8n-mcp-delegate",
+            prompt: "Search templates for {query} with reusable patterns",
+            model: "haiku"
+          })
+
+      - tool: "mcp__n8n-mcp__get_template"
+        purpose: "Get specific template"
+        payload_size: "Large (5-30KB)"
+
+      - tool: "mcp__n8n-mcp__n8n_deploy_template"
+        purpose: "Deploy template to instance"
+        payload_size: "Response: Small"
+
+    execution_health:
+      - tool: "mcp__n8n-mcp__n8n_executions"
+        purpose: "Execution history"
+        payload_size: "Large (can be very large)"
+
+      - tool: "mcp__n8n-mcp__n8n_health_check"
+        purpose: "Health/connectivity check"
+        payload_size: "Small"
+
+      - tool: "mcp__n8n-mcp__validate_workflow"
+        purpose: "Validate workflow JSON"
+        payload_size: "Medium"
+
+      - tool: "mcp__n8n-mcp__tools_documentation"
+        purpose: "Get tool documentation"
+        payload_size: "Medium"
+
+  github:
+    repository_operations:
+      - tool: "mcp__n8n-workflows__search_repositories"
+        purpose: "Search GitHub repositories"
+        payload_size: "Medium (1-10KB)"
+        delegation_example: |
+          Task({
+            subagent_type: "github-mcp-delegate",
+            prompt: "Search repos for {query}",
+            model: "haiku"
+          })
+
+      - tool: "mcp__n8n-workflows__get_file_contents"
+        purpose: "Get file from repository"
+        payload_size: "Variable (can be large)"
+        delegation_example: |
+          Task({
+            subagent_type: "github-mcp-delegate",
+            prompt: "Get file {path} and extract patterns",
+            model: "haiku"
+          })
+
+      - tool: "mcp__n8n-workflows__search_code"
+        purpose: "Search code patterns"
+        payload_size: "Medium (2-15KB)"
+        delegation_example: |
+          Task({
+            subagent_type: "github-mcp-delegate",
+            prompt: "Search code for {pattern}",
+            model: "haiku"
+          })
+
+delegation_rules:
+  hard_gate:
+    name: "MCP Delegation Enforcement (v2.0)"
+    enforcement: "ZERO TOLERANCE"
+    rule: "ALL MCP tool calls MUST be delegated to MCP-specific agents"
+    violation_action: "Immediate self-correction required"
+
+  when_to_delegate:
+    - condition: "Any mcp__* tool call detected"
+      action: "MUST delegate to appropriate MCP agent"
+
+    - condition: "Intent to call mcp__n8n-mcp__*"
+      action: "Delegate to n8n-mcp-delegate"
+
+    - condition: "Intent to call mcp__n8n-workflows__*"
+      action: "Delegate to github-mcp-delegate"
+
+  self_check_protocol:
+    - step: "Before ANY MCP call, ask: 'Am I calling mcp__* directly?'"
+    - step: "If YES, STOP and delegate instead"
+    - step: "If delegating, proceed with Task({ subagent_type: '{mcp}-delegate', ... })"
+    - step: "If direct MCP call slips through, immediately spawn correction agent"
+
+  forbidden_patterns:
+    - pattern: "Direct mcp__* calls from orchestrator"
+      reason: "Violates delegation enforcement"
+
+    - pattern: "Raw MCP payload returns"
+      reason: "Must distill to vital information only"
+
+configuration:
+  mcp_mode: "stdio"
+  log_level: "debug"
+  n8n_api_timeout: 30000
+  n8n_api_max_retries: 3
+
+  context_reduction_targets:
+    minimum: "70%"
+    target: "90%"
+
+  distillation_rules:
+    - "NEVER return raw MCP payloads"
+    - "ALWAYS distill to vital information"
+    - "Include actionable recommendations"
+    - "Reference pattern library when relevant"
+    - "Report context reduction percentage"
+
+  anti_memory_patterns:
+    openai_image_nodes:
+      - issue: "binaryPropertyName must be 'data' NOT '=data'"
+      - issue: "modelId requires ResourceLocator format"
+
+    expression_syntax:
+      - rule: "Static values: 'value'"
+      - rule: "Dynamic expressions: '={{ $json.field }}'"
+      - rule: "Property names: NO '=' prefix"
+
+    connection_types:
+      - rule: "type must be 'main' not '0'"
+
+  delegate_model: "haiku"
+
+examples:
+  n8n_workflow_retrieval:
+    description: "Get and summarize workflow structure"
+    input: "Get workflow gjYSN6xNjLw8qsA1"
+    delegation: |
+      Task({
+        subagent_type: "n8n-mcp-delegate",
+        prompt: `Execute n8n MCP operation:
+          Tool: mcp__n8n-mcp__n8n_get_workflow
+          Parameters: { id: "gjYSN6xNjLw8qsA1", mode: "structure" }
+          Return: Distilled workflow structure with node types and connections`,
+        model: "haiku"
+      })
+    distilled_output:
+      summary: "Brief workflow description"
+      id: "workflow-id"
+      name: "Workflow Name"
+      active: true
+      nodeCount: 15
+      triggerType: "webhook|schedule|manual"
+      nodeTypes: ["unique node types used"]
+      keyNodes:
+        - name: "NodeName"
+          type: "node-type"
+          purpose: "brief description"
+      connections: "summary of flow structure"
+      issues: ["any validation warnings or errors"]
+      recommendations: ["actionable suggestions"]
+
+  github_file_retrieval:
+    description: "Get workflow JSON from repository"
+    input: "Get workflow JSON from Zie619/n8n-workflows"
+    delegation: |
+      Task({
+        subagent_type: "github-mcp-delegate",
+        prompt: `Execute GitHub MCP operation:
+          Tool: mcp__n8n-workflows__get_file_contents
+          Parameters: { path: "workflows/example.json", owner: "Zie619", repo: "n8n-workflows" }
+          Return: Distilled workflow structure with reusable patterns`,
+        model: "haiku"
+      })
+    distilled_output:
+      summary: "Workflow purpose and structure"
+      workflowName: "Name from JSON"
+      nodeCount: 15
+      triggerType: "webhook|schedule|manual"
+      nodeTypes: ["unique node types used"]
+      keyNodes: []
+      connections: "summary of flow structure"
+      reusablePatterns: ["patterns that could be adopted"]
+      requiredCredentials: ["credential types needed"]
+      recommendations: ["how to adapt for use"]
+
+  node_validation:
+    description: "Validate node configuration with anti-pattern detection"
+    input: "Validate OpenAI image node config"
+    delegation: |
+      Task({
+        subagent_type: "n8n-mcp-delegate",
+        prompt: "Validate this OpenAI image node config: { binaryPropertyName: '=data' }",
+        model: "haiku"
+      })
+    expected_behavior:
+      - "IMMEDIATELY detect anti-pattern ('=data' should be 'data')"
+      - "Call mcp__n8n-mcp__validate_node with corrected config"
+      - "Return validation result with anti-pattern warning"
+
+context_efficiency:
+  raw_vs_distilled:
+    mcp_tool: "10,000-50,000 tokens raw"
+    distilled: "500-2,000 tokens"
+    reduction: "70-96%"
+
+  benefits:
+    - "Isolation: MCP payloads stay in sub-agent context, not director"
+    - "Distillation: Only vital information returns to orchestrator"
+    - "Parallel Execution: MCP agents run alongside other reconnaissance agents"
+    - "Focused Analysis: Sub-agent context dedicated to MCP interpretation"
+
+integration:
+  synrg_commands:
+    - command: "/synrg"
+      integration: "Full MCP delegation protocol with detection and routing"
+
+    - command: "/synrg-buildworkflow"
+      integration: "10 specialized agents, all MCP calls delegated"
+
+    - command: "/synrg-swarm"
+      integration: "MCP delegation patterns for sub-agent development"
+
+  pattern_library:
+    openai_image: "patterns/api-integration/openai-image-nodes.md"
+    ai_agent: "patterns/workflow-architecture/ai-agent-typeversion.md"
+    output_parser: "patterns/workflow-architecture/output-parser-config.md"
+    memory_nodes: "patterns/workflow-architecture/memory-session-config.md"
+    if_switch: "patterns/error-handling/if-node-conditions.md"
+
+version_history:
+  "1.0.0":
+    date: "2026-01-09"
+    changes:
+      - "Initial extraction from SYNRG commands"
+      - "Consolidated MCP delegation rules"
+      - "Added tool patterns for n8n and GitHub"
+      - "Included distillation rules and examples"
+      - "Documented anti-memory patterns"

@@ -1,0 +1,675 @@
+# Sub-Agent Spawn Protocol
+# Extracted from: synrg.md, synrg-guided.md, synrg-refactor.md
+# Version: 1.0.0
+
+id: sub-agent-spawn
+name: "Sub-Agent Spawn Protocol"
+version: "1.0.0"
+extracted_from:
+  - synrg.md
+  - synrg-guided.md
+  - synrg-refactor.md
+
+description: |
+  Comprehensive protocol for spawning, coordinating, and managing sub-agents
+  within the SYNRG orchestration framework. Covers Task tool invocation patterns,
+  parallel execution strategies, model selection, prompt injection requirements,
+  result handling, and completion criteria.
+
+# =============================================================================
+# SPAWN PATTERNS
+# =============================================================================
+spawn_patterns:
+  parallel:
+    rules:
+      - Invoke ALL independent Task calls in a single message for maximum parallelization
+      - Only parallelize when quality can be maintained
+      - Prefer sequential execution if parallel risks quality
+      - Coordinate comprehensive validation across parallel branches
+      - Target 5-10 parallel agents maximum per batch
+
+    batch_structure:
+      - name: "Safe Parallel Batch"
+        description: "Independent low-risk tasks that share no dependencies"
+        max_concurrency: 10
+        validation_checkpoint: true
+
+      - name: "Medium Parallel Batch"
+        description: "Tasks with moderate risk, small batches with checkpoints"
+        max_concurrency: 3
+        validation_checkpoint: true
+
+      - name: "Sequential Critical Phase"
+        description: "High-value/high-risk tasks requiring sequential execution"
+        max_concurrency: 1
+        validation_frequency: "AFTER_EACH_TASK"
+
+    example: |
+      // BATCH 1: 6 Parallel Discovery Agents (single message)
+      Task({ subagent_type: "general-purpose", prompt: "Agent 1A task...", model: "haiku" })
+      Task({ subagent_type: "general-purpose", prompt: "Agent 1B task...", model: "haiku" })
+      Task({ subagent_type: "general-purpose", prompt: "Agent 1C task...", model: "haiku" })
+      Task({ subagent_type: "general-purpose", prompt: "Agent 1D task...", model: "haiku" })
+      Task({ subagent_type: "general-purpose", prompt: "Agent 1E task...", model: "haiku" })
+      Task({ subagent_type: "general-purpose", prompt: "Agent 1F task...", model: "haiku" })
+
+  sequential:
+    rules:
+      - Use for tasks with dependencies on prior results
+      - Use for critical path tasks that cannot risk parallel failures
+      - Use for high-risk modifications requiring per-task validation
+      - Validate comprehensively after each task
+      - Maintain rollback capability between tasks
+
+    dependency_handling:
+      - Build clear DAG (Directed Acyclic Graph) of task dependencies
+      - Identify critical path vs. parallel opportunities
+      - Pass only essential information between agents
+      - Use file paths and references to minimize context transfer
+
+# =============================================================================
+# AGENT TYPES
+# =============================================================================
+agent_types:
+  general_purpose:
+    name: "general-purpose"
+    description: "Default agent for most tasks, Claude matches via description"
+    model: "haiku"
+    use_when:
+      - Task requires domain expertise
+      - Response will be >500 tokens
+      - Task can run in parallel with others
+      - Task is reusable across objectives
+
+  specialized_agents:
+    n8n_domain:
+      - name: "n8n-node-validator"
+        model: "haiku"
+        purpose: "Node validation tasks"
+
+      - name: "n8n-connection-fixer"
+        model: "haiku"
+        purpose: "Connection fixing tasks"
+
+      - name: "n8n-version-researcher"
+        model: "haiku"
+        purpose: "Version research tasks"
+
+      - name: "n8n-expression-debugger"
+        model: "haiku"
+        purpose: "Expression debugging tasks"
+
+      - name: "n8n-pattern-retriever"
+        model: "haiku"
+        purpose: "Pattern retrieval tasks"
+
+      - name: "n8n-workflow-expert"
+        model: "sonnet"
+        purpose: "Complex multi-step n8n tasks"
+
+    mcp_delegates:
+      - name: "n8n-mcp-delegate"
+        model: "haiku"
+        purpose: "ALL mcp__n8n-mcp__* tool calls"
+        agent_file: "~/.claude/agents/n8n-mcp-delegate.md"
+        mandatory: true
+        enforcement: "Direct MCP calls FORBIDDEN"
+
+      - name: "github-mcp-delegate"
+        model: "haiku"
+        purpose: "ALL mcp__n8n-workflows__* tool calls"
+        agent_file: "~/.claude/agents/github-mcp-delegate.md"
+        mandatory: true
+        enforcement: "Direct MCP calls FORBIDDEN"
+
+    reconnaissance_agents:
+      - id: "codebase-analyzer"
+        role: "Codebase Structure Analysis"
+        task: "Map directory structure, patterns, conventions, complexity"
+        tools: ["Glob", "Grep", "Read"]
+        context_scope: "Files and directories only"
+        deliverable:
+          structure: "Directory layout and file organization"
+          patterns: "Architectural patterns detected"
+          conventions: "Naming conventions and code style"
+          complexity: "Cyclomatic complexity metrics"
+
+      - id: "dependency-mapper"
+        role: "Dependency Graph Analysis"
+        task: "Map internal, external, and shared dependencies"
+        tools: ["Glob", "Grep", "Read"]
+        context_scope: "Import statements and package files"
+        deliverable:
+          internal: "Internal module dependencies"
+          external: "External package dependencies"
+          shared: "Shared resources and utilities"
+          graph: "Dependency graph structure"
+
+      - id: "quality-assessor"
+        role: "Code Quality Metrics"
+        task: "Assess testing, documentation, code quality, performance, security"
+        tools: ["Bash", "Read", "Grep"]
+        context_scope: "Test files, docs, config files, git history"
+        deliverable:
+          testing: "Test coverage and quality metrics"
+          documentation: "Documentation completeness"
+          codeQuality: "Maintainability and complexity scores"
+          performance: "Performance benchmarks"
+          security: "Security audit status"
+
+      - id: "production-analyzer"
+        role: "Production Context Analysis"
+        task: "Analyze stability, usage, business impact"
+        tools: ["Bash", "Read", "Grep"]
+        context_scope: "Logs, monitoring configs, git history, documentation"
+        deliverable:
+          stability: "Uptime, incidents, error rates"
+          usage: "User metrics, request volume, critical paths"
+          business: "Revenue impact, compliance, SLA"
+
+      - id: "impact-identifier"
+        role: "Affected Systems Identification"
+        task: "Identify primary targets, secondary impacts, dependency chains"
+        tools: ["Grep", "Read", "Glob"]
+        context_scope: "Related files and dependencies"
+        deliverable:
+          primaryTargets: "Direct targets of objective"
+          secondaryImpacts: "Indirect systems affected"
+          dependencyChain: "Full dependency chain"
+
+# =============================================================================
+# MODEL SELECTION
+# =============================================================================
+model_selection:
+  haiku:
+    use_for:
+      - Focused atomic tasks
+      - Single-responsibility operations
+      - Node validation
+      - Pattern retrieval
+      - MCP delegation
+      - File scanning
+      - Dependency mapping
+    token_budget: "~30K-40K tokens maximum"
+
+  sonnet:
+    use_for:
+      - Complex multi-step tasks
+      - Architectural decisions
+      - Tasks requiring broader context
+      - Integration validation
+      - Error analysis requiring deep reasoning
+    token_budget: "~50K-100K tokens maximum"
+
+  selection_rule: |
+    Default to haiku for focused tasks.
+    Use sonnet only when task complexity requires broader reasoning.
+    Always specify model explicitly in Task invocation.
+
+# =============================================================================
+# PROMPT REQUIREMENTS
+# =============================================================================
+prompt_requirements:
+  structure:
+    - section: "CONTEXT"
+      required: true
+      content:
+        - User objective
+        - Scope definition
+        - Exclusions
+        - Relevant prior results
+
+    - section: "TASK"
+      required: true
+      content:
+        - Single clear objective
+        - Atomic responsibility
+        - Specific deliverable
+
+    - section: "DELIVERABLE"
+      required: true
+      content:
+        - Expected output format (usually JSON)
+        - Required fields
+        - Evidence requirements
+
+    - section: "ACTIONS"
+      required: true
+      content:
+        - Numbered step-by-step instructions
+        - Tools to use
+        - Specific patterns to follow
+
+    - section: "VALIDATION_CRITERIA"
+      required: true
+      content:
+        - Success conditions with checkmarks
+        - Evidence required
+        - Quality gates to pass
+
+    - section: "ROBUSTNESS_REQUIREMENTS"
+      required: true
+      content:
+        - Error handling instructions
+        - Fallback procedures
+        - Escalation criteria
+
+    - section: "BUDGETS"
+      required: true
+      content:
+        - Time budget (take as long as needed for quality)
+        - Context budget (~30K-50K tokens)
+
+  mandatory_injections:
+    anti_memory_protocol:
+      trigger: "Task involves known failure patterns"
+      injection: |
+        ANTI-MEMORY PROTOCOL ACTIVE
+
+        This task involves known failure patterns: {patterns}
+
+        MANDATORY REQUIREMENTS:
+        1. DO NOT reconstruct configurations from memory
+        2. FETCH and READ the documented reference template
+        3. COPY exact syntax - do not adapt or improve
+        4. VALIDATE before implementing
+        5. VERIFY expected output
+
+        Failure to follow this protocol has caused repeated errors in past executions.
+
+    documentation_freshness:
+      trigger: "Task involves web searches or documentation lookups"
+      injection: |
+        DOCUMENTATION FRESHNESS: Determine current date first.
+        Always search for LATEST docs by appending current year to queries.
+        Reject docs older than 1 year.
+
+    pattern_library_reference:
+      trigger: "Task involves n8n or workflows"
+      injection: |
+        Pattern library: /Users/jelalconnor/CODING/N8N/Workflows/.claude/patterns/
+        Check pattern-index.json for relevant patterns before acting.
+
+  example_prompt: |
+    You are Agent 1A-FileScanner for SYNRG-REFACTOR v3.0.
+
+    **CONTEXT**:
+    - User Objective: ${executionConfig.objective}
+    - Scope: ${executionConfig.scope}
+    - Exclusions: ${executionConfig.exclusions}
+
+    **TASK**: Scan and categorize all files in scope
+
+    **DELIVERABLE**: Structured file tree with metadata (JSON format)
+
+    **ACTIONS**:
+    1. Use Glob tool to find all files matching scope patterns
+    2. For each file, extract path, type, size, timestamps
+    3. Categorize files (needs_analysis, standard, critical)
+    4. Flag issues (large files, inconsistent naming, orphans)
+
+    **OUTPUT FORMAT** (JSON):
+    {
+      "summary": { ... },
+      "files": [ ... ]
+    }
+
+    **VALIDATION CRITERIA**:
+    - All paths exist and are accessible
+    - All files properly categorized
+    - JSON is valid and parseable
+
+    **ROBUSTNESS REQUIREMENTS** (SYNRG v3.0):
+    - If Glob tool fails: Perform 5-Why root cause analysis
+    - If file access errors: Assess impact
+    - If zero files found: Escalate immediately
+
+    **TIME BUDGET**: Take as long as needed for thorough analysis
+    **CONTEXT BUDGET**: ~30K tokens maximum
+
+    Execute this task with production-grade quality.
+
+# =============================================================================
+# TASK TOOL INVOCATION SYNTAX
+# =============================================================================
+task_invocation:
+  basic_syntax: |
+    Task({
+      subagent_type: "general-purpose",
+      prompt: "[Complete prompt with all sections]",
+      model: "haiku"
+    })
+
+  mcp_delegation_syntax: |
+    // n8n MCP delegation
+    Task({
+      subagent_type: "n8n-mcp-delegate",
+      prompt: "Get workflow {id} and return distilled structure",
+      model: "haiku"
+    })
+
+    // GitHub MCP delegation
+    Task({
+      subagent_type: "github-mcp-delegate",
+      prompt: "Search repos for {query}",
+      model: "haiku"
+    })
+
+  specialized_agent_syntax: |
+    Task({
+      subagent_type: "n8n-workflow-expert",
+      prompt: "[Complex n8n task with full context]",
+      model: "sonnet"
+    })
+
+# =============================================================================
+# RESULT HANDLING
+# =============================================================================
+result_handling:
+  consolidation:
+    pattern: "Director consolidates findings from all sub-agents"
+    steps:
+      - Receive agentReports from all sub-agents
+      - Merge using comprehensive_merge strategy
+      - Validate completeness against required data
+      - Fill gaps by spawning additional agents if needed
+
+  distillation:
+    purpose: "Reduce context consumption by 70-96%"
+    for_mcp_agents:
+      return_format:
+        summary: "2-3 sentence summary"
+        vitalData: "Key extracted data points"
+        recommendations: "Specific suggestions"
+        warnings: "Issues or anti-patterns"
+        references: "IDs/paths for follow-up"
+      exclude:
+        - "Full JSON payloads"
+        - "Raw API responses"
+        - "Complete node definitions"
+        - "Execution logs"
+
+  error_handling:
+    on_failure:
+      - Perform 5-Why root cause analysis
+      - Assess current impact (severity, scope, urgency)
+      - Predict future impact
+      - Detect cascade risk
+      - Identify preventive actions
+      - Escalate if cascade risk > 70% or architectural change needed
+
+    failure_types:
+      - type: "VALIDATION_FAILURE"
+        action: "Revert, try alternative approach"
+        continue: true
+
+      - type: "REGRESSION_DETECTED"
+        action: "Immediate revert to baseline"
+        continue: "with safeguards"
+
+      - type: "BLOCKER_ENCOUNTERED"
+        action: "Document and escalate"
+        continue: false
+
+      - type: "ECOSYSTEM_FAILURE"
+        action: "Rollback, escalate to user"
+        continue: false
+
+# =============================================================================
+# COMPLETION CRITERIA
+# =============================================================================
+completion_criteria:
+  validation_layers:
+    - layer: 1
+      name: "Technical"
+      checks:
+        - All tests passing (Unit + Integration + E2E)
+        - Zero type errors
+        - Build succeeds
+        - No console errors
+
+    - layer: 2
+      name: "Integration"
+      checks:
+        - Components connect properly
+        - Data flows correctly
+        - APIs communicate as expected
+        - No regressions detected
+
+    - layer: 2.5
+      name: "Ecosystem"
+      checks:
+        - Inbound dependencies functional
+        - Outbound dependencies reachable
+        - Critical paths intact
+        - Integration points operational
+
+    - layer: 3
+      name: "User Reality"
+      checks:
+        - Actual user can complete task
+        - UX is intuitive
+        - Works in production-like conditions
+        - Screenshot evidence (if required)
+
+    - layer: 4
+      name: "Future-Proofing"
+      checks:
+        - Security audit passed
+        - Performance benchmarked
+        - Documentation complete
+        - Error handling comprehensive
+
+  quality_gates:
+    - name: "Testing"
+      requirement: "100% of planned tests passing"
+
+    - name: "Documentation"
+      requirement: "100% complete (no TODOs)"
+
+    - name: "Security"
+      requirement: "0 critical/high vulnerabilities"
+
+    - name: "Performance"
+      requirement: "0% regression from baseline"
+
+    - name: "Error Handling"
+      requirement: "All edge cases handled"
+
+    - name: "Code Quality"
+      requirement: "Linting passes, acceptable complexity"
+
+  evidence_requirements:
+    code_changes:
+      - Test output showing all tests pass
+      - No new console errors/warnings
+      - Diff showing exactly what changed
+      - Performance impact assessment
+
+    ui_changes:
+      - Screenshot/video of working feature
+      - Accessibility audit (WCAG 2.1 AA)
+      - Responsive design verification
+      - Cross-browser compatibility
+
+    api_changes:
+      - Request/response examples
+      - API contract validation
+      - Error handling demonstration
+      - Load testing results
+
+    configuration_changes:
+      - Before/after comparison
+      - Services still running validation
+      - Rollback procedure documented
+      - Impact analysis on dependents
+
+# =============================================================================
+# DELEGATION CHECK PROTOCOL
+# =============================================================================
+delegation_check:
+  mandatory_before_execution: true
+  steps:
+    - step: "IDENTIFY"
+      question: "Is this task delegatable to a focused agent?"
+
+    - step: "MATCH"
+      action: "Check ~/.claude/agents/ for qualified agents"
+
+    - step: "CREATE"
+      action: "If no match exists, create the agent first"
+
+    - step: "DELEGATE"
+      action: "Use Task tool with specific agent type"
+
+  agent_auto_creation:
+    when: "No qualified agent exists"
+    steps:
+      - Analyze task for atomic responsibility
+      - Generate agent definition (YAML frontmatter + Markdown prompt)
+      - Write to ~/.claude/agents/{domain}-{focus}.md
+      - Document creation in agents-evolution.md
+      - Delegate original task to new agent
+
+  context_delegation_mandate:
+    rules:
+      - "Large document reads (>500 tokens) -> Delegate to Explore or general-purpose"
+      - "ALL MCP tool calls -> Delegate to MCP-specific agents"
+      - "ALL context gathering operations -> Delegate appropriately"
+
+    self_check: |
+      Before EVERY operation:
+      - Is this an MCP call? -> MUST delegate to MCP agent
+      - Is this a large file read? -> MUST delegate to Explore/general-purpose
+      - Is this context gathering? -> MUST delegate to appropriate agent
+      - Will response be >500 tokens? -> MUST delegate
+
+      If ANY = YES -> DELEGATE. No exceptions.
+
+# =============================================================================
+# EXAMPLES
+# =============================================================================
+examples:
+  parallel_reconnaissance:
+    description: "Spawn 5 reconnaissance agents in parallel"
+    code: |
+      // Execute in single message for parallel execution
+
+      Task({
+        subagent_type: "general-purpose",
+        prompt: "Agent codebase-analyzer: Map directory structure...",
+        model: "haiku"
+      })
+
+      Task({
+        subagent_type: "general-purpose",
+        prompt: "Agent dependency-mapper: Map dependencies...",
+        model: "haiku"
+      })
+
+      Task({
+        subagent_type: "general-purpose",
+        prompt: "Agent quality-assessor: Assess code quality...",
+        model: "haiku"
+      })
+
+      Task({
+        subagent_type: "general-purpose",
+        prompt: "Agent production-analyzer: Analyze production context...",
+        model: "haiku"
+      })
+
+      Task({
+        subagent_type: "general-purpose",
+        prompt: "Agent impact-identifier: Identify affected systems...",
+        model: "haiku"
+      })
+
+  mcp_delegation:
+    description: "Delegate MCP calls to specialized agents"
+    code: |
+      // NEVER call MCP tools directly
+      // ALWAYS delegate to MCP agents
+
+      // n8n workflow retrieval
+      Task({
+        subagent_type: "n8n-mcp-delegate",
+        prompt: "Get workflow abc123 and return distilled structure with nodes, connections, and validation issues",
+        model: "haiku"
+      })
+
+      // GitHub repository search
+      Task({
+        subagent_type: "github-mcp-delegate",
+        prompt: "Search repositories for n8n-workflows and extract top 5 relevant results",
+        model: "haiku"
+      })
+
+  sequential_critical:
+    description: "Execute critical tasks sequentially with validation"
+    code: |
+      // Critical tasks execute one at a time
+      // Each task validates before next begins
+
+      // Task 1: Schema migration
+      const result1 = await Task({
+        subagent_type: "general-purpose",
+        prompt: "Execute database migration with full rollback capability...",
+        model: "sonnet"
+      })
+
+      // Validate result1 (5-layer validation)
+      await validateComprehensively(result1)
+
+      // Task 2: API contract update (depends on Task 1)
+      const result2 = await Task({
+        subagent_type: "general-purpose",
+        prompt: "Update API contracts to match new schema...",
+        model: "sonnet"
+      })
+
+      // Validate result2
+      await validateComprehensively(result2)
+
+  error_recovery:
+    description: "Handle sub-agent failures with comprehensive analysis"
+    code: |
+      const taskResult = await Task({
+        subagent_type: "general-purpose",
+        prompt: "...",
+        model: "haiku"
+      })
+
+      if (!taskResult.success) {
+        // Mandatory error analysis
+        const errorAnalysis = {
+          rootCause: identify5WhyRootCause(taskResult.error),
+          currentImpact: assessCurrentImpact(taskResult.error),
+          futureImpact: predictFutureImpact(taskResult.error),
+          cascadeRisk: analyzeCascadePotential(taskResult.error),
+          preventiveActions: identifyPreventiveActions(taskResult.error)
+        }
+
+        if (errorAnalysis.cascadeRisk.probability > 70) {
+          // Escalate to user
+          escalateToUser(errorAnalysis)
+        } else {
+          // Revert and try alternative
+          revertToBaseline()
+          tryAlternativeApproach(errorAnalysis.suggestedAlternatives)
+        }
+      }
+
+# =============================================================================
+# VERSION HISTORY
+# =============================================================================
+version_history:
+  - version: "1.0.0"
+    date: "2026-01-09"
+    changes:
+      - Initial extraction from synrg.md, synrg-guided.md, synrg-refactor.md
+      - Consolidated spawn patterns (parallel/sequential)
+      - Documented agent types and model selection
+      - Captured prompt requirements and injection protocols
+      - Defined result handling and completion criteria
+      - Included practical examples

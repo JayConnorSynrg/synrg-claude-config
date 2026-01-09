@@ -1,91 +1,103 @@
 # SYNRG Protocol Registry
-# Auto-generated index of extractable protocol modules
-# Version: 1.0.0
+# Index of extracted protocol modules
+# Version: 1.1.0
 
-version: "1.0.0"
+version: "1.1.0"
 last_updated: "2026-01-09"
+phase: "2-complete"
 
-# Protocols identified for extraction (Phase 2)
-# These are duplicated across multiple commands and should be modularized
+# Extracted Protocols (Phase 2 Complete)
+# These protocols are now available as standalone modules
 
 protocols:
   # Mandatory Context Delegation Protocol
-  # Found in: synrg.md, synrg-refactor.md, synrg-swarm.md, synrg-buildworkflow.md
   - id: mcdp
     name: "Mandatory Context Delegation Protocol"
-    status: embedded  # embedded | extracted | deprecated
+    status: extracted
+    path: "./mcdp.yaml"
+    lines: 165
     source_commands:
       - synrg.md
       - synrg-refactor.md
       - synrg-swarm.md
       - synrg-buildworkflow.md
-    future_path: "./mcdp.yaml"
-    estimated_lines: 45
+    description: "Enforces sub-agent delegation for context efficiency"
 
   # Sub-Agent Spawn Protocol
-  # Found in: synrg.md, synrg-guided.md, synrg-refactor.md
   - id: sub-agent-spawn
     name: "Sub-Agent Spawn Protocol"
-    status: embedded
+    status: extracted
+    path: "./sub-agent-spawn.yaml"
+    lines: 675
     source_commands:
       - synrg.md
       - synrg-guided.md
       - synrg-refactor.md
-    future_path: "./sub-agent-spawn.yaml"
-    estimated_lines: 80
+    description: "Rules for spawning and managing parallel/sequential sub-agents"
 
   # Value-First Analysis Protocol
-  # Found in: synrg.md, synrg-spec.md
   - id: value-first
     name: "Value-First Analysis Protocol"
-    status: embedded
+    status: extracted
+    path: "./value-first.yaml"
+    lines: 280
     source_commands:
       - synrg.md
       - synrg-spec.md
-    future_path: "./value-first.yaml"
-    estimated_lines: 120
+    description: "Value-based prioritization and impact assessment"
 
   # Git Commit Protocol
-  # Found in: synrg-commit.md
   - id: git-commit
     name: "Git Commit Protocol"
-    status: embedded
+    status: extracted
+    path: "./git-commit.yaml"
+    lines: 450
     source_commands:
       - synrg-commit.md
-    future_path: "./git-commit.yaml"
-    estimated_lines: 200
+    description: "Git workflow, atomic commits, and message formatting"
 
   # Phase Gate Protocol
-  # Found in: synrg-spec.md, synrg-scaffold.md
   - id: phase-gate
     name: "Phase Gate Protocol"
-    status: embedded
+    status: extracted
+    path: "./phase-gate.yaml"
+    lines: 406
     source_commands:
       - synrg-spec.md
       - synrg-scaffold.md
-    future_path: "./phase-gate.yaml"
-    estimated_lines: 60
+    description: "Phase transition gates and approval requirements"
 
   # MCP Tool Configuration
-  # Found in: synrg.md, synrg-buildworkflow.md, synrg-swarm.md
   - id: mcp-config
-    name: "MCP Tool Configuration"
-    status: embedded
+    name: "MCP Tool Configuration Protocol"
+    status: extracted
+    path: "./mcp-config.yaml"
+    lines: 355
     source_commands:
       - synrg.md
       - synrg-buildworkflow.md
       - synrg-swarm.md
-    future_path: "./mcp-config.yaml"
-    estimated_lines: 150
+    description: "MCP server configuration and delegation patterns"
 
-# Extraction queue (Phase 2 priority order)
-extraction_queue:
-  - mcdp           # Highest duplication, extract first
-  - sub-agent-spawn
-  - mcp-config
-  - phase-gate
-  - value-first
-  - git-commit
+# Protocol loader documentation
+loader: "./loader.md"
+
+# Extraction statistics
+statistics:
+  total_protocols: 6
+  total_lines: 2331
+  extraction_date: "2026-01-09"
+  extraction_phase: 2
+
+# Protocol import syntax (for Phase 3)
+import_syntax: "<!-- PROTOCOL_IMPORT: [protocol_id] -->"
 
 # Schema version for protocol files
 protocol_schema_version: "1.0.0"
+
+# Next phase: Path Variables (Phase 3)
+next_phase:
+  id: 3
+  name: "Path Variables"
+  description: "Replace hardcoded paths with ${CLAUDE_HOME} variables"
+  status: "pending"

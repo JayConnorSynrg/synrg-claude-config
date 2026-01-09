@@ -1,0 +1,370 @@
+# Git Commit Protocol
+# Extracted from: synrg-commit.md
+# Version: 1.0.0
+
+id: git-commit
+name: "Git Commit Protocol"
+version: "1.0.0"
+extracted_from:
+  - synrg-commit.md
+
+description: |
+  Intelligent atomic commit protocol for analyzing uncommitted changes,
+  decomposing them into logical atomic commits, generating senior-level
+  conventional commit messages, and executing git operations with
+  comprehensive validation and safety mechanisms.
+
+commit_message_format:
+  structure: |
+    <type>(<scope>): <subject>
+
+    <body>
+
+    <footer>
+
+  header:
+    type:
+      description: "Commit type indicating the nature of changes"
+      values:
+        - feat: "New feature"
+        - fix: "Bug fix"
+        - docs: "Documentation only"
+        - style: "Code style (formatting, no logic change)"
+        - refactor: "Code refactoring (no feature/fix)"
+        - test: "Adding or updating tests"
+        - chore: "Build process, dependencies, configs"
+    scope:
+      description: "Module, feature, or area affected"
+      inference_priority:
+        - "Common scopes from repository history"
+        - "Module/feature from context analysis"
+        - "Directory path segment (e.g., src/auth/profile.ts -> auth)"
+    subject:
+      description: "Brief description of the change"
+      max_length: 50
+      rules:
+        - "Use imperative mood (add, fix, update - not added, fixed, updated)"
+        - "Start with lowercase letter after type/scope"
+        - "No trailing period"
+        - "Truncate with '...' if exceeding max length"
+
+  body:
+    description: "Detailed explanation of What, Why, How, and Impact"
+    sections:
+      - "**What**: Describe the changes made"
+      - "**Why**: Explain the rationale/motivation"
+      - "**How**: Describe implementation approach"
+      - "**Impact**: Summarize deployment/breaking impact"
+
+  footer:
+    components:
+      - breaking_changes: "BREAKING CHANGE: <description>"
+      - issue_refs: "Refs: #123, #456"
+      - attribution: |
+          Generated with [Claude Code](https://claude.com/claude-code)
+          Co-Authored-By: Claude <noreply@anthropic.com>
+
+  rules:
+    - "Use imperative mood in subject (add, not added)"
+    - "Subject line max 50 characters"
+    - "Separate subject from body with blank line"
+    - "Wrap body at 72 characters"
+    - "Include comprehensive body explaining what/why/how"
+    - "Reference related issues or tickets in footer"
+    - "Never use vague messages (fix bug, update code)"
+    - "Never include implementation details in subject"
+    - "Never use past tense or present continuous"
+
+workflow_steps:
+  phase_1_reconnaissance:
+    description: "Parallel analysis with 6 sub-agents"
+    agents:
+      - name: "git-diff-analyzer"
+        role: "Parse and structure git status and diff output"
+        commands:
+          - "git status --porcelain"
+          - "git diff --cached --stat"
+          - "git diff --stat"
+          - "git diff --cached"
+          - "git diff"
+          - "git ls-files --others --exclude-standard"
+
+      - name: "context-mapper"
+        role: "Map changed files to architectural context and dependencies"
+        analyzes:
+          - "File imports and exports"
+          - "Module/feature boundaries"
+          - "Dependency graph"
+          - "Architectural layers"
+
+      - name: "intent-detector"
+        role: "Infer developer intent from changes"
+        analyzes:
+          - "Diff content patterns"
+          - "Comments and naming"
+          - "Branch name context"
+          - "Breaking change indicators"
+
+      - name: "quality-checker"
+        role: "Assess code quality metrics"
+        checks:
+          - "Type check errors"
+          - "Lint status/warnings"
+          - "Test coverage delta"
+          - "Security audit"
+
+      - name: "impact-assessor"
+        role: "Predict impact and risk of changes"
+        analyzes:
+          - "API contract changes"
+          - "Database schema changes"
+          - "Configuration changes"
+          - "Deployment risk level"
+
+      - name: "commit-history-analyzer"
+        role: "Analyze recent commit patterns and conventions"
+        extracts:
+          - "Conventional commit usage"
+          - "Common types and scopes"
+          - "Message length patterns"
+          - "Footer conventions"
+
+  phase_2_decomposition:
+    description: "Director synthesis and atomic grouping"
+    steps:
+      - "Group changes by feature/module"
+      - "Group changes by intent"
+      - "Separate test changes from implementation"
+      - "Separate documentation from code"
+      - "Merge overlapping groups"
+      - "Validate atomicity of each group"
+      - "Determine commit order via dependency graph"
+      - "Generate commit message for each group"
+
+  phase_3_execution:
+    description: "Validation and git operations"
+    steps:
+      - "Run pre-commit validation (optional)"
+      - "Create safety backup branch"
+      - "Stage files for each commit group"
+      - "Execute atomic commits sequentially"
+      - "Validate each commit success"
+      - "Report comprehensive summary"
+      - "Clean up backup branch on success"
+
+atomic_commit_principles:
+  definition: "A commit is atomic if:"
+  criteria:
+    - "Has a single, clear purpose"
+    - "Can be reverted independently"
+    - "Builds and passes tests (if tests exist)"
+    - "Does not break the application"
+    - "Is the smallest meaningful unit of change"
+
+  do_use_when:
+    - "Each commit represents a complete, logical unit of work"
+    - "Commits can be reviewed independently"
+    - "Commits can be cherry-picked to other branches"
+    - "Each commit tells a clear story in git history"
+
+  avoid_when:
+    - "Would break the build or tests"
+    - "So small they have no meaning"
+    - "Mix unrelated changes"
+    - "Create unnecessary noise in history"
+
+branch_strategies:
+  supported_workflows:
+    - "Feature branch workflow"
+    - "Git Flow"
+    - "GitHub Flow"
+    - "Trunk-based development"
+
+  branch_name_extraction:
+    purpose: "Extract issue references and context from branch names"
+    example: "feature/user-profile-update -> US-123 reference"
+
+  backup_branch_pattern: "synrg-commit-backup-<timestamp>"
+
+pre_commit_checks:
+  quality_gates:
+    - name: "tests_pass"
+      description: "All tests must pass"
+      blocking: true
+    - name: "lint_pass"
+      description: "No lint errors"
+      blocking: true
+    - name: "type_check_pass"
+      description: "No TypeScript/type errors"
+      blocking: true
+    - name: "security_pass"
+      description: "No critical security issues"
+      blocking: true
+    - name: "build_pass"
+      description: "Project builds successfully"
+      blocking: false
+
+  validation_commands:
+    - "npm run type-check"
+    - "npm run lint"
+    - "npm run test -- --coverage"
+    - "npm audit --production"
+
+  integrations:
+    - "husky"
+    - "lint-staged"
+    - "commitlint"
+    - "CI/CD pipelines"
+
+post_commit_actions:
+  on_success:
+    - "Delete backup branch"
+    - "Display execution summary"
+    - "Report successful commit hashes"
+
+  on_failure:
+    - "Rollback to backup branch"
+    - "Display error details"
+    - "Provide manual recovery instructions"
+
+  summary_display:
+    - "Total commits attempted"
+    - "Successful commits with hashes"
+    - "Failed commits with errors"
+    - "Skipped commits"
+
+error_handling:
+  error_types:
+    - type: "MERGE_CONFLICT"
+      action: "abort"
+      rollback: true
+      message: "Resolve conflicts manually"
+
+    - type: "PRE_COMMIT_HOOK_FAILED"
+      action: "fix"
+      rollback: false
+      message: "Fix issues and retry"
+
+    - type: "GIT_PERMISSION_ERROR"
+      action: "escalate"
+      rollback: false
+      message: "Check repository permissions"
+
+    - type: "EMPTY_COMMIT"
+      action: "skip"
+      rollback: false
+      message: "No changes to commit"
+
+  rollback_procedure:
+    steps:
+      - "git reset --hard <backup-branch>"
+      - "git branch -D <backup-branch>"
+
+safety_mechanisms:
+  backup:
+    enabled: true
+    pattern: "synrg-commit-backup-<timestamp>"
+
+  rollback_on_failure: true
+  allow_empty_commits: false
+
+  prohibited_operations:
+    - "Never update git config"
+    - "Never run destructive commands (push --force, hard reset) unless explicit"
+    - "Never skip hooks (--no-verify, --no-gpg-sign) unless explicit"
+    - "Never force push to main/master"
+    - "Avoid git commit --amend unless specific conditions met"
+
+configuration_options:
+  execution:
+    auto_approve: false
+    dry_run: false
+
+  validation:
+    run_validation: false
+    require_tests: false
+    require_lint: false
+    require_type_check: false
+
+  message_format:
+    format: "conventional"  # conventional | simple | detailed
+    include_body: true
+    include_footer: true
+    max_subject_length: 50
+
+  decomposition:
+    min_commit_size: 1
+    max_commit_size: 10
+    separate_tests: true
+    separate_docs: true
+
+  safety:
+    create_backup: true
+    rollback_on_failure: true
+    allow_empty_commits: false
+
+  analysis:
+    depth: "deep"  # quick | medium | deep
+    context_window: "full"  # minimal | medium | full
+
+examples:
+  commit_messages:
+    - |
+      feat(auth): add user profile update endpoint
+
+      **What**: Add PUT /api/user/profile endpoint with validation
+      **Why**: Implements user story US-123 for profile management
+      **How**: New route handler with Zod schema validation
+      **Impact**: New API endpoint, no breaking changes
+
+      Refs: #123
+
+      Generated with [Claude Code](https://claude.com/claude-code)
+      Co-Authored-By: Claude <noreply@anthropic.com>
+
+    - |
+      fix(api): correct validation logic for email field
+
+      **What**: Fix regex pattern for email validation
+      **Why**: Previous pattern rejected valid email formats
+      **How**: Updated regex to RFC 5322 compliant pattern
+
+      Generated with [Claude Code](https://claude.com/claude-code)
+      Co-Authored-By: Claude <noreply@anthropic.com>
+
+    - |
+      refactor(db): extract user queries to repository pattern
+
+      **What**: Move inline queries to UserRepository class
+      **Why**: Improve testability and separation of concerns
+      **How**: Created UserRepository with dependency injection
+      **Impact**: No external API changes
+
+      Generated with [Claude Code](https://claude.com/claude-code)
+      Co-Authored-By: Claude <noreply@anthropic.com>
+
+  usage:
+    - command: "/synrg-commit"
+      description: "Basic interactive mode"
+
+    - command: "/synrg-commit --auto-approve"
+      description: "Skip confirmation prompt"
+
+    - command: "/synrg-commit --dry-run"
+      description: "Preview commits without executing"
+
+    - command: "/synrg-commit --run-validation"
+      description: "Run pre-commit quality checks"
+
+commit_type_inference:
+  priority_order:
+    - "Detected intent with >80% confidence"
+    - "File pattern matching (test files, docs, configs)"
+    - "Diff content analysis (new functions, refactoring patterns)"
+
+  patterns:
+    test: "Files containing .test. or .spec."
+    docs: "Files ending in .md or in /docs/ directory"
+    chore: "package.json or config files"
+    feat: "Additions > deletions * 2 (new functions)"
+    refactor: "Additions approximately equal to deletions"

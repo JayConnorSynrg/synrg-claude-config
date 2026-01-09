@@ -1,0 +1,406 @@
+# Phase Gate Protocol
+# Extracted from: synrg-spec.md, synrg-scaffold.md
+# Version: 1.0.0
+
+id: phase-gate
+name: "Phase Gate Protocol"
+version: "1.0.0"
+extracted_from:
+  - synrg-spec.md
+  - synrg-scaffold.md
+
+description: |
+  Mandatory phase gating protocol for progressive refinement pipelines.
+  Enforces sequential execution of phases with prerequisite validation.
+  No phase can be skipped. Each phase must produce artifacts and achieve
+  complete/ready status before the next phase can begin. Used in spec-driven
+  development and project scaffolding workflows.
+
+# =============================================================================
+# SYNRG-SPEC PHASES (7-Phase Pipeline)
+# =============================================================================
+
+spec_phases:
+  - name: "CONSTITUTION"
+    phase_number: 1
+    purpose: "Define immutable principles (9 Articles)"
+    gate_requirements:
+      - "None (initial phase)"
+    artifacts:
+      - "constitution.md"
+      - "constitutional-articles.md"
+    next_phase: "SPECIFY"
+    status_required: "complete"
+
+  - name: "SPECIFY"
+    phase_number: 2
+    purpose: "Generate detailed specification from objective and constitutional constraints"
+    gate_requirements:
+      - "constitution.md exists"
+      - "constitution.md status is complete"
+    artifacts:
+      - "spec.md"
+    next_phase: "CLARIFY"
+    status_required: "complete"
+
+  - name: "CLARIFY"
+    phase_number: 3
+    purpose: "Resolve all ambiguities through structured Q&A before planning"
+    gate_requirements:
+      - "spec.md exists"
+      - "spec.md status is complete"
+    artifacts:
+      - "clarifications.md"
+    next_phase: "PLAN"
+    status_required: "complete"
+    special_conditions:
+      - "0 pending clarifications required"
+      - "Maximum 3 clarification rounds"
+
+  - name: "PLAN"
+    phase_number: 4
+    purpose: "Generate phased implementation plan from spec + clarifications"
+    gate_requirements:
+      - "clarifications.md exists"
+      - "clarifications.md status is complete"
+      - "0 pending clarification items"
+    artifacts:
+      - "plan.md"
+      - "data-model.md (optional)"
+      - "research.md (optional)"
+    next_phase: "TASKS"
+    status_required: "complete"
+
+  - name: "TASKS"
+    phase_number: 5
+    purpose: "Break implementation plan into atomic, assignable tasks"
+    gate_requirements:
+      - "plan.md exists"
+      - "plan.md status is complete"
+    artifacts:
+      - "tasks.md"
+      - "tests.md (specifications)"
+    next_phase: "TESTS"
+    status_required: "ready"
+
+  - name: "TESTS"
+    phase_number: 6
+    purpose: "Write tests BEFORE implementation. Confirm tests FAIL (RED phase)"
+    gate_requirements:
+      - "tasks.md exists"
+      - "tasks.md status is ready"
+      - "Article III (Test-First) enforcement"
+    artifacts:
+      - "tests.md (with RED confirmation)"
+      - "Test files created"
+    next_phase: "IMPLEMENT"
+    status_required: "RED_CONFIRMED"
+    special_conditions:
+      - "All tests must be written"
+      - "All tests must FAIL (RED phase confirmed)"
+      - "User approval required for RED phase"
+
+  - name: "IMPLEMENT"
+    phase_number: 7
+    purpose: "Make all tests pass (GREEN). Execute via SYNRG Director delegation"
+    gate_requirements:
+      - "tests.md exists"
+      - "tests.md shows RED confirmation (failing tests confirmed)"
+    artifacts:
+      - "implementation.log"
+      - "Source code files"
+      - "All tests GREEN"
+    next_phase: "COMPLETE"
+    status_required: "GREEN_CONFIRMED"
+    special_conditions:
+      - "All tests must PASS (GREEN phase)"
+      - "Refactoring allowed after GREEN"
+
+# =============================================================================
+# SYNRG-SCAFFOLD PHASES (6-Phase Pipeline)
+# =============================================================================
+
+scaffold_phases:
+  - name: "Project Type Discovery"
+    phase_number: 1
+    subphase: "1.5: Strategic Foundation Analysis"
+    purpose: "Establish foundation that drives all subsequent questions"
+    gate_requirements:
+      - "None (initial phase)"
+    artifacts:
+      - "projectType selection"
+      - "techStack selection"
+      - "projectStage selection"
+    next_phase: "Adaptive Context Gathering"
+
+  - name: "Adaptive Context Gathering"
+    phase_number: 2
+    subphase: "2.5: Ecosystem & Alternative Analysis"
+    purpose: "Ask intelligent follow-up questions based on project type"
+    gate_requirements:
+      - "Phase 1 complete"
+      - "User decision to proceed"
+    artifacts:
+      - "Project-specific configuration"
+      - "Technology selections"
+    next_phase: "Development Workflow & Standards"
+
+  - name: "Development Workflow & Standards"
+    phase_number: 3
+    subphase: "3.5: Workflow Optimization Analysis"
+    purpose: "Universal questions about development practices"
+    gate_requirements:
+      - "Phase 2 complete"
+      - "User confirmed technology stack"
+    artifacts:
+      - "testingApproach"
+      - "qualityTools"
+      - "gitWorkflow"
+      - "cicd"
+    next_phase: "SYNRG Integration Preferences"
+
+  - name: "SYNRG Integration Preferences"
+    phase_number: 4
+    subphase: "4.5: Automation Strategy Validation"
+    purpose: "Determine SYNRG orchestration capabilities"
+    gate_requirements:
+      - "Phase 3 complete"
+      - "User validated workflow"
+    artifacts:
+      - "synrgCommands"
+      - "automationLevel"
+      - "screenshotValidation"
+    next_phase: "Directory Scaffolding"
+
+  - name: "Directory Scaffolding"
+    phase_number: 5
+    purpose: "Generate project structure and files"
+    gate_requirements:
+      - "Phase 4 complete"
+      - "User approved automation configuration"
+    artifacts:
+      - ".claude/ directory structure"
+      - "Configuration files"
+      - "Template files"
+    next_phase: "Validation & Next Steps"
+
+  - name: "Validation & Next Steps"
+    phase_number: 6
+    purpose: "Verify scaffolding and provide guidance"
+    gate_requirements:
+      - "Phase 5 complete"
+      - "All files generated"
+    artifacts:
+      - "Validation report"
+      - "Next steps documentation"
+    next_phase: null
+
+# =============================================================================
+# UNIVERSAL GATE RULES
+# =============================================================================
+
+gate_rules:
+  - rule: "Sequential execution mandatory"
+    description: "Phases MUST execute in order. No phase can be skipped."
+
+  - rule: "Artifact existence validation"
+    description: "Before entering ANY phase, validate that previous phase artifact exists."
+
+  - rule: "Status validation"
+    description: "Previous phase status must be 'complete' or 'ready' before proceeding."
+
+  - rule: "Pending items check"
+    description: "No pending items allowed from previous phase."
+
+  - rule: "Hash-based integrity"
+    description: "Each artifact stores hash of upstream dependencies for change detection."
+
+# =============================================================================
+# PRE-IMPLEMENTATION GATES (Universal)
+# =============================================================================
+
+pre_implementation_gates:
+  - gate: "ANTI-MEMORY"
+    description: "READ files, don't trust memory"
+
+  - gate: "GIT_STRATEGY"
+    description: "Use --branch flag for auto-branch creation"
+
+  - gate: "CERTAINTY"
+    description: "Spec-driven = high certainty, but verify implementations"
+
+  - gate: "SECURITY"
+    description: "Security review in each phase"
+
+  - gate: "USER_VERIFY"
+    description: "Phase gating provides natural checkpoints"
+
+# =============================================================================
+# POST-IMPLEMENTATION REVIEWS (Universal)
+# =============================================================================
+
+post_implementation_reviews:
+  - review: "OBJECTIVE"
+    description: "All requirements met"
+
+  - review: "SECURITY"
+    description: "No hardcoded credentials"
+
+  - review: "DOCS"
+    priority: 5
+    description: "README and architecture docs generated"
+
+  - review: "COMMIT"
+    description: "Changes committed with proper message"
+
+  - review: "QUALITY"
+    description: "All gates passed -> COMPLETE"
+
+# =============================================================================
+# APPROVAL REQUIREMENTS
+# =============================================================================
+
+approval_requirements:
+  - scenario: "RED phase confirmation"
+    phase: "TESTS"
+    requires: "User must approve that all tests are failing before implementation begins"
+
+  - scenario: "Clarification rounds exceeded"
+    phase: "CLARIFY"
+    requires: "User approval if more than 3 clarification rounds needed"
+
+  - scenario: "Implementation phase expansion"
+    phase: "PLAN"
+    requires: "Expansion beyond 3 initial phases requires explicit user approval"
+
+  - scenario: "Strategic decision points"
+    phase: "All scaffold phases"
+    requires: "User decision required between phases (proceed/reconsider/discuss)"
+
+  - scenario: "Cascade regeneration"
+    phase: "Any"
+    requires: "Major upstream changes may require user approval for downstream regeneration"
+
+# =============================================================================
+# FAILURE HANDLING
+# =============================================================================
+
+failure_handling:
+  - scenario: "Gate validation fails"
+    action: "Throw error with specific reason"
+    template: "Cannot enter [phase] phase: [reason]"
+
+  - scenario: "Artifact missing"
+    action: "Block phase entry, return to previous phase"
+
+  - scenario: "Status not complete/ready"
+    action: "Continue previous phase until status achieved"
+
+  - scenario: "Pending items exist"
+    action: "Resolve pending items before proceeding"
+
+  - scenario: "Tests not RED (TESTS phase)"
+    action: "Cannot proceed to IMPLEMENT until RED confirmed"
+
+  - scenario: "Hash mismatch detected"
+    action: "Mark artifact as 'stale', trigger regeneration cascade"
+
+# =============================================================================
+# VALIDATION FUNCTION (Pseudocode)
+# =============================================================================
+
+validation_logic: |
+  function canEnterPhase(targetPhase, specDir):
+    previousPhase = getPreviousPhase(targetPhase)
+
+    if previousPhase is null:
+      return { allowed: true }  # First phase
+
+    # Check artifact exists
+    artifact = getArtifact(previousPhase, specDir)
+    if artifact does not exist:
+      return { allowed: false, reason: "Previous phase artifact missing" }
+
+    # Check status
+    status = getStatus(artifact)
+    if status not in ['complete', 'ready', 'RED_CONFIRMED']:
+      return { allowed: false, reason: "Previous phase not complete" }
+
+    # Check pending items
+    pendingItems = getPendingItems(artifact)
+    if pendingItems > 0:
+      return { allowed: false, reason: "Pending items from previous phase" }
+
+    # Special cases
+    if targetPhase == 'IMPLEMENT' and not hasRedConfirmation(specDir):
+      return { allowed: false, reason: "Tests must be RED before implementation" }
+
+    return { allowed: true }
+
+# =============================================================================
+# EXAMPLES
+# =============================================================================
+
+examples:
+  - name: "Standard spec progression"
+    description: "Normal flow through all 7 phases"
+    flow: |
+      init -> constitution.md [complete]
+      -> specify -> spec.md [complete]
+      -> clarify -> clarifications.md [complete, 0 pending]
+      -> plan -> plan.md [complete]
+      -> tasks -> tasks.md [ready]
+      -> tests -> tests.md [RED_CONFIRMED]
+      -> implement -> implementation.log [GREEN_CONFIRMED]
+
+  - name: "Blocked phase entry"
+    description: "Attempting to skip clarify phase"
+    flow: |
+      init -> constitution.md [complete]
+      -> specify -> spec.md [complete]
+      -> plan (BLOCKED)
+      Error: "Cannot enter plan phase: clarifications.md does not exist"
+
+  - name: "Pending items block"
+    description: "Clarifications have unresolved items"
+    flow: |
+      clarify -> clarifications.md [complete, 2 pending]
+      -> plan (BLOCKED)
+      Error: "Cannot enter plan phase: 2 pending clarifications"
+
+  - name: "RED phase gate"
+    description: "Implementation blocked until tests fail"
+    flow: |
+      tests -> tests.md [written but not run]
+      -> implement (BLOCKED)
+      Error: "Cannot enter implement phase: tests must show RED confirmation"
+
+  - name: "Scaffold user decision point"
+    description: "User must confirm before proceeding"
+    flow: |
+      Phase 1 complete
+      -> Strategic Foundation Analysis presented
+      -> User chooses: "Proceed with current choices"
+      -> Phase 2 begins
+
+# =============================================================================
+# INTEGRATION POINTS
+# =============================================================================
+
+integration:
+  synrg_director:
+    description: "IMPLEMENT phase delegates to SYNRG Director for execution"
+
+  synrg_refactor:
+    description: "Can be invoked during IMPLEMENT phase for structural changes"
+
+  cascade_protocol:
+    description: "Upstream changes trigger downstream regeneration based on hash detection"
+    trigger_matrix:
+      constitutional_articles: "ALL artifacts (full cascade)"
+      spec_scope_change: "clarifications -> plan -> tasks -> tests"
+      spec_detail_only: "Validate only, no cascade"
+      clarifications: "plan -> tasks -> tests"
+      plan_architecture: "tasks -> tests"
+      plan_order_only: "tasks only"
+      tasks: "tests (affected tasks only)"

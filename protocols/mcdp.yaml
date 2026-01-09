@@ -1,0 +1,232 @@
+# Mandatory Context Delegation Protocol (MCDP)
+# Extracted from: synrg.md, synrg-refactor.md, synrg-swarm.md, synrg-buildworkflow.md
+# Version: 1.0.0
+
+id: mcdp
+name: "Mandatory Context Delegation Protocol"
+version: "1.0.0"
+authority: "ABSOLUTE - Zero Exceptions"
+scope: "ALL SYNRG Commands"
+
+extracted_from:
+  - synrg.md
+  - synrg-refactor.md
+  - synrg-swarm.md
+  - synrg-buildworkflow.md
+
+description: |
+  The Mandatory Context Delegation Protocol (MCDP) enforces that all context-heavy
+  operations are delegated to sub-agents rather than executed directly by the
+  orchestrating agent. This provides 70-97% context reduction and maintains
+  efficient multi-agent coordination. The protocol covers three mandatory
+  delegation categories: large document reads, all MCP tool calls, and all
+  context gathering operations.
+
+triggers:
+  - "Any MCP tool call (mcp__*)"
+  - "Large document reads (>500 tokens expected)"
+  - "File reads matching large file patterns (*.md > 5KB, *.json > 10KB, *.ts > 500 lines)"
+  - "Codebase exploration operations"
+  - "Architecture analysis"
+  - "Dependency analysis"
+  - "Git history analysis"
+  - "External documentation lookups"
+
+rules:
+  rule_1_mcp_delegation:
+    name: "MCP Tool Delegation"
+    priority: "ABSOLUTE"
+    description: "NEVER call any MCP tool directly - ALL must be delegated"
+    delegate_mapping:
+      - pattern: "mcp__n8n-mcp__*"
+        delegate: "n8n-mcp-delegate"
+        agent_file: "~/.claude/agents/n8n-mcp-delegate.md"
+        context_reduction: "70-96%"
+      - pattern: "mcp__n8n-workflows__*"
+        delegate: "github-mcp-delegate"
+        agent_file: "~/.claude/agents/github-mcp-delegate.md"
+        context_reduction: "70-90%"
+
+  rule_2_large_document_delegation:
+    name: "Large Document Reads"
+    priority: "ABSOLUTE"
+    description: "Any file read expected to return >500 tokens must be delegated"
+    large_file_patterns:
+      - "*.md > 5KB"
+      - "*.json > 10KB"
+      - "*.ts/*.js > 500 lines"
+      - "package.json"
+      - "README.md"
+      - "*.log"
+      - ".claude/commands/*.md"
+      - "workflow*.json"
+      - "schema.(ts|json)"
+      - "config.*"
+    delegate_to:
+      - "Explore"
+      - "general-purpose"
+    context_reduction: "85-95%"
+
+  rule_3_context_gathering_delegation:
+    name: "Context Gathering Operations"
+    priority: "ABSOLUTE"
+    description: "All operations gathering information about codebase, architecture, or state"
+    operation_types:
+      - operation: "Codebase exploration"
+        delegate: "Explore"
+      - operation: "Architecture analysis"
+        delegate: "general-purpose"
+      - operation: "Dependency analysis"
+        delegate: "general-purpose"
+      - operation: "Git history analysis"
+        delegate: "general-purpose"
+      - operation: "External documentation"
+        delegate: "Explore or general-purpose"
+    context_reduction: "80-97%"
+
+delegation_requirements:
+  pre_operation_check:
+    description: "Before EVERY operation, verify compliance"
+    checklist:
+      - "Is this an MCP call? -> MUST delegate to MCP agent"
+      - "Is this a large file read? -> MUST delegate to Explore/general-purpose"
+      - "Is this context gathering? -> MUST delegate to appropriate agent"
+      - "Will response be >500 tokens? -> MUST delegate"
+    enforcement: "If ANY checkbox = YES -> DELEGATE. No exceptions."
+
+  return_format:
+    required_fields:
+      - summary: "2-3 sentences maximum"
+      - keyConcepts: "Array of key concepts/sections"
+      - extractedData: "Only requested data points"
+      - references: "Line numbers/sections for follow-up"
+    forbidden_returns:
+      - "Full file contents"
+      - "Raw JSON payloads"
+      - "Verbose explanations"
+      - "Unrequested information"
+
+  subagent_injection:
+    description: "All sub-agents must include delegation inheritance"
+    mandate: |
+      Sub-agents operating under MCDP must also delegate:
+      - MCP tool calls -> Create nested Task() calls to MCP delegates
+      - Large document reads -> Return summaries, not full content
+      - Context gathering -> Focus on distilled, actionable findings
+
+violation_handling:
+  detection: "Self-enforcement before every operation"
+  correction_sequence:
+    - step: 1
+      action: "HALT current operation immediately"
+    - step: 2
+      action: "LOG violation type and operation"
+    - step: 3
+      action: "CONSTRUCT proper delegation"
+    - step: 4
+      action: "EXECUTE via Task() with appropriate agent"
+    - step: 5
+      action: "CONTINUE only with delegated result"
+  policy: "NO EXCEPTIONS. NO BYPASSES. NO JUSTIFICATIONS."
+
+context_efficiency_targets:
+  mcp_tool_call:
+    raw_context: "10,000-50,000 tokens"
+    delegated_return: "500-2,000 tokens"
+    reduction: "70-96%"
+  large_file_read:
+    raw_context: "2,000-20,000 tokens"
+    delegated_return: "200-1,000 tokens"
+    reduction: "85-95%"
+  codebase_explore:
+    raw_context: "5,000-50,000 tokens"
+    delegated_return: "500-2,000 tokens"
+    reduction: "80-96%"
+  git_history:
+    raw_context: "2,000-10,000 tokens"
+    delegated_return: "200-800 tokens"
+    reduction: "85-92%"
+  architecture:
+    raw_context: "10,000-100,000 tokens"
+    delegated_return: "1,000-3,000 tokens"
+    reduction: "90-97%"
+
+examples:
+  mcp_delegation:
+    description: "Delegating n8n MCP operation"
+    forbidden: |
+      mcp__n8n-mcp__n8n_get_workflow({ id: "xyz" })
+    required: |
+      Task({
+        subagent_type: "n8n-mcp-delegate",
+        prompt: `Execute n8n MCP operation:
+          Tool: mcp__n8n-mcp__n8n_get_workflow
+          Parameters: { id: "xyz", mode: "structure" }
+          Return: Distilled workflow structure with node types and connections`,
+        model: "haiku"
+      })
+
+  large_file_delegation:
+    description: "Delegating large file read"
+    forbidden: |
+      const content = await Read({ file_path: "large-file.md" });
+    required: |
+      Task({
+        subagent_type: "Explore",
+        prompt: `Read and analyze ${file}. Return ONLY:
+          - Summary (2-3 sentences)
+          - Key concepts/sections
+          - Specific data points needed
+          - References for follow-up`,
+        model: "haiku"
+      })
+
+  context_gathering_delegation:
+    description: "Delegating codebase exploration"
+    forbidden: |
+      const files = await Glob({ pattern: "**/*.ts" });
+      for (const file of files) {
+        const content = await Read({ file_path: file });
+      }
+    required: |
+      Task({
+        subagent_type: "Explore",
+        prompt: `Explore codebase for: [objective]
+          Return:
+          - Relevant files with brief descriptions
+          - Key patterns identified
+          - Recommendations`,
+        model: "haiku"
+      })
+
+absolute_rules_summary:
+  - "NEVER call mcp__* directly -> ALWAYS delegate to MCP agents"
+  - "NEVER read large docs directly -> ALWAYS delegate and get summaries"
+  - "NEVER gather context in main thread -> ALWAYS spawn sub-agents"
+  - "ALWAYS return distilled findings -> NEVER raw payloads"
+  - "ALWAYS check before operations -> NEVER assume compliance"
+  - "ALWAYS self-correct violations -> NEVER justify or bypass"
+
+command_specific_applications:
+  synrg:
+    description: "Director-Orchestrator"
+    application: "All reconnaissance phase operations delegated in parallel"
+  synrg_refactor:
+    description: "File restructuring"
+    application: "File analysis and pattern detection delegated"
+  synrg_swarm:
+    description: "Sub-agent development"
+    application: "Agent library analysis delegated to sub-agents"
+  synrg_buildworkflow:
+    description: "n8n workflow builder"
+    application: "ALL node/workflow operations delegated to MCP agents"
+
+related_protocols:
+  - name: "MCP Delegation Enforcement"
+    version: "v2.0"
+    file: "~/.claude/protocols/mcp-delegation.yaml"
+  - name: "Universal SYNRG Protocols"
+    version: "v1.0"
+    file: "~/.claude/skills/universal-synrg-protocols.md"
+
+full_specification: "~/.claude/skills/mandatory-context-delegation.md"

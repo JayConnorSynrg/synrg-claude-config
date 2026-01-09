@@ -7,12 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned - Phase 2: Protocol Extraction
-- Extract MCDP (Mandatory Context Delegation Protocol) to standalone module
-- Extract Sub-Agent Spawn Protocol
-- Extract MCP Configuration Protocol
-- Create protocol import system
-
 ### Planned - Phase 3: Path Variables
 - Replace hardcoded paths with `${CLAUDE_HOME}` variables
 - Implement path resolver in commands
@@ -32,6 +26,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create command registry API
 - Implement inter-command communication
 - Add dependency resolution
+
+---
+
+## [1.1.0] - 2026-01-09
+
+### Added - Phase 2: Protocol Extraction
+Extracted 6 standalone protocol modules from SYNRG commands (2,331 total lines):
+
+| Protocol | File | Lines | Source Commands |
+|----------|------|-------|-----------------|
+| MCDP | `mcdp.yaml` | 165 | synrg, synrg-refactor, synrg-swarm, synrg-buildworkflow |
+| Sub-Agent Spawn | `sub-agent-spawn.yaml` | 675 | synrg, synrg-guided, synrg-refactor |
+| Value-First | `value-first.yaml` | 280 | synrg, synrg-spec |
+| Git Commit | `git-commit.yaml` | 450 | synrg-commit |
+| Phase Gate | `phase-gate.yaml` | 406 | synrg-spec, synrg-scaffold |
+| MCP Config | `mcp-config.yaml` | 355 | synrg, synrg-buildworkflow, synrg-swarm |
+
+### Added - Protocol Infrastructure
+- `protocols/loader.md` - Protocol import syntax documentation
+- Updated `protocols/index.yaml` to v1.1.0 with extraction status
+
+### Protocol Import Syntax (Future Use)
+```markdown
+<!-- PROTOCOL_IMPORT: mcdp -->
+<!-- PROTOCOL_IMPORT: sub-agent-spawn -->
+```
+
+### Notes
+- Original commands remain unchanged (backward compatible)
+- Protocols are extracted copies, not replacements yet
+- Phase 3 will implement path variables for command integration
 
 ---
 

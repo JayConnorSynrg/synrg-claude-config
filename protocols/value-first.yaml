@@ -1,0 +1,428 @@
+# Value-First Analysis Protocol
+# Extracted from: synrg.md, synrg-spec.md
+# Version: 1.0.0
+
+id: value-first
+name: "Value-First Analysis Protocol"
+version: "1.0.0"
+extracted_from:
+  - synrg.md
+  - synrg-spec.md
+
+description: |
+  A mandatory pre-change analysis protocol that quantifies existing system value
+  before planning modifications. Core principle: "Understand what exists, quantify
+  its value, then enhance intelligently rather than restructure reflexively."
+
+  Every system in production has earned its place through battle-tested stability,
+  integration value, business logic value, and team knowledge. Restructuring without
+  understanding value risks destroying hard-won stability for uncertain gains.
+
+# ============================================================================
+# ANALYSIS STEPS
+# ============================================================================
+
+analysis_steps:
+  - step: 1
+    name: "Architectural Reconnaissance"
+    objective: "Map current state comprehensively before planning changes"
+    sub_agents:
+      - id: codebase-analyzer
+        role: "Codebase Structure Analysis"
+        deliverables: [structure, patterns, conventions, complexity]
+      - id: dependency-mapper
+        role: "Dependency Graph Analysis"
+        deliverables: [internal, external, shared, graph]
+      - id: quality-assessor
+        role: "Code Quality Metrics"
+        deliverables: [testing, documentation, codeQuality, performance, security]
+      - id: production-analyzer
+        role: "Production Context Analysis"
+        deliverables: [stability, usage, business]
+      - id: impact-identifier
+        role: "Affected Systems Identification"
+        deliverables: [primaryTargets, secondaryImpacts, dependencyChain]
+    data_gathered:
+      - codebase_structure
+      - dependencies
+      - data_flow
+      - quality_metrics
+      - production_context
+      - affected_systems
+
+  - step: 2
+    name: "Value Quantification"
+    objective: "Assign quantitative value scores (0-100) to inform preserve-vs-change decisions"
+    scoring_components:
+      - component: production_stability
+        weight: 0.30
+        factors:
+          - uptime_history
+          - incident_count
+          - error_rate
+          - days_since_last_issue
+        interpretation:
+          "95-100": "Exceptional stability - preserve at almost all costs"
+          "70-89": "High stability - preserve unless compelling reason"
+          "40-69": "Medium stability - evaluate trade-offs carefully"
+          "20-39": "Low stability - restructuring may be beneficial"
+          "0-19": "Very low - strong candidate for replacement"
+
+      - component: business_logic_value
+        weight: 0.25
+        factors:
+          - critical_path: "+40 points if in critical user flow"
+          - revenue_impact: "+30 points if affects revenue flow"
+          - compliance: "+20 points if has compliance requirements"
+          - user_impact: "0-100 scale based on user percentage affected"
+
+      - component: integration_value
+        weight: 0.20
+        factors:
+          - inbound_dependencies: "consumers.length * 5"
+          - outbound_dependencies: "dependencies.length"
+          - external_apis: "externalIntegrations.length * 10"
+          - coupling_level: "-(couplingScore / 2)"
+
+      - component: code_quality
+        weight: 0.15
+        factors:
+          - test_coverage: "coverage * 0.4"
+          - documentation: "completeness * 0.3"
+          - maintainability: "maintainabilityIndex * 0.3"
+
+      - component: team_knowledge
+        weight: 0.10
+        factors:
+          - documentation: "completeness * 0.5"
+          - contributors: "uniqueContributors * 5"
+          - bus_factor: "busFactor * 10"
+
+  - step: 3
+    name: "Change Impact Prediction"
+    objective: "Predict full impact of proposed changes BEFORE committing to approach"
+    assessments:
+      - category: technical_impact
+        metrics:
+          - files_affected
+          - lines_changed
+          - tests_requiring_update
+          - migration_complexity
+          - regression_risk
+
+      - category: production_impact
+        metrics:
+          - downtime_required
+          - rollback_complexity
+          - user_experience_change
+          - performance_delta
+
+      - category: integration_impact
+        metrics:
+          - breaking_changes
+          - dependent_systems_affected
+          - api_contract_changes
+          - data_schema_changes
+
+      - category: value_at_risk
+        formula: |
+          stabilityRisk = (productionStability/100) * (regressionRisk/100) * 100
+          integrationRisk = (integrationValue/100) * breakingChanges.length * 20
+          knowledgeRisk = (teamKnowledgeValue/100) * (deletedLines/totalLines) * 100
+          totalRiskScore = (stabilityRisk * 0.40) + (integrationRisk * 0.35) + (knowledgeRisk * 0.25)
+
+      - category: expected_benefits
+        formula: |
+          totalBenefitScore = (qualityImprovement * 0.25) + (performanceGain * 0.25)
+                            + (maintainabilityGain * 0.25) + (featureEnablement * 0.25)
+
+      - category: net_value_change
+        formula: "expectedBenefits.totalBenefitScore - valueAtRisk.totalRiskScore"
+
+  - step: 4
+    name: "Protected Structure Detection"
+    objective: "Identify critical system components requiring maximum caution"
+    protected_categories:
+      - category: database
+        priority: MAXIMUM
+        auto_escalate: true
+        patterns: [migrations, schema, database, prisma, supabase, drizzle, typeorm]
+        risks: [data_loss, production_downtime, cascade_failures]
+
+      - category: api_contracts
+        priority: HIGH
+        auto_escalate: true
+        patterns: [api_routes, controllers, openapi, swagger, graphql_schema, zod_schema]
+        risks: [breaking_changes, integration_failures, sla_violations]
+
+      - category: authentication
+        priority: MAXIMUM
+        auto_escalate: true
+        patterns: [auth, authentication, authorization, permissions, roles, jwt, session, oauth]
+        risks: [security_vulnerabilities, system_lockout, data_exposure]
+
+      - category: production_config
+        priority: HIGH
+        auto_escalate: true
+        patterns: [env.production, config_production, secrets, credentials, vercel, netlify, docker_prod, kubernetes]
+        risks: [production_outage, secret_exposure, deployment_failures]
+
+  - step: 5
+    name: "Intelligent Decision Framework"
+    objective: "Make data-driven preserve-vs-restructure decisions"
+
+  - step: 6
+    name: "User Escalation"
+    objective: "Present comprehensive analysis when decision.escalateToUser is true"
+    trigger: "When confidence is not maximum or trade-offs require human judgment"
+
+# ============================================================================
+# PRIORITIZATION CRITERIA
+# ============================================================================
+
+prioritization_criteria:
+  # Priority ordering for questions and assumptions
+  priority_order:
+    - level: 1
+      category: SCOPE
+      description: "Highest priority - defines what we build"
+    - level: 2
+      category: SECURITY
+      description: "High priority - compliance and safety"
+    - level: 3
+      category: UX
+      description: "Medium priority - user experience decisions"
+    - level: 4
+      category: TECHNICAL
+      description: "Lower priority - implementation details (can default)"
+
+  # User story prioritization (MoSCoW)
+  user_story_priorities:
+    - P1: "Critical User Journeys (Must Have)"
+    - P2: "Important User Journeys (Should Have)"
+    - P3: "Enhancement User Journeys (Nice to Have)"
+
+  # Value score categories
+  value_categories:
+    HIGH:
+      range: "70-100"
+      action: "Preserve unless compelling reason to change"
+    MEDIUM:
+      range: "40-69"
+      action: "Evaluate trade-offs carefully"
+    LOW:
+      range: "0-39"
+      action: "Restructuring may be beneficial"
+
+# ============================================================================
+# IMPACT ASSESSMENT
+# ============================================================================
+
+impact_assessment:
+  risk_weights:
+    stability_risk: 0.40
+    integration_risk: 0.35
+    knowledge_risk: 0.25
+
+  benefit_weights:
+    quality_improvement: 0.25
+    performance_gain: 0.25
+    maintainability_gain: 0.25
+    feature_enablement: 0.25
+
+  net_value_formula: |
+    net_value_change = total_benefit_score - total_risk_score
+    If net_value_change < 0: DO_NOT_PROCEED (risks outweigh benefits)
+
+# ============================================================================
+# ORDERING RULES (Decision Matrix)
+# ============================================================================
+
+ordering_rules:
+  - rule: 1
+    condition: "Protected Structures Detected"
+    recommendation: PRESERVE_WITH_SAFEGUARDS
+    confidence: MAXIMUM
+    escalate: true
+    alternatives:
+      - "Read-only analysis with recommendations"
+      - "Non-breaking additions only"
+      - "User-guided modifications with comprehensive rollback"
+
+  - rule: 2
+    condition: "High Value (>=70) AND High Risk (>=50)"
+    recommendation: PRESERVE_AND_ENHANCE
+    confidence: HIGH
+    escalate: true
+    alternatives:
+      - "Incremental enhancement preserving core structure"
+      - "Adapter pattern to extend without modifying"
+      - "Parallel implementation with gradual migration"
+
+  - rule: 3
+    condition: "Low Value (<40) AND High Benefit (>=60)"
+    recommendation: COMPREHENSIVE_RESTRUCTURE
+    confidence: HIGH
+    escalate: false
+    rationale: "Net value change is positive, proceed autonomously"
+
+  - rule: 4
+    condition: "Medium Value (40-69)"
+    recommendation: ADAPTIVE_ENHANCEMENT
+    confidence: MEDIUM
+    escalate: true
+    alternatives:
+      - "Preserve high-value components, restructure low-value areas"
+      - "Phased approach with validation gates"
+      - "Hybrid: Extend existing + Add new alongside"
+
+  - rule: 5
+    condition: "Negative Net Value Change"
+    recommendation: DO_NOT_PROCEED
+    confidence: HIGH
+    escalate: true
+    rationale: "Risks outweigh benefits - proposed changes would destroy more value than they create"
+    alternatives:
+      - "Focus on different optimization target"
+      - "Accept current implementation (if working well)"
+      - "Defer until more compelling benefits identified"
+
+  - rule: 6
+    condition: "Default (standard risk-benefit profile)"
+    recommendation: PROCEED_WITH_VALIDATION
+    confidence: MEDIUM
+    escalate: false
+
+# ============================================================================
+# PLANNING APPROACHES (Based on Decision)
+# ============================================================================
+
+planning_approaches:
+  PRESERVE_WITH_SAFEGUARDS:
+    strategy: "Protected Structure Modification"
+    approach: "Maximum caution, comprehensive safeguards"
+    validation: "All pre-change + post-change + continuous monitoring"
+    rollback: "Tested rollback procedure MANDATORY before any changes"
+    testing: "Protected structure validation suite + all standard gates"
+    user_involvement: "Continuous approval at each checkpoint"
+    timeline: "3x normal time for extra caution"
+
+  PRESERVE_AND_ENHANCE:
+    strategy: "Incremental Enhancement"
+    approach: "Build on existing, avoid restructuring core"
+    validation: "After every micro-change + regression suite"
+    rollback: "Instant rollback capability on any regression"
+    testing: "Comprehensive regression suite + new feature tests"
+    user_involvement: "Periodic checkpoints at phase boundaries"
+    timeline: "Phased implementation, 2x normal time"
+
+  ADAPTIVE_ENHANCEMENT:
+    strategy: "Selective Preservation"
+    approach: "Preserve high-value parts, enhance/restructure low-value"
+    validation: "Component-level validation gates"
+    rollback: "Component-level rollback capability"
+    testing: "Integration tests for preserved + unit tests for new"
+    user_involvement: "Approve component-level plan"
+    timeline: "Standard to 1.5x for careful preservation"
+
+  COMPREHENSIVE_RESTRUCTURE:
+    strategy: "Clean Slate with Migration"
+    approach: "Build new alongside old, migrate when validated"
+    validation: "Full validation of new implementation"
+    rollback: "Keep old implementation running until confident"
+    testing: "Complete test suite for new implementation"
+    user_involvement: "Inform of approach, proceed autonomously"
+    timeline: "May be faster than preservation (no legacy constraints)"
+
+  DO_NOT_PROCEED:
+    strategy: "Reconsider or Pivot"
+    approach: "Pause and reconsider objective"
+    validation: "N/A"
+    rollback: "N/A"
+    testing: "N/A"
+    user_involvement: "Discuss alternative objectives"
+    timeline: "N/A - redirect effort"
+
+# ============================================================================
+# EXAMPLES
+# ============================================================================
+
+examples:
+  - scenario: "Database schema modification request"
+    value_score: 85
+    risk_score: 75
+    protected_structures: [database, migrations]
+    decision: PRESERVE_WITH_SAFEGUARDS
+    reasoning:
+      - "Protected structure detected (database)"
+      - "High existing value (85/100)"
+      - "High risk of data loss and cascade failures"
+      - "Mandatory user escalation for safety"
+    outcome: "Present options to user with comprehensive rollback plan"
+
+  - scenario: "Refactor legacy utility module"
+    value_score: 25
+    risk_score: 20
+    benefit_score: 70
+    protected_structures: []
+    decision: COMPREHENSIVE_RESTRUCTURE
+    reasoning:
+      - "Low existing value (25/100)"
+      - "High expected benefit (70/100)"
+      - "Net value change positive (+50)"
+      - "No protected structures affected"
+    outcome: "Proceed autonomously with clean slate rebuild"
+
+  - scenario: "Enhance authentication flow"
+    value_score: 75
+    risk_score: 60
+    protected_structures: [authentication]
+    decision: PRESERVE_WITH_SAFEGUARDS
+    reasoning:
+      - "Authentication is MAXIMUM priority protected structure"
+      - "High existing stability"
+      - "Security vulnerabilities risk too high"
+    outcome: "Mandatory escalation - user-guided modifications only"
+
+  - scenario: "Add new API endpoint to existing service"
+    value_score: 55
+    risk_score: 30
+    benefit_score: 45
+    protected_structures: []
+    decision: ADAPTIVE_ENHANCEMENT
+    reasoning:
+      - "Medium existing value (55/100)"
+      - "Moderate risk and benefit trade-off"
+      - "Best to preserve high-value parts, extend carefully"
+    outcome: "Escalate for component-level plan approval"
+
+# ============================================================================
+# QUALITY GATES (Value Preservation)
+# ============================================================================
+
+quality_gates:
+  ecosystem_protection:
+    - integration_regression_tests: "Verify dependent systems unaffected"
+    - api_contract_validation: "Ensure no breaking changes"
+    - database_migration_safety: "Verify schema changes are safe"
+    - production_config_verification: "Ensure environment consistency"
+    - inbound_dependency_tests: "All consumers still work"
+
+  planning_checklist:
+    - "Value analysis decision integrated into approach"
+    - "High-value components explicitly identified for preservation"
+    - "Protected structures have maximum safeguards applied"
+    - "Ecosystem dependencies mapped and protection planned"
+    - "Rollback complexity assessed and procedure defined"
+    - "Alternative approaches presented (if applicable)"
+    - "User escalation handled (if required)"
+
+# ============================================================================
+# METADATA
+# ============================================================================
+
+metadata:
+  synrg_version: "4.0.0"
+  philosophy: "Value-First Architecture Intelligence"
+  time_investment: "+30-60 seconds for analysis"
+  value_proposition: "Prevents costly restructuring mistakes, preserves production stability"
