@@ -1,4 +1,14 @@
 ---
+synrg_version: "1.0.0"
+command: "synrg-spec"
+created: "2025-06-01"
+updated: "2026-01-09"
+min_claude_version: "opus-4"
+requires:
+  protocols: [value-first, phase-gate]
+  agents: []
+  skills: [universal-synrg-protocols]
+breaking_changes: []
 description: Execute SYNRG Spec-Driven Development - Progressive refinement from constitution to implementation with mandatory phase gating
 argument-hint: [init|specify|clarify|plan|tasks|implement|status|continue] [objective or feature name]
 ---
@@ -61,8 +71,8 @@ Reject docs older than 1 year.
 
 | MCP Domain | Delegate Agent | Agent File |
 |------------|----------------|------------|
-| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `~/.claude/agents/n8n-mcp-delegate.md` |
-| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `~/.claude/agents/github-mcp-delegate.md` |
+| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `${CLAUDE_AGENTS}/n8n-mcp-delegate.md` |
+| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `${CLAUDE_AGENTS}/github-mcp-delegate.md` |
 
 **Enforcement**: Direct MCP calls are FORBIDDEN. Violation requires immediate self-correction.
 
@@ -102,13 +112,13 @@ Reject docs older than 1 year.
 ANY = YES → DELEGATE. No exceptions.
 ```
 
-**Full Protocol**: See `~/.claude/skills/mandatory-context-delegation.md`
+**Full Protocol**: See `${CLAUDE_SKILLS}/mandatory-context-delegation.md`
 
 ---
 
 ## 🔒 UNIVERSAL SYNRG PROTOCOLS (USP v1.0 - Compact)
 
-**All gates apply. Full specs: `~/.claude/skills/universal-synrg-protocols.md`**
+**All gates apply. Full specs: `${CLAUDE_SKILLS}/universal-synrg-protocols.md`**
 
 ### PRE-IMPLEMENTATION GATES
 ```
@@ -321,7 +331,7 @@ When any phase runs, it first checks upstream hashes:
 │  SUB-AGENT DELEGATION CHECK (MANDATORY)                             │
 │                                                                     │
 │  1. IDENTIFY: Is this task delegatable to a focused agent?          │
-│  2. MATCH: Check ~/.claude/agents/ for qualified agents             │
+│  2. MATCH: Check ${CLAUDE_AGENTS}/ for qualified agents             │
 │  3. CREATE: If no match exists, create the agent first              │
 │  4. DELEGATE: Use Task tool with specific agent type                │
 └─────────────────────────────────────────────────────────────────────┘

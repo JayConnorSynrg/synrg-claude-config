@@ -49,8 +49,8 @@ Pre-approved operations (no user confirmation required):
 
 ### Environment
 - macOS system (Darwin)
-- Primary coding directory: ~/CODING
-- SYNRG orchestration platform installed at ~/.local/synrg/
+- Primary coding directory: ${CODING_ROOT}
+- SYNRG orchestration platform installed at ${SYNRG_HOME}/
 
 ### Available Tools
 - MCP servers configured for Supabase and custom integrations

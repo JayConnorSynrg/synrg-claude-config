@@ -1,14 +1,4 @@
 ---
-synrg_version: "4.0.0"
-command: "synrg"
-created: "2025-01-01"
-updated: "2026-01-09"
-min_claude_version: "opus-4"
-requires:
-  protocols: [mcdp, sub-agent-spawn, value-first, mcp-config]
-  agents: [n8n-mcp-delegate, github-mcp-delegate]
-  skills: [mandatory-context-delegation, universal-synrg-protocols]
-breaking_changes: []
 description: Execute SYNRG Director-Orchestrator for multi-agent planning and execution
 argument-hint: [objective or task description]
 ---
@@ -82,8 +72,8 @@ Reject documentation older than 1 year. Verify 6+ month old docs are still curre
 
 | MCP Domain | Delegate Agent | Agent File Location |
 |------------|----------------|---------------------|
-| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `${CLAUDE_AGENTS}/n8n-mcp-delegate.md` |
-| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `${CLAUDE_AGENTS}/github-mcp-delegate.md` |
+| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `~/.claude/agents/n8n-mcp-delegate.md` |
+| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `~/.claude/agents/github-mcp-delegate.md` |
 
 **N8N MCP Delegation (ALL n8n tools → n8n-mcp-delegate):**
 
@@ -244,7 +234,7 @@ If ANY checkbox = YES → DELEGATE. No exceptions.
 | Codebase Explore | 5,000-50,000 | 500-2,000 | 80-96% |
 | Git History | 2,000-10,000 | 200-800 | 85-92% |
 
-**Full Protocol**: See `${CLAUDE_SKILLS}/mandatory-context-delegation.md`
+**Full Protocol**: See `~/.claude/skills/mandatory-context-delegation.md`
 
 ---
 
@@ -371,7 +361,7 @@ If ANY checkbox = YES → DELEGATE. No exceptions.
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Skills Reference**: Full protocol details in `${CLAUDE_SKILLS}/`:
+**Skills Reference**: Full protocol details in `~/.claude/skills/`:
 - `certainty-gated-atomic-change.md` - Complete CGAC protocol
 - `enterprise-security-review.md` - Full security checklist
 - `git-strategy-decision.md` - Complete branch/worktree decision tree
@@ -419,7 +409,7 @@ If ANY checkbox = YES → DELEGATE. No exceptions.
 
 ### Tool Type Definitions
 
-**1. SUB-AGENTS** (`${CLAUDE_AGENTS}/` or project `.claude/agents/`)
+**1. SUB-AGENTS** (`~/.claude/agents/` or project `.claude/agents/`)
 ```yaml
 Purpose: Focused tasks with isolated context
 When to use:
@@ -431,7 +421,7 @@ Structure: YAML frontmatter + Markdown prompt
 Invocation: Task tool with subagent_type matching agent name
 ```
 
-**2. SLASH COMMANDS** (`${CLAUDE_COMMANDS}/` or project `.claude/commands/`)
+**2. SLASH COMMANDS** (`~/.claude/commands/` or project `.claude/commands/`)
 ```yaml
 Purpose: Complex multi-phase orchestration
 When to use:
@@ -745,7 +735,7 @@ Implementation:
 │  SUB-AGENT DELEGATION CHECK (MANDATORY)                     │
 │                                                             │
 │  1. IDENTIFY: Is this task delegatable to a focused agent?  │
-│  2. MATCH: Check ${CLAUDE_AGENTS}/ for qualified agents     │
+│  2. MATCH: Check ~/.claude/agents/ for qualified agents     │
 │  3. CREATE: If no match exists, create the agent first      │
 │  4. DELEGATE: Use Task tool with specific agent type        │
 └─────────────────────────────────────────────────────────────┘
@@ -770,7 +760,7 @@ Task({
   subagent_type: "general-purpose",  // Claude matches via description
   prompt: `[Specific task description with full context]
 
-  Pattern library: ${HOME}/CODING/N8N/Workflows/.claude/patterns/
+  Pattern library: /Users/jelalconnor/CODING/N8N/Workflows/.claude/patterns/
   Check pattern-index.json for relevant patterns before acting.`,
   model: "haiku"  // Use haiku for focused atomic tasks
 })
@@ -781,7 +771,7 @@ Task({
 **When no qualified agent exists:**
 1. Analyze task for atomic responsibility
 2. Generate agent definition (YAML frontmatter + Markdown prompt)
-3. Write to `${CLAUDE_AGENTS}/{domain}-{focus}.md`
+3. Write to `~/.claude/agents/{domain}-{focus}.md`
 4. Document creation in project's `agents-evolution.md`
 5. Delegate original task to new agent
 
@@ -1017,8 +1007,8 @@ async function executeSubAgent(agent, plan) {
 **CRITICAL UPDATE v5.0**: MCP delegate agents now exist as PHYSICAL AGENT FILES. All MCP calls MUST use these agents via the Task tool.
 
 **Agent Files Created:**
-- `${CLAUDE_AGENTS}/n8n-mcp-delegate.md` - Handles ALL `mcp__n8n-mcp__*` tool calls
-- `${CLAUDE_AGENTS}/github-mcp-delegate.md` - Handles ALL `mcp__n8n-workflows__*` tool calls
+- `~/.claude/agents/n8n-mcp-delegate.md` - Handles ALL `mcp__n8n-mcp__*` tool calls
+- `~/.claude/agents/github-mcp-delegate.md` - Handles ALL `mcp__n8n-workflows__*` tool calls
 
 **Objective**: Offload MCP tool calls to specialized sub-agents to optimize context usage. MCP tools often return large payloads that consume significant context. By delegating to sub-agents, we use their isolated context windows and return only vital information.
 
@@ -4899,13 +4889,13 @@ if (errorPattern.frequency > 2 && errorPattern.severity === 'high') {
 3. **Update Command File**:
    ```bash
    # Create version snapshot
-   cp ${CLAUDE_COMMANDS}/synrg.md ${CLAUDE_COMMANDS}/synrg.v$(date +%Y%m%d).md
+   cp ~/.claude/commands/synrg.md ~/.claude/commands/synrg.v$(date +%Y%m%d).md
 
    # Add new guidance to appropriate section
    # Maintain command integrity - only additions, never deletions
 
    # Document the evolution
-   echo "[$(date)] Added: [Brief description]" >> ${CLAUDE_COMMANDS}/synrg.evolution.log
+   echo "[$(date)] Added: [Brief description]" >> ~/.claude/commands/synrg.evolution.log
    ```
 
 4. **Validate Update**:
@@ -4917,7 +4907,7 @@ if (errorPattern.frequency > 2 && errorPattern.severity === 'high') {
 
 ### Phase 5: Evolution Tracking
 
-**Maintain Evolution Log** (`${CLAUDE_COMMANDS}/synrg.evolution.log`):
+**Maintain Evolution Log** (`~/.claude/commands/synrg.evolution.log`):
 
 ```
 [2025-10-15 14:30] INIT: Self-evolution protocol activated
@@ -5167,8 +5157,8 @@ Provide the user with:
 
 **Primary Instance**:
 - **API URL**: `https://jayconnorexe.app.n8n.cloud/api/v1`
-- **Config Location**: `${HOME}/CODING/Development/N8N-Integration/Cursor N8N MCP/config/n8n-config.json`
-- **Fast Access**: `${HOME}/CODING/Development/N8N-Integration/Cursor N8N MCP/n8n-fast-config.js`
+- **Config Location**: `/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/config/n8n-config.json`
+- **Fast Access**: `/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/n8n-fast-config.js`
 
 **MCP Configuration**:
 ```json
@@ -5228,7 +5218,7 @@ await client.validateWorkflow(workflowData);
 
 ### Existing Workflows
 
-**Workflow Catalog**: `${HOME}/CODING/Development/N8N-Integration/Cursor N8N MCP/workflows/catalog.json`
+**Workflow Catalog**: `/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/workflows/catalog.json`
 
 **Active Workflows**:
 1. **AI ROI DATA INGEST V2**
@@ -5483,10 +5473,10 @@ for (let attempt = 0; attempt < maxRetries; attempt++) {
 - **Community Nodes**: https://docs.n8n.io/integrations/community-nodes/
 
 **Local Resources**:
-- **Config Files**: `${HOME}/CODING/Development/N8N-Integration/Cursor N8N MCP/config/`
-- **Workflows**: `${HOME}/CODING/Development/N8N-Integration/Cursor N8N MCP/workflows/`
-- **Fast Access Script**: `${HOME}/CODING/Development/N8N-Integration/Cursor N8N MCP/n8n-fast-config.js`
-- **n8n Rules**: `${HOME}/CODING/Development/N8N-Integration/VS STUDIO N8N MCP/n8n-rules-document.txt`
+- **Config Files**: `/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/config/`
+- **Workflows**: `/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/workflows/`
+- **Fast Access Script**: `/Users/jelalconnor/CODING/Development/N8N-Integration/Cursor N8N MCP/n8n-fast-config.js`
+- **n8n Rules**: `/Users/jelalconnor/CODING/Development/N8N-Integration/VS STUDIO N8N MCP/n8n-rules-document.txt`
 
 **When Planning n8n Tasks**:
 1. Check existing workflows in catalog for reusable patterns
@@ -5691,7 +5681,7 @@ for (let attempt = 0; attempt < maxRetries; attempt++) {
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Skills Reference**: Full protocol details in `${CLAUDE_SKILLS}/`:
+**Skills Reference**: Full protocol details in `~/.claude/skills/`:
 - `commit-message-craft.md` - Senior-level commit message protocol
 - `universal-synrg-protocols.md` - Complete USP specification
 

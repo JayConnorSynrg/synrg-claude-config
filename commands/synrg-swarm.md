@@ -1,4 +1,14 @@
 ---
+synrg_version: "1.0.0"
+command: "synrg-swarm"
+created: "2025-09-01"
+updated: "2026-01-09"
+min_claude_version: "opus-4"
+requires:
+  protocols: [mcdp, sub-agent-spawn, mcp-config]
+  agents: [n8n-mcp-delegate, github-mcp-delegate]
+  skills: [mandatory-context-delegation]
+breaking_changes: []
 description: Execute SYNRG Director for sub-agent development and optimization
 argument-hint: [agent development objective or enhancement task]
 ---
@@ -46,7 +56,7 @@ Reject docs older than 1 year.
 ┌─────────────────────────────────────────────────────────────┐
 │  AGENT LIBRARY CHECK (MANDATORY)                            │
 │                                                             │
-│  1. CHECK ~/.claude/agents/ for existing agents             │
+│  1. CHECK ${CLAUDE_AGENTS}/ for existing agents             │
 │  2. REVIEW agent descriptions for task coverage             │
 │  3. EXTEND existing agents if possible (add capabilities)   │
 │  4. CREATE new agents only for uncovered task types         │
@@ -56,7 +66,7 @@ Reject docs older than 1 year.
 
 ### Current Agent Library
 
-**N8N Domain** (`~/.claude/agents/n8n-*.md`):
+**N8N Domain** (`${CLAUDE_AGENTS}/n8n-*.md`):
 - `n8n-node-validator` - Node schema validation
 - `n8n-connection-fixer` - Connection syntax fixing
 - `n8n-version-researcher` - TypeVersion research
@@ -93,8 +103,8 @@ Reject docs older than 1 year.
 
 | MCP Domain | Delegate Agent | Agent File |
 |------------|----------------|------------|
-| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `~/.claude/agents/n8n-mcp-delegate.md` |
-| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `~/.claude/agents/github-mcp-delegate.md` |
+| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `${CLAUDE_AGENTS}/n8n-mcp-delegate.md` |
+| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `${CLAUDE_AGENTS}/github-mcp-delegate.md` |
 
 **Enforcement**: Direct MCP calls are FORBIDDEN. Violation requires immediate self-correction.
 
@@ -134,13 +144,13 @@ Reject docs older than 1 year.
 ANY = YES → DELEGATE. No exceptions.
 ```
 
-**Full Protocol**: See `~/.claude/skills/mandatory-context-delegation.md`
+**Full Protocol**: See `${CLAUDE_SKILLS}/mandatory-context-delegation.md`
 
 ---
 
 ## 🔒 UNIVERSAL SYNRG PROTOCOLS (USP v1.0 - Compact)
 
-**All gates apply. Full specs: `~/.claude/skills/universal-synrg-protocols.md`**
+**All gates apply. Full specs: `${CLAUDE_SKILLS}/universal-synrg-protocols.md`**
 
 ### PRE-IMPLEMENTATION GATES
 ```
@@ -209,8 +219,8 @@ REVIEW 5: QUALITY      - All gates passed → COMPLETE
 
 | MCP Domain | Delegate Agent | Agent File |
 |------------|----------------|------------|
-| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `~/.claude/agents/n8n-mcp-delegate.md` |
-| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `~/.claude/agents/github-mcp-delegate.md` |
+| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `${CLAUDE_AGENTS}/n8n-mcp-delegate.md` |
+| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `${CLAUDE_AGENTS}/github-mcp-delegate.md` |
 
 **Agent Development Delegation:**
 ```javascript

@@ -1,4 +1,14 @@
 ---
+synrg_version: "3.0.0"
+command: "synrg-refactor"
+created: "2025-06-01"
+updated: "2026-01-09"
+min_claude_version: "opus-4"
+requires:
+  protocols: [mcdp, sub-agent-spawn]
+  agents: []
+  skills: [certainty-gated-atomic-change]
+breaking_changes: []
 description: Execute SYNRG File Restructuring Agent with intelligent code quality elevation
 argument-hint: [restructuring objective and scope]
 ---
@@ -114,13 +124,13 @@ Reject docs older than 1 year.
 ANY = YES → DELEGATE. No exceptions.
 ```
 
-**Full Protocol**: See `~/.claude/skills/mandatory-context-delegation.md`
+**Full Protocol**: See `${CLAUDE_SKILLS}/mandatory-context-delegation.md`
 
 ---
 
 ## 🔒 UNIVERSAL SYNRG PROTOCOLS (USP v1.0 - Compact)
 
-**All gates apply. Full specs: `~/.claude/skills/universal-synrg-protocols.md`**
+**All gates apply. Full specs: `${CLAUDE_SKILLS}/universal-synrg-protocols.md`**
 
 ### PRE-IMPLEMENTATION GATES
 ```
@@ -145,8 +155,8 @@ REVIEW 5: QUALITY      - All gates passed → COMPLETE
 
 | MCP Domain | Delegate Agent | Agent File |
 |------------|----------------|------------|
-| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `~/.claude/agents/n8n-mcp-delegate.md` |
-| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `~/.claude/agents/github-mcp-delegate.md` |
+| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `${CLAUDE_AGENTS}/n8n-mcp-delegate.md` |
+| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `${CLAUDE_AGENTS}/github-mcp-delegate.md` |
 
 **Enforcement**: Direct MCP calls are FORBIDDEN. Violation requires immediate self-correction.
 
@@ -218,7 +228,7 @@ Before modifying configuration files, import statements, or type definitions:
 ┌─────────────────────────────────────────────────────────────┐
 │  AGENT LIBRARY CHECK (MANDATORY)                            │
 │                                                             │
-│  1. CHECK ~/.claude/agents/ for relevant agents             │
+│  1. CHECK ${CLAUDE_AGENTS}/ for relevant agents             │
 │  2. USE existing agents instead of spawning generic ones    │
 │  3. CREATE new agents if task type has no coverage          │
 │  4. DOCUMENT new agents in agents-evolution.md              │
@@ -227,7 +237,7 @@ Before modifying configuration files, import statements, or type definitions:
 
 ### Available Specialized Agents
 
-Check `~/.claude/agents/` before spawning. Key agents:
+Check `${CLAUDE_AGENTS}/` before spawning. Key agents:
 - **N8N**: `n8n-node-validator`, `n8n-connection-fixer`, `n8n-expression-debugger`, `n8n-workflow-expert`
 - **General**: `full-stack-dev-expert`, `agency-automation-expert`
 
@@ -3081,7 +3091,7 @@ function calculate(user) {
 
 **Version**: v3.0.0 (Robustness-First with True Orchestration)
 **Created**: 2025-10-29
-**Evolution Log**: `~/.claude/commands/synrg-refactor.evolution.log`
+**Evolution Log**: `${CLAUDE_COMMANDS}/synrg-refactor.evolution.log`
 
 ### What's New in v3.0
 

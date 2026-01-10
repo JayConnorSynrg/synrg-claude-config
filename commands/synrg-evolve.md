@@ -1,4 +1,14 @@
 ---
+synrg_version: "1.0.0"
+command: "synrg-evolve"
+created: "2025-10-01"
+updated: "2026-01-09"
+min_claude_version: "opus-4"
+requires:
+  protocols: []
+  agents: []
+  skills: [universal-synrg-protocols]
+breaking_changes: []
 description: Activate SYNRG self-evolution to integrate patterns and improvements
 argument-hint: [integrate|analyze|optimize]
 ---
@@ -57,8 +67,8 @@ Reject docs older than 1 year.
 
 | MCP Domain | Delegate Agent | Agent File |
 |------------|----------------|------------|
-| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `~/.claude/agents/n8n-mcp-delegate.md` |
-| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `~/.claude/agents/github-mcp-delegate.md` |
+| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `${CLAUDE_AGENTS}/n8n-mcp-delegate.md` |
+| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `${CLAUDE_AGENTS}/github-mcp-delegate.md` |
 
 **Evolution-Specific Delegation:**
 ```javascript
@@ -104,13 +114,13 @@ Task({ subagent_type: "n8n-mcp-delegate", prompt: "Analyze workflow for pattern 
 ANY = YES → DELEGATE. No exceptions.
 ```
 
-**Full Protocol**: See `~/.claude/skills/mandatory-context-delegation.md`
+**Full Protocol**: See `${CLAUDE_SKILLS}/mandatory-context-delegation.md`
 
 ---
 
 ## 🔒 UNIVERSAL SYNRG PROTOCOLS (USP v1.0 - Compact)
 
-**All gates apply. Full specs: `~/.claude/skills/universal-synrg-protocols.md`**
+**All gates apply. Full specs: `${CLAUDE_SKILLS}/universal-synrg-protocols.md`**
 
 ### PRE-IMPLEMENTATION GATES
 ```
@@ -162,8 +172,8 @@ When patterns are identified:
 Task({
   subagent_type: "general-purpose",
   prompt: `Analyze patterns in agents-evolution.md for agent coverage gaps.
-  Agent library: ~/.claude/agents/
-  Pattern library: /Users/jelalconnor/CODING/N8N/Workflows/.claude/patterns/`,
+  Agent library: ${CLAUDE_AGENTS}/
+  Pattern library: ${HOME}/CODING/N8N/Workflows/.claude/patterns/`,
   model: "haiku"
 })
 ```
@@ -176,8 +186,8 @@ Task({
 
 | Tool Type | When to Create | Evolution Action |
 |-----------|----------------|------------------|
-| **SUB-AGENTS** | New domain expertise, recurring focused tasks | Create in ~/.claude/agents/ |
-| **SLASH COMMANDS** | New orchestration patterns, multi-phase workflows | Create in ~/.claude/commands/ |
+| **SUB-AGENTS** | New domain expertise, recurring focused tasks | Create in ${CLAUDE_AGENTS}/ |
+| **SLASH COMMANDS** | New orchestration patterns, multi-phase workflows | Create in ${CLAUDE_COMMANDS}/ |
 | **HOOKS** | New validation/enforcement rules | Create in project .claude/hooks/ |
 | **SKILLS** | New reusable methodologies | Create in project .claude/skills/ |
 
@@ -231,7 +241,7 @@ function determineEvolutionMode() {
 **Process**:
 1. **Read Current SYNRG Command**
    ```bash
-   cat ~/.claude/commands/synrg.md
+   cat ${CLAUDE_COMMANDS}/synrg.md
    ```
 
 2. **Review Staged Improvements**
@@ -553,11 +563,11 @@ When executing sub-agent tasks, **ALWAYS**:
 **Backup Protocol**:
 ```bash
 # Before any integration
-cp ~/.claude/commands/synrg.md \
-   ~/.claude/commands/synrg.v$(date +%Y%m%d_%H%M%S).md
+cp ${CLAUDE_COMMANDS}/synrg.md \
+   ${CLAUDE_COMMANDS}/synrg.v$(date +%Y%m%d_%H%M%S).md
 
 # Keep last 10 versions
-ls -t ~/.claude/commands/synrg.v*.md | tail -n +11 | xargs rm -f
+ls -t ${CLAUDE_COMMANDS}/synrg.v*.md | tail -n +11 | xargs rm -f
 ```
 
 ---

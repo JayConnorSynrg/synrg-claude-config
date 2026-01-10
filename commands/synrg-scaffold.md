@@ -1,6 +1,20 @@
+---
+synrg_version: "2.0.0"
+command: "synrg-scaffold"
+created: "2025-07-01"
+updated: "2026-01-09"
+min_claude_version: "opus-4"
+requires:
+  protocols: [phase-gate]
+  agents: []
+  skills: [universal-synrg-protocols]
+breaking_changes: []
+description: SYNRG-SCAFFOLD - Guided Evolving Project Directory Builder with Strategic Intelligence
+argument-hint: [project type or directory path]
+---
+
 # SYNRG-SCAFFOLD: Guided Evolving Project Directory Builder with Strategic Intelligence
 
-**Version:** 2.0.0
 **Purpose:** Intelligent project scaffolding with evolving context-aware questions and strategic alternative analysis
 **Philosophy:** Understand the project type first, then analyze alternatives and provide top 1% insights before building the perfect structure
 
@@ -53,8 +67,8 @@ Reject docs older than 1 year.
 
 | MCP Domain | Delegate Agent | Agent File |
 |------------|----------------|------------|
-| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `~/.claude/agents/n8n-mcp-delegate.md` |
-| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `~/.claude/agents/github-mcp-delegate.md` |
+| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `${CLAUDE_AGENTS}/n8n-mcp-delegate.md` |
+| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `${CLAUDE_AGENTS}/github-mcp-delegate.md` |
 
 **Enforcement**: Direct MCP calls are FORBIDDEN. Violation requires immediate self-correction.
 
@@ -94,13 +108,13 @@ Reject docs older than 1 year.
 ANY = YES → DELEGATE. No exceptions.
 ```
 
-**Full Protocol**: See `~/.claude/skills/mandatory-context-delegation.md`
+**Full Protocol**: See `${CLAUDE_SKILLS}/mandatory-context-delegation.md`
 
 ---
 
 ## 🔒 UNIVERSAL SYNRG PROTOCOLS (USP v1.0 - Compact)
 
-**All gates apply. Full specs: `~/.claude/skills/universal-synrg-protocols.md`**
+**All gates apply. Full specs: `${CLAUDE_SKILLS}/universal-synrg-protocols.md`**
 
 ### PRE-IMPLEMENTATION GATES
 ```

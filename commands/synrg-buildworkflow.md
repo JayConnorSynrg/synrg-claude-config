@@ -1,3 +1,18 @@
+---
+synrg_version: "1.0.0"
+command: "synrg-buildworkflow"
+created: "2025-09-01"
+updated: "2026-01-09"
+min_claude_version: "opus-4"
+requires:
+  protocols: [mcdp, mcp-config]
+  agents: [n8n-mcp-delegate, github-mcp-delegate]
+  skills: []
+breaking_changes: []
+description: SYNRG Build Workflow Command
+argument-hint: [workflow objective or automation description]
+---
+
 # SYNRG Build Workflow Command
 
 You are the **SYNRG Build Workflow Orchestrator**, coordinating 10 specialized n8n agents to build production-ready workflows with 95%+ success rate in 10-15 minutes.
@@ -51,8 +66,8 @@ Reject docs older than 1 year.
 
 | MCP Domain | Delegate Agent | Agent File |
 |------------|----------------|------------|
-| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `~/.claude/agents/n8n-mcp-delegate.md` |
-| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `~/.claude/agents/github-mcp-delegate.md` |
+| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `${CLAUDE_AGENTS}/n8n-mcp-delegate.md` |
+| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `${CLAUDE_AGENTS}/github-mcp-delegate.md` |
 
 **Workflow Building Delegation:**
 ```javascript
@@ -107,13 +122,13 @@ Task({ subagent_type: "n8n-mcp-delegate", prompt: "Search templates for {pattern
 ANY = YES → DELEGATE. No exceptions.
 ```
 
-**Full Protocol**: See `~/.claude/skills/mandatory-context-delegation.md`
+**Full Protocol**: See `${CLAUDE_SKILLS}/mandatory-context-delegation.md`
 
 ---
 
 ## 🔒 UNIVERSAL SYNRG PROTOCOLS (USP v1.0 - Compact)
 
-**All gates apply. Full specs: `~/.claude/skills/universal-synrg-protocols.md`**
+**All gates apply. Full specs: `${CLAUDE_SKILLS}/universal-synrg-protocols.md`**
 
 ### PRE-IMPLEMENTATION GATES
 ```
@@ -262,7 +277,7 @@ const workflowSlug = sanitizeSlug(workflowName); // e.g., "teams-voice-bot"
 const workflowId = existingId || "new"; // Use provided ID or "new" until deployed
 
 // Base path for all workflow projects
-const WORKFLOWS_BASE = "/Users/jelalconnor/CODING/N8N/Workflows/workflows/development";
+const WORKFLOWS_BASE = "${HOME}/CODING/N8N/Workflows/workflows/development";
 
 // Create dedicated folder structure
 const workflowFolder = `${WORKFLOWS_BASE}/${workflowSlug}/`;
@@ -651,8 +666,8 @@ interface WorkflowRequest {
 ## 📚 PATTERN LIBRARY REFERENCE
 
 Agents must reference consolidated pattern library at:
-- **Schema**: `/Users/jelalconnor/CODING/N8N/AGENTS/n8n-patterns-schema.ts`
-- **Data**: `/Users/jelalconnor/CODING/N8N/AGENTS/n8n-patterns-data.ts`
+- **Schema**: `${HOME}/CODING/N8N/AGENTS/n8n-patterns-schema.ts`
+- **Data**: `${HOME}/CODING/N8N/AGENTS/n8n-patterns-data.ts`
 
 **Contains:**
 - 7 Ubiquitous Rules

@@ -1,4 +1,14 @@
 ---
+synrg_version: "4.3.0"
+command: "synrg-guided"
+created: "2025-06-01"
+updated: "2026-01-09"
+min_claude_version: "opus-4"
+requires:
+  protocols: [sub-agent-spawn, phase-gate]
+  agents: []
+  skills: [universal-synrg-protocols]
+breaking_changes: []
 description: Execute SYNRG Guided Orchestrator - Interactive planning with autonomous execution and adaptive parallelization
 argument-hint: [objective or task description]
 ---
@@ -59,8 +69,8 @@ Reject docs older than 1 year.
 
 | MCP Domain | Delegate Agent | Agent File |
 |------------|----------------|------------|
-| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `~/.claude/agents/n8n-mcp-delegate.md` |
-| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `~/.claude/agents/github-mcp-delegate.md` |
+| `mcp__n8n-mcp__*` | `n8n-mcp-delegate` | `${CLAUDE_AGENTS}/n8n-mcp-delegate.md` |
+| `mcp__n8n-workflows__*` | `github-mcp-delegate` | `${CLAUDE_AGENTS}/github-mcp-delegate.md` |
 
 **Delegation Examples:**
 ```javascript
@@ -107,7 +117,7 @@ Task({ subagent_type: "github-mcp-delegate", prompt: "Search repos for {query}",
 ANY = YES → DELEGATE. No exceptions.
 ```
 
-**Full Protocol**: See `~/.claude/skills/mandatory-context-delegation.md`
+**Full Protocol**: See `${CLAUDE_SKILLS}/mandatory-context-delegation.md`
 
 ---
 
@@ -171,7 +181,7 @@ ANY = YES → DELEGATE. No exceptions.
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Full Protocol**: See `~/.claude/skills/universal-synrg-protocols.md`
+**Full Protocol**: See `${CLAUDE_SKILLS}/universal-synrg-protocols.md`
 
 ---
 
@@ -204,7 +214,7 @@ ANY = YES → DELEGATE. No exceptions.
 │  SUB-AGENT DELEGATION CHECK (MANDATORY)                     │
 │                                                             │
 │  1. IDENTIFY: Is this task delegatable to a focused agent?  │
-│  2. MATCH: Check ~/.claude/agents/ for qualified agents     │
+│  2. MATCH: Check ${CLAUDE_AGENTS}/ for qualified agents     │
 │  3. CREATE: If no match exists, create the agent first      │
 │  4. DELEGATE: Use Task tool with specific agent type        │
 └─────────────────────────────────────────────────────────────┘
@@ -223,7 +233,7 @@ Task({
 
 ### Available Agents
 
-Check `~/.claude/agents/` for available agents. Key n8n agents:
+Check `${CLAUDE_AGENTS}/` for available agents. Key n8n agents:
 - `n8n-node-validator`, `n8n-connection-fixer`, `n8n-version-researcher`
 - `n8n-expression-debugger`, `n8n-pattern-retriever`, `n8n-workflow-expert`
 
@@ -2309,7 +2319,7 @@ Status: [COMPLETED/PENDING]
 TASK: [COMPLETE/BLOCKED]
 ```
 
-**Full Protocol**: See `~/.claude/skills/universal-synrg-protocols.md`
+**Full Protocol**: See `${CLAUDE_SKILLS}/universal-synrg-protocols.md`
 
 ---
 
